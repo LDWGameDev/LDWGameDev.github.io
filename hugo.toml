@@ -1,0 +1,4 @@
+baseURL = 'https://LDWGameDev.github.io/'
+languageCode = 'en-us'
+title = 'Ldwork'
+theme = 'name'
