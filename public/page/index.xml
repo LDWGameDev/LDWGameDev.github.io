@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Ldwork</title>
+    <link>https://LDWGameDev.github.io/page/</link>
+    <description>Recent content in Pages on Ldwork</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://LDWGameDev.github.io/page/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LDWORK</title>
+      <link>https://LDWGameDev.github.io/project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://LDWGameDev.github.io/project/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

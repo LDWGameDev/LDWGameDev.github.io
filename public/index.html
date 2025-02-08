@@ -1,14 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="generator" content="Hugo 0.143.0">
+	<meta name="generator" content="Hugo 0.143.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ldwork</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>LDWORK</title>
+    <link rel="stylesheet" href="/css/homepage.css"> 
 </head>
 <body>
-    <h1>Welcome to Ldwork</h1>
-    <p>This is my custom Hugo site.</p>
+    
+    <div class="title-social-container">
+        
+        <div class="title-container">
+            
+            <h1 onclick="reloadPage()" class="clickable-title">LDWORK</h1>
+            <p>Unreal Engine Gameplay Developer</p>
+        </div>
+
+        
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/in/do-duy-long/" target="_blank">
+                <img src="/images/social/linkedin.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/LDWGameDev" target="_blank">
+                <img src="/images/social/github.png" alt="GitHub">
+            </a>
+            <a href="https://x.com/LDWGameDev" target="_blank">
+                <img src="/images/social/twitter.png" alt="Twitter">
+            </a>
+        </div>
+    </div>
+
+    <section class="intro">
+        <img src="/images/profile.jpg" alt="Profile Picture" class="profile-pic">
+        <h2 class="highlighted-text">Hi! I’m Ldwork</h2>
+        <p class="intro-text">A passionate game developer with 3 years of experience working with Unreal Engine. Skilled in fast prototyping, building scalable systems, debugging, profiling and optimization. Familiar with Unreal networking model and best practices.</p>
+    </section>
+
+    <section class="projects-section">
+        <h2 class="highlighted-text">Projects</h2>
+
+        
+        <div class="project-tags">
+            
+            <button class="tag-button" onclick="filterProjects('All', this)">All</button>
+            
+            <button class="tag-button" onclick="filterProjects('Unity', this)">Unity</button>
+            
+            <button class="tag-button" onclick="filterProjects('Unreal Engine', this)">Unreal Engine</button>
+            
+            <button class="tag-button" onclick="filterProjects('Personal', this)">Personal</button>
+            
+            <button class="tag-button" onclick="filterProjects('Work', this)">Work</button>
+            
+            <button class="tag-button" onclick="filterProjects('Prototype', this)">Prototype</button>
+            
+        </div>
+    
+        
+        <div class="project-grid-container">
+            
+
+            <div class="project-grid">
+                
+                <div class="project-card" data-tags="Unity, Personal" onclick="navigateToProject( 0 )">
+                    <img src="/images/projects/fake-knight/fake-knight.png" alt="Fake Knight" class="project-image">
+                    <div class="project-info">
+                    <h3 class="project-name">Fake Knight</h3>
+                    <p class="project-time">2020</p>
+                    <p class="project-tags">Unity, Personal</p>
+                    </div>
+                </div>
+                
+                <div class="project-card" data-tags="Unreal Engine, Personal" onclick="navigateToProject( 1 )">
+                    <img src="/images/projects/wukong/wukong-title-image.png" alt="Wukong Early Fan Made" class="project-image">
+                    <div class="project-info">
+                    <h3 class="project-name">Wukong Early Fan Made</h3>
+                    <p class="project-time">2021</p>
+                    <p class="project-tags">Unreal Engine, Personal</p>
+                    </div>
+                </div>
+                
+                <div class="project-card" data-tags="Unreal Engine, Personal" onclick="navigateToProject( 2 )">
+                    <img src="/images/projects/casual-shooter/cts-banner.png" alt="Casual Topdown Shooter" class="project-image">
+                    <div class="project-info">
+                    <h3 class="project-name">Casual Topdown Shooter</h3>
+                    <p class="project-time">2021</p>
+                    <p class="project-tags">Unreal Engine, Personal</p>
+                    </div>
+                </div>
+                
+                <div class="project-card" data-tags="Unreal Engine, Personal" onclick="navigateToProject( 3 )">
+                    <img src="/images/projects/action-rougelike/ar-banner.png" alt="Action Rougelike" class="project-image">
+                    <div class="project-info">
+                    <h3 class="project-name">Action Rougelike</h3>
+                    <p class="project-time">2022-2023</p>
+                    <p class="project-tags">Unreal Engine, Personal</p>
+                    </div>
+                </div>
+                
+                <div class="project-card" data-tags="Unreal Engine, Work" onclick="navigateToProject( 4 )">
+                    <img src="/images/projects/deverse-world/dv-banner.png" alt="Deverse World" class="project-image">
+                    <div class="project-info">
+                    <h3 class="project-name">Deverse World</h3>
+                    <p class="project-time">2022 - 2025</p>
+                    <p class="project-tags">Unreal Engine, Work</p>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </section>
+
+    
+    <div class="bottom-section">
+        <div class="contact-section">
+            <h3>Contact Information</h3>
+            <p>Email: <a href="Email: ldwork.cs@gmail.com">ldwork.cs@gmail.com</a></p>
+            <p>Phone: <a href="Phone: &#43;84%20769%20661%20420">&#43;84 769 661 420</a></p>
+        </div>
+
+        <button id="scroll-to-top" onclick="scrollToTop()">
+            <img src="/images/icons/up-arrow.png" alt = "Scroll to Top">
+        </button>
+    </div>
+
+    
+    <script>
+        function filterProjects(tag, button) {
+            const projects = document.querySelectorAll(".project-card");
+            const buttons = document.querySelectorAll(".tag-button");
+            const noProjectsMessage = document.getElementById("no-projects-message");
+
+            let found = false;
+            const grid = document.querySelector(".project-grid");
+
+            
+            buttons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            projects.forEach(project => {
+                const tags = project.getAttribute("data-tags").split(",").map(t => t.trim().toLowerCase());
+                if (tag.toLowerCase() === "all" || tags.includes(tag.toLowerCase())) {
+                    project.style.display = "block";
+                    found = true;
+                } else {
+                    project.style.display = "none";
+                }
+            });
+
+            
+            
+        }
+
+        function navigateToProject(index) {
+            window.location.href = "/project/?id=" + index;
+        }
+
+
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const defaultButton = document.querySelector(".tag-button");
+            if (defaultButton) {
+                defaultButton.classList.add("active");
+                filterProjects("All", defaultButton);
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function reloadPage() {
+            window.location.reload();  
+        }
+
+    </script>
+
 </body>
 </html>

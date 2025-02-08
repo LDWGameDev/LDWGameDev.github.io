@@ -1,0 +1,267 @@
+<link rel="stylesheet" href="/css/project_detail.css">
+
+ <!-- Title + Social Icons Container -->
+ <div class="title-social-container">
+    <!-- Title + Subtitle -->
+    <div class="title-container">
+        <!-- Title as a button -->
+        <h1 onclick="backToHomepage()" class="clickable-title">{{ .Params.Title }}</h1>
+        <p>{{ .Params.subtitle }}</p>
+    </div>
+</div>
+
+<div class="project-title-section">
+    <!-- Image Section (3/5 width) -->
+    <div class="project-image-container">
+      <img id="project-image" src="" alt="Project Image" class="project-image">
+    </div>
+  
+    <!-- Info Section (2/5 width) -->
+    <div class="project-info-container">
+      <h2 id="project-name" class="project-name"></h2>
+      <div id="project-time" class="project-time"></div>
+      <p id="project-description" class="project-description"></p>
+      <div id="project-tags" class="project-tags"></div>
+    </div>
+  </div>
+  
+
+<div class="bottom-section">
+    <button id="scroll-to-top" onclick="scrollToTop()">
+        <img src="/images/icons/up-arrow.png" alt="Scroll to Top">
+    </button>
+</div>
+
+<script>
+    function backToHomepage() {
+        window.location.href = "/";  // Redirects to the homepage
+    }
+
+    function convertToEmbedURL(url) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+        const match = url.match(youtubeRegex);
+        if (match && match[1]) {
+            return `https://www.youtube.com/embed/${match[1]}`;
+        }
+        return url;  // Return original URL if it's not a valid YouTube link
+    }
+
+    function extractVideoID(url) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+        const match = url.match(youtubeRegex);
+        if (match && match[1]) {
+            console.log('Extracted Video ID:', match[1]);
+            return match[1];
+        } else {
+            console.error('Invalid YouTube URL:', url);
+            return null;
+        }
+    }
+
+    function setupVisibilityObserver(player, videoId) {
+        const videoElement = document.getElementById(`youtube-player-${videoId}`);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    player.pauseVideo();
+                } else {
+                }
+            });
+        }, {
+            threshold: 0.1  // Pause when 90% out of view
+        });
+
+        observer.observe(videoElement);
+    }
+
+    function createYouTubePlayer(videoId) {
+        console.log('Creating YouTube Player for ID:', videoId);
+
+        const player = new YT.Player(`youtube-player-${videoId}`, {
+            videoId: videoId,
+            events: {
+                'onReady': function(event) {
+                    console.log('YouTube Player is ready:', videoId);
+                    event.target.setPlaybackQuality('hd1080');  // Set to highest quality
+                    setupVisibilityObserver(event.target, videoId);  // Pause when out of view
+                },
+                'onError': function(event) {
+                    console.error('Error with YouTube Player:', event);
+                }
+            },
+            playerVars: {
+                rel: 0,
+                modestbranding: 1,
+                autoplay: 0  // Disable autoplay
+            }
+        });
+
+        console.log('YouTube Player created:', player);
+    }
+
+    const youtubeVideoQueue = [];  // Global queue for videos to initialize
+
+    function loadYouTubeAPI(callback) {
+        if (window.YT && YT.Player) {
+            console.log('YouTube API already loaded.');
+            callback();  // API is ready, process the current video
+            return;
+        }
+
+        if (!document.getElementById('youtube-iframe-api')) {
+            const script = document.createElement('script');
+            script.id = 'youtube-iframe-api';
+            script.src = 'https://www.youtube.com/iframe_api';
+            document.body.appendChild(script);
+            console.log('Loading YouTube IFrame API...');
+        }
+
+        // Queue the video initialization
+        youtubeVideoQueue.push(callback);
+
+        // When API is ready, process all queued videos
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('YouTube IFrame API is ready.');
+            youtubeVideoQueue.forEach(init => init());  // Initialize all videos in the queue
+            youtubeVideoQueue.length = 0;  // Clear the queue after processing
+        };
+    }
+
+    function displayYouTubeVideo(link) {
+        const videoId = extractVideoID(link);
+        if (!videoId) {
+            console.error('Invalid YouTube Link:', link);
+            return;
+        }
+
+        console.log('Preparing to display YouTube video with ID:', videoId);
+
+        // Create a container for the YouTube player
+        const videoContainer = document.createElement('div');
+        videoContainer.id = `youtube-player-${videoId}`;
+        videoContainer.className = 'project-content-video';
+        contentContainer.appendChild(videoContainer);
+
+        // Queue the video initialization or create player if API is ready
+        loadYouTubeAPI(() => createYouTubePlayer(videoId));
+    }
+
+    function displayTextContent(content) {
+        // Replace literal '\n' with actual newline characters
+        const processedContent = content.replace(/\\n/g, '\n');
+
+        if (processedContent.includes('\n-')) {
+            console.log('Detected list in text content');
+
+            const lines = processedContent.split('\n');
+
+            // Display the first line as introductory text
+            const paragraph = document.createElement('p');
+            paragraph.textContent = lines[0];  // The first line is the intro text
+            contentContainer.appendChild(paragraph);
+
+            // Create unordered list for the rest of the items
+            const ul = document.createElement('ul');
+            lines.slice(1).forEach(line => {
+                if (line.startsWith('-')) {
+                    const li = document.createElement('li');
+                    li.textContent = line.substring(2);  // Remove '- ' prefix
+                    ul.appendChild(li);
+                }
+            });
+
+            contentContainer.appendChild(ul);
+        } else {
+            console.log('No list detected, displaying as plain text');
+
+            // Display as plain paragraph if no list pattern detected
+            const paragraph = document.createElement('p');
+            paragraph.textContent = processedContent;
+            contentContainer.appendChild(paragraph);
+        }
+    }
+
+    function displayImageContent(content) {
+        console.log('Displaying image:', content);
+
+        const img = document.createElement('img');
+        img.src = content;
+        img.className = 'project-content-image';
+        contentContainer.appendChild(img);
+    }
+
+    function displayGifContent(content) {
+        console.log('Displaying GIF:', content);
+
+        const gif = document.createElement('img');
+        gif.src = content;
+        gif.className = 'project-content-gif';
+        contentContainer.appendChild(gif);
+    }
+
+    src="https://www.youtube.com/iframe_api"
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = parseInt(urlParams.get('id'), 10);  // Ensure projectId is an integer
+
+    local_projects = {{ .Site.Params.projects | jsonify }};
+    local_projects = JSON.parse(local_projects);
+
+    const projectKey = projectId.toString();  
+    const selected_project = local_projects[projectKey];  
+
+    // Set Image
+    document.getElementById('project-image').src = selected_project.image;
+    document.getElementById('project-image').alt = selected_project.name;
+
+    // Set Project Name
+    document.getElementById('project-name').textContent = selected_project.name;
+
+    document.getElementById('project-time').textContent = selected_project.time;
+
+    // Set Description (assuming it's part of 'content' or add it in your data structure)
+    const description = selected_project.description;
+    document.getElementById('project-description').textContent = description;
+
+    // Set Tags
+    const tagsContainer = document.getElementById('project-tags');
+    tagsContainer.innerHTML = ''; // Clear existing tags if any
+    selected_project.tags.forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'tag';
+        tagElement.textContent = tag;
+        tagsContainer.appendChild(tagElement);
+    });
+
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'project-detailed-content';
+
+    console.log(selected_project);
+
+    // Loop through the content array
+    selected_project.content.forEach(item => {
+        Object.values(item).forEach(value => {
+            // Split the content at the first '#' to separate type and content
+            const [type, content] = value.split(/#(.+)/);  // Split only at the first #
+
+            // Display based on type
+            if (type === '0') {
+                displayTextContent(content);
+            } else if (type === '1') {
+                displayImageContent(content);
+            } else if (type === '2') {
+                displayGifContent(content);
+            }
+            else if (type === '3'){
+                displayYouTubeVideo(content);
+            }
+        });
+    });
+
+    document.querySelector('.project-title-section').after(contentContainer);
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+</script>

@@ -1,0 +1,267 @@
+<script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><link rel="stylesheet" href="/css/project_detail.css">
+
+ 
+ <div class="title-social-container">
+    
+    <div class="title-container">
+        
+        <h1 onclick="backToHomepage()" class="clickable-title">LDWORK</h1>
+        <p>Unreal Engine Gameplay Developer</p>
+    </div>
+</div>
+
+<div class="project-title-section">
+    
+    <div class="project-image-container">
+      <img id="project-image" src="" alt="Project Image" class="project-image">
+    </div>
+  
+    
+    <div class="project-info-container">
+      <h2 id="project-name" class="project-name"></h2>
+      <div id="project-time" class="project-time"></div>
+      <p id="project-description" class="project-description"></p>
+      <div id="project-tags" class="project-tags"></div>
+    </div>
+  </div>
+  
+
+<div class="bottom-section">
+    <button id="scroll-to-top" onclick="scrollToTop()">
+        <img src="/images/icons/up-arrow.png" alt="Scroll to Top">
+    </button>
+</div>
+
+<script>
+    function backToHomepage() {
+        window.location.href = "/";  
+    }
+
+    function convertToEmbedURL(url) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+        const match = url.match(youtubeRegex);
+        if (match && match[1]) {
+            return `https://www.youtube.com/embed/${match[1]}`;
+        }
+        return url;  
+    }
+
+    function extractVideoID(url) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+        const match = url.match(youtubeRegex);
+        if (match && match[1]) {
+            console.log('Extracted Video ID:', match[1]);
+            return match[1];
+        } else {
+            console.error('Invalid YouTube URL:', url);
+            return null;
+        }
+    }
+
+    function setupVisibilityObserver(player, videoId) {
+        const videoElement = document.getElementById(`youtube-player-${videoId}`);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    player.pauseVideo();
+                } else {
+                }
+            });
+        }, {
+            threshold: 0.1  
+        });
+
+        observer.observe(videoElement);
+    }
+
+    function createYouTubePlayer(videoId) {
+        console.log('Creating YouTube Player for ID:', videoId);
+
+        const player = new YT.Player(`youtube-player-${videoId}`, {
+            videoId: videoId,
+            events: {
+                'onReady': function(event) {
+                    console.log('YouTube Player is ready:', videoId);
+                    event.target.setPlaybackQuality('hd1080');  
+                    setupVisibilityObserver(event.target, videoId);  
+                },
+                'onError': function(event) {
+                    console.error('Error with YouTube Player:', event);
+                }
+            },
+            playerVars: {
+                rel: 0,
+                modestbranding: 1,
+                autoplay: 0  
+            }
+        });
+
+        console.log('YouTube Player created:', player);
+    }
+
+    const youtubeVideoQueue = [];  
+
+    function loadYouTubeAPI(callback) {
+        if (window.YT && YT.Player) {
+            console.log('YouTube API already loaded.');
+            callback();  
+            return;
+        }
+
+        if (!document.getElementById('youtube-iframe-api')) {
+            const script = document.createElement('script');
+            script.id = 'youtube-iframe-api';
+            script.src = 'https://www.youtube.com/iframe_api';
+            document.body.appendChild(script);
+            console.log('Loading YouTube IFrame API...');
+        }
+
+        
+        youtubeVideoQueue.push(callback);
+
+        
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('YouTube IFrame API is ready.');
+            youtubeVideoQueue.forEach(init => init());  
+            youtubeVideoQueue.length = 0;  
+        };
+    }
+
+    function displayYouTubeVideo(link) {
+        const videoId = extractVideoID(link);
+        if (!videoId) {
+            console.error('Invalid YouTube Link:', link);
+            return;
+        }
+
+        console.log('Preparing to display YouTube video with ID:', videoId);
+
+        
+        const videoContainer = document.createElement('div');
+        videoContainer.id = `youtube-player-${videoId}`;
+        videoContainer.className = 'project-content-video';
+        contentContainer.appendChild(videoContainer);
+
+        
+        loadYouTubeAPI(() => createYouTubePlayer(videoId));
+    }
+
+    function displayTextContent(content) {
+        
+        const processedContent = content.replace(/\\n/g, '\n');
+
+        if (processedContent.includes('\n-')) {
+            console.log('Detected list in text content');
+
+            const lines = processedContent.split('\n');
+
+            
+            const paragraph = document.createElement('p');
+            paragraph.textContent = lines[0];  
+            contentContainer.appendChild(paragraph);
+
+            
+            const ul = document.createElement('ul');
+            lines.slice(1).forEach(line => {
+                if (line.startsWith('-')) {
+                    const li = document.createElement('li');
+                    li.textContent = line.substring(2);  
+                    ul.appendChild(li);
+                }
+            });
+
+            contentContainer.appendChild(ul);
+        } else {
+            console.log('No list detected, displaying as plain text');
+
+            
+            const paragraph = document.createElement('p');
+            paragraph.textContent = processedContent;
+            contentContainer.appendChild(paragraph);
+        }
+    }
+
+    function displayImageContent(content) {
+        console.log('Displaying image:', content);
+
+        const img = document.createElement('img');
+        img.src = content;
+        img.className = 'project-content-image';
+        contentContainer.appendChild(img);
+    }
+
+    function displayGifContent(content) {
+        console.log('Displaying GIF:', content);
+
+        const gif = document.createElement('img');
+        gif.src = content;
+        gif.className = 'project-content-gif';
+        contentContainer.appendChild(gif);
+    }
+
+    src="https://www.youtube.com/iframe_api"
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = parseInt(urlParams.get('id'), 10);  
+
+    local_projects = "[{\"content\":[{\"0\":\"3#https://youtu.be/3ZKLAST7Lec\",\"1\":\"0#First project I completed using Unity engine, and possibly the last one as well because I switched to Unreal Engine right after this. This project was made purely for learning purposes and, therefore, contains many copyrighted resources.\",\"2\":\"0#This was my final assignment project for a class in my second year.\",\"3\":\"0#What I worked on:\\\\n- Inventory and equipment system with set effects. \\\\n- Enemy systems featuring four types of enemies: melee, ranged, flying and boss.\\\\n- Player and AI state machine. \\\\n- Save, load system with 3 save slots for player to choose from. \\\\n- Quest system.\",\"4\":\"0#Full gameplay.\",\"5\":\"3#https://youtu.be/mY6sDiFHwwo\",\"6\":\"2#/images/projects/fake-knight/fake-knight-combat.gif\",\"7\":\"2#/images/projects/fake-knight/fake-knight-inventory.gif\"}],\"description\":\"Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?\",\"image\":\"/images/projects/fake-knight/fake-knight.png\",\"name\":\"Fake Knight\",\"tags\":[\"Unity\",\"Personal\"],\"time\":\"2020\"},{\"content\":[{\"0\":\"3#https://youtu.be/ntYqUWGNy1c\",\"1\":\"0#First project after switching to Unreal Engine. I tried to mess around with the framework and see how everything works together. To be honest, I was impressed but also overwhelmed at first by all the tools and features in front of me.\",\"2\":\"0#What I worked on:\\\\n- Combat system. \\\\n- Environment creation tools.\\\\n- Enemy AI.\",\"3\":\"2#/images/projects/wukong/wukong-enemies-combat.gif\",\"4\":\"2#/images/projects/wukong/wukong-boss-combat.gif\"}],\"description\":\"Dive headfirst into intense, action-packed battles in Myth of the Jade Monkey, an RPG inspired by the high-energy combat of Black Myth: Wukong's first trailer. Play as a fierce warrior armed with elemental powers, mastering fast, fluid combat techniques to conquer formidable, mythic foes.\",\"image\":\"/images/projects/wukong/wukong-title-image.png\",\"name\":\"Wukong Early Fan Made\",\"tags\":[\"Unreal Engine\",\"Personal\"],\"time\":\"2021\"},{\"content\":[{\"0\":\"3#https://youtu.be/P0DJOXgHhxs\",\"1\":\"0#This was my final assignment project for a class in my third year.\",\"2\":\"0#What I worked on:\\\\n- Levels and character management system. \\\\n- Shooting combat.\\\\n- Enemy AI. \\\\n- Save load system. \\\\n- Multiple game modes with different gameplay styles to choose from.\",\"3\":\"2#/images/projects/casual-shooter/cts-combat.gif\",\"4\":\"0#Characters, weapons and enemies.\",\"5\":\"1#/images/projects/casual-shooter/cts-characters.png\",\"6\":\"1#/images/projects/casual-shooter/cts-weapons.png\",\"7\":\"1#/images/projects/casual-shooter/cts-enemies.png\"}],\"description\":\"Sharpen your reflexes in this fast-paced, top-down shooter for PC and mobile! Outsmart waves of enemies, navigate dynamic battlegrounds, and unleash tactical firepower as you blast through each level.\",\"image\":\"/images/projects/casual-shooter/cts-banner.png\",\"name\":\"Casual Topdown Shooter\",\"tags\":[\"Unreal Engine\",\"Personal\"],\"time\":\"2021\"},{\"content\":[{\"0\":\"3#https://youtu.be/mfHQZCE7S80\",\"1\":\"0#This was my university graduation project in my final year.\",\"2\":\"0# What I worked on:\\\\n- Rougelike combat. \\\\n- Random rooms and upgrades system. \\\\n- Enemy AI, trap system. \\\\n- Save load system.\\\\n- Event trigger, simple shop.\",\"3\":\"0# Full gameplay.\",\"4\":\"3#https://youtu.be/8IbrqM4H0rg\",\"5\":\"1#/images/projects/action-rougelike/ar-combat-2.png\",\"6\":\"2#/images/projects/action-rougelike/ar-combat.gif\"}],\"description\":\"Dodge, dash, and slash your way through ever-changing levels, where every decision counts. Defeat everything in your path and master the chaos, but stay sharp ---- one wrong move and it’s game over. Can you survive the madness and push further than ever before?\",\"image\":\"/images/projects/action-rougelike/ar-banner.png\",\"name\":\"Action Rougelike\",\"tags\":[\"Unreal Engine\",\"Personal\"],\"time\":\"2022-2023\"},{\"content\":[{\"0\":\"3#https://www.youtube.com/watch?v=5_RaYynq8PY\",\"1\":\"0#What I worked on:\\\\n- Sandbox metaverse game with in-game builder tool and world-sharing feature.\\\\n- Base building and shooter gameplay.\\\\n- Debugged, profiled and optimized CPU and GPU performance to ensure a smooth experience for players.\\\\n- Reviewed and refined game logic, addressed and resolved technical issues.\\\\n- Customized and extended third-party, existing systems to align with project requirements.\",\"2\":\"0#Small early gameplay.\",\"3\":\"3#https://www.youtube.com/watch?v=rSpk9f4pZWM\",\"4\":\"1#/images/projects/deverse-world/dv-library-hero.png\",\"5\":\"2#/images/projects/deverse-world/dv-gameplay.png\"}],\"description\":\"Deverse World is role-playing game with fusion of RTS, shooter and sandbox adventure revolving around base building versus base raiding across infinite procedural floating isles.\",\"image\":\"/images/projects/deverse-world/dv-banner.png\",\"name\":\"Deverse World\",\"tags\":[\"Unreal Engine\",\"Work\"],\"time\":\"2022 - 2025\"}]";
+    local_projects = JSON.parse(local_projects);
+
+    const projectKey = projectId.toString();  
+    const selected_project = local_projects[projectKey];  
+
+    
+    document.getElementById('project-image').src = selected_project.image;
+    document.getElementById('project-image').alt = selected_project.name;
+
+    
+    document.getElementById('project-name').textContent = selected_project.name;
+
+    document.getElementById('project-time').textContent = selected_project.time;
+
+    
+    const description = selected_project.description;
+    document.getElementById('project-description').textContent = description;
+
+    
+    const tagsContainer = document.getElementById('project-tags');
+    tagsContainer.innerHTML = ''; 
+    selected_project.tags.forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'tag';
+        tagElement.textContent = tag;
+        tagsContainer.appendChild(tagElement);
+    });
+
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'project-detailed-content';
+
+    console.log(selected_project);
+
+    
+    selected_project.content.forEach(item => {
+        Object.values(item).forEach(value => {
+            
+            const [type, content] = value.split(/#(.+)/);  
+
+            
+            if (type === '0') {
+                displayTextContent(content);
+            } else if (type === '1') {
+                displayImageContent(content);
+            } else if (type === '2') {
+                displayGifContent(content);
+            }
+            else if (type === '3'){
+                displayYouTubeVideo(content);
+            }
+        });
+    });
+
+    document.querySelector('.project-title-section').after(contentContainer);
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+</script>
