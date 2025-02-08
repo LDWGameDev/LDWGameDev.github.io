@@ -2,24 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/all/</loc>
+    <loc>https://LDWGameDev.github.io/tags/all/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://LDWGameDev.github.io/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://LDWGameDev.github.io/</loc>
   </url><url>
-    <loc>http://localhost:1313/project/</loc>
+    <loc>https://LDWGameDev.github.io/project/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/personal/</loc>
+    <loc>https://LDWGameDev.github.io/tags/personal/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/prototype/</loc>
+    <loc>https://LDWGameDev.github.io/tags/prototype/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://LDWGameDev.github.io/tags/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/unity/</loc>
+    <loc>https://LDWGameDev.github.io/tags/unity/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/unreal-engine/</loc>
+    <loc>https://LDWGameDev.github.io/tags/unreal-engine/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/work/</loc>
+    <loc>https://LDWGameDev.github.io/tags/work/</loc>
   </url>
 </urlset>
