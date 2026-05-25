@@ -52,6 +52,21 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 
 ---
 
+## Followups (not now)
+
+Manual / operational tasks to revisit later:
+
+- [ ] **Test OG previews** — paste a project URL (e.g. `https://ldwgamedev.github.io/projects/fake-knight/`) into <https://opengraph.xyz/>. Should show the project hero image + description card. If it looks off, design a dedicated 1200×630 OG card and reference it from [layouts/partials/head.html](../layouts/partials/head.html).
+- [ ] **Submit sitemap to Google** — go to <https://search.google.com/search-console>, add the property `ldwgamedev.github.io`, submit `https://ldwgamedev.github.io/sitemap.xml`. Speeds up indexing of the new per-project pages.
+
+## Adding new content (cheat-sheet)
+
+For a new project:
+1. Edit [data/projects.yaml](../data/projects.yaml) — add a new entry. `slug` must be URL-safe and unique.
+2. Create `content/projects/<slug>/index.md` with frontmatter `title: "<Project Name>"`.
+3. Drop hero/body images into `static/images/projects/<slug>/`.
+4. `.\tools\deploy.ps1` to publish.
+
 ## Suggested order
 
 Highest leverage / quickest wins first:
