@@ -34,11 +34,11 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 ## Code quality / maintainability
 
 - [ ] **19. Restructure project data** — [hugo.toml](../hugo.toml) has projects as one giant inline array with `"0#..."`/`"1#..."`/`"2#..."`/`"3#..."` magic-number prefixes. Move each project to its own content file or a `data/projects.yaml`, and use a `type:` field.
-- [ ] **20. Extract inline `<script>` to static files** — large JS block in [project_detail.html:39-271](../layouts/page/project_detail.html#L39-L271). Easier to lint and cache.
-- [ ] **21. Extract shared CSS** — ~50 lines duplicated between [homepage.css](../static/css/homepage.css) and [project_detail.css](../static/css/project_detail.css) (`title-social-container`, `clickable-title`, `#scroll-to-top`). Make `_common.css`.
-- [ ] **22. Drop unused font imports** — both CSS files `@import` Montserrat + Poppins; Montserrat is never used. Share Poppins.
-- [ ] **23. Replace inline `onclick` handlers** with `addEventListener`. Enables CSP later.
-- [ ] **24. Improve `alt` text** on profile/project images.
+- [x] **20. Extract inline `<script>` to static files** — moved to `static/js/homepage.js` and `static/js/project_detail.js`. Project data is embedded as a `<script type="application/json">` block and parsed by the JS file.
+- [x] **21. Extract shared CSS** — `static/css/_common.css` now holds shared rules (Poppins import, body, title row, clickable-title, scroll-to-top). Both layouts link it.
+- [x] **22. Drop unused font imports** — Montserrat removed from both pages.
+- [x] **23. Replace inline `onclick` handlers** — replaced with `data-action` attributes + `addEventListener` in the JS files.
+- [x] **24. Improve `alt` text** — profile pic now `alt="LDW logo"`; decorative scroll-to-top icon now `alt=""` with `aria-label` on the button.
 - [x] **25. Make homepage title click consistent** — `reloadPage()` reloads instead of routing to `/`. Detail page does it correctly.
 - [ ] **26. Harden text-list parser** — [project_detail.html](../layouts/page/project_detail.html) `displayTextContent` uses `\n-` as a list marker. Items without `- ` prefix silently disappear.
 - [x] **27. Fix misleading IntersectionObserver comment** — [project_detail.html:76](../layouts/page/project_detail.html#L76) says "Pause when 90% out of view" but `threshold: 0.1` means it pauses when more than 90% is out. Behavior likely fine; comment is wrong.
