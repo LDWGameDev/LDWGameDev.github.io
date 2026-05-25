@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<title> Ldwork Game Dev</title>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }}</title>
-    <link rel="stylesheet" href="/css/homepage.css"> <!-- Load only for the homepage -->
+    <link rel="stylesheet" href="/css/homepage.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
 </head>
 <body>
@@ -84,8 +83,8 @@
     <div class="bottom-section">
         <div class="contact-section">
             <h3>Contact Information</h3>
-            <p>Email: <a href="Email: {{ .Params.email }}">{{ .Params.email }}</a></p>
-            <p>Phone: <a href="Phone: {{ .Params.phone }}">{{ .Params.phone }}</a></p>
+            <p>Email: <a href="mailto:{{ .Params.email }}">{{ .Params.email }}</a></p>
+            <p>Phone: <a href="tel:{{ .Params.phone }}">{{ .Params.phone }}</a></p>
         </div>
 
         <button id="scroll-to-top" onclick="scrollToTop()">
@@ -140,7 +139,7 @@
         }
 
         function reloadPage() {
-            window.location.reload();  // Reloads the current page
+            window.location.href = "/";
         }
 
     </script>

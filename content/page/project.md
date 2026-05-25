@@ -1,6 +1,6 @@
 ---
-Title: "LDWORK"
+title: "LDWORK"
 layout: "project_detail"
 url: "/project/"
-Subtitle: "Unreal Engine Gameplay Developer"
+subtitle: "Unreal Engine Gameplay Developer"
 ---

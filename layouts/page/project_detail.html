@@ -1,15 +1,20 @@
-<title> Ldwork Game Dev</title>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Params.title }}</title>
     <link rel="stylesheet" href="/css/project_detail.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
 </head>
+<body>
 
  <!-- Title + Social Icons Container -->
  <div class="title-social-container">
     <!-- Title + Subtitle -->
     <div class="title-container">
         <!-- Title as a button -->
-        <h1 onclick="backToHomepage()" class="clickable-title">{{ .Params.Title }}</h1>
+        <h1 onclick="backToHomepage()" class="clickable-title">{{ .Params.title }}</h1>
         <p>{{ .Params.subtitle }}</p>
     </div>
 </div>
@@ -19,7 +24,7 @@
     <div class="project-image-container">
       <img id="project-image" src="" alt="Project Image" class="project-image">
     </div>
-  
+
     <!-- Info Section (2/5 width) -->
     <div class="project-info-container">
       <h2 id="project-name" class="project-name"></h2>
@@ -28,7 +33,7 @@
       <div id="project-tags" class="project-tags"></div>
     </div>
   </div>
-  
+
 
 <div class="bottom-section">
     <button id="scroll-to-top" onclick="scrollToTop()">
@@ -73,7 +78,7 @@
                 }
             });
         }, {
-            threshold: 0.1  // Pause when 90% out of view
+            threshold: 0.1  // Pause once less than 10% of the player is visible
         });
 
         observer.observe(videoElement);
@@ -204,15 +209,17 @@
         contentContainer.appendChild(gif);
     }
 
-    src="https://www.youtube.com/iframe_api"
     const urlParams = new URLSearchParams(window.location.search);
-    const projectId = parseInt(urlParams.get('id'), 10);  // Ensure projectId is an integer
+    const projectId = parseInt(urlParams.get('id'), 10);
 
     local_projects = {{ .Site.Params.projects | jsonify }};
     local_projects = JSON.parse(local_projects);
 
-    const projectKey = projectId.toString();  
-    const selected_project = local_projects[projectKey];  
+    const selected_project = Number.isInteger(projectId) ? local_projects[projectId] : undefined;
+    if (!selected_project) {
+        window.location.href = "/";
+        throw new Error("Invalid project id: " + urlParams.get('id'));
+    }
 
     // Set Image
     document.getElementById('project-image').src = selected_project.image;
