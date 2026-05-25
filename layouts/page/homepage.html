@@ -46,18 +46,17 @@
 
         <div class="project-grid-container">
             <div class="project-grid">
-                {{ range $index, $project := site.Data.projects }}
-                <div class="project-card"
-                     data-action="navigate-project"
-                     data-project-index="{{ $index }}"
-                     data-tags="{{ delimit $project.tags ", " }}">
-                    <img src="{{ $project.image }}" alt="{{ $project.name }}" class="project-image">
+                {{ range site.Data.projects }}
+                <a class="project-card"
+                   href="/projects/{{ .slug }}/"
+                   data-tags="{{ delimit .tags ", " }}">
+                    <img src="{{ .image }}" alt="{{ .name }}" class="project-image">
                     <div class="project-info">
-                        <h3 class="project-name">{{ $project.name }}</h3>
-                        <p class="project-time">{{ $project.time }}</p>
-                        <p class="project-tags">{{ delimit $project.tags ", " }}</p>
+                        <h3 class="project-name">{{ .name }}</h3>
+                        <p class="project-time">{{ .time }}</p>
+                        <p class="project-tags">{{ delimit .tags ", " }}</p>
                     </div>
-                </div>
+                </a>
                 {{ end }}
             </div>
         </div>

@@ -28,12 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => filterProjects(btn.dataset.tag, btn));
     });
 
-    document.querySelectorAll('[data-action="navigate-project"]').forEach((card) => {
-        card.addEventListener('click', () => {
-            window.location.href = '/project/?id=' + card.dataset.projectIndex;
-        });
-    });
-
     document.querySelectorAll('[data-action="scroll-top"]').forEach((btn) => {
         btn.addEventListener('click', scrollToTop);
     });

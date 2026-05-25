@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} — {{ site.Title }}</title>
+    <link rel="stylesheet" href="/css/_common.css">
+    <link rel="stylesheet" href="/css/project_detail.css">
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+</head>
+<body>
+
+{{- /* Find the matching project entry in data/projects.yaml by slug (= directory name). */ -}}
+{{- $slug := .File.ContentBaseName -}}
+{{- $project := false -}}
+{{- range site.Data.projects -}}
+    {{- if eq .slug $slug -}}{{- $project = . -}}{{- end -}}
+{{- end -}}
+
+<div class="title-social-container">
+    <div class="title-container">
+        <h1 data-action="home" class="clickable-title">{{ site.Title | upper }}</h1>
+        <p>{{ site.Params.subtitle | default "" }}</p>
+    </div>
+</div>
+
+{{ with $project }}
+<div class="project-title-section">
+    <div class="project-image-container">
+        <img src="{{ .image }}" alt="{{ .name }}" class="project-image">
+    </div>
+
+    <div class="project-info-container">
+        <h2 class="project-name">{{ .name }}</h2>
+        <div class="project-time">{{ .time }}</div>
+        <p class="project-description">{{ .description }}</p>
+        <div class="project-tags">
+            {{ range .tags }}
+            <span class="tag">{{ . }}</span>
+            {{ end }}
+        </div>
+    </div>
+</div>
+
+<div class="project-detailed-content">
+    {{ range .content }}
+        {{ if eq .type "text" }}
+            <p>{{ .value }}</p>
+        {{ else if eq .type "list" }}
+            {{ with .intro }}<p>{{ . }}</p>{{ end }}
+            <ul>
+                {{ range .items }}<li>{{ . }}</li>{{ end }}
+            </ul>
+        {{ else if eq .type "image" }}
+            <img src="{{ .value }}" alt="" class="project-content-image">
+        {{ else if eq .type "gif" }}
+            <img src="{{ .value }}" alt="" class="project-content-gif">
+        {{ else if eq .type "video" }}
+            <div class="project-content-video" data-youtube-url="{{ .value }}"></div>
+        {{ end }}
+    {{ end }}
+</div>
+{{ else }}
+<p>Project not found.</p>
+{{ end }}
+
+<div class="bottom-section">
+    <button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
+        <img src="/images/icons/up-arrow.png" alt="">
+    </button>
+</div>
+
+<script src="/js/project_page.js"></script>
+
+</body>
+</html>

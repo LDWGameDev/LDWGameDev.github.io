@@ -3,41 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Params.title }}</title>
-    <link rel="stylesheet" href="/css/_common.css">
-    <link rel="stylesheet" href="/css/project_detail.css">
+    <title>Redirecting…</title>
+    <meta name="robots" content="noindex">
     <link rel="icon" href="/images/favicon.png" type="image/png">
 </head>
 <body>
+    <p>Redirecting…</p>
 
-<div class="title-social-container">
-    <div class="title-container">
-        <h1 data-action="home" class="clickable-title">{{ .Params.title }}</h1>
-        <p>{{ .Params.subtitle }}</p>
-    </div>
-</div>
-
-<div class="project-title-section">
-    <div class="project-image-container">
-        <img id="project-image" src="" alt="" class="project-image">
-    </div>
-
-    <div class="project-info-container">
-        <h2 id="project-name" class="project-name"></h2>
-        <div id="project-time" class="project-time"></div>
-        <p id="project-description" class="project-description"></p>
-        <div id="project-tags" class="project-tags"></div>
-    </div>
-</div>
-
-<div class="bottom-section">
-    <button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
-        <img src="/images/icons/up-arrow.png" alt="">
-    </button>
-</div>
-
-<script type="application/json" id="projects-data">{{ .Site.Data.projects | jsonify | safeJS }}</script>
-<script src="/js/project_detail.js"></script>
-
+    {{- /* Old URL shape was /project/?id=N — map that integer to the
+           project's slug and bounce to the canonical /projects/<slug>/ page. */ -}}
+    <script type="application/json" id="projects-data">{{ .Site.Data.projects | jsonify | safeJS }}</script>
+    <script src="/js/project_redirect.js"></script>
 </body>
 </html>

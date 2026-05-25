@@ -1,6 +1,9 @@
 ---
-title: "LDWORK"
+title: "Redirecting"
 layout: "project_detail"
 url: "/project/"
-subtitle: "Unreal Engine Gameplay Developer"
+sitemap:
+  disable: true
+_build:
+  list: never
 ---
