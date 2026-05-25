@@ -36,7 +36,7 @@
     </button>
 </div>
 
-<script type="application/json" id="projects-data">{{ .Site.Params.projects | jsonify | safeJS }}</script>
+<script type="application/json" id="projects-data">{{ .Site.Data.projects | jsonify | safeJS }}</script>
 <script src="/js/project_detail.js"></script>
 
 </body>

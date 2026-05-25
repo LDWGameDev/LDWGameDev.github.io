@@ -1,12 +1,13 @@
 // Project detail page: reads project data from a JSON <script> block
 // embedded by the Hugo layout, renders the title + body content, and
 // lazy-loads the YouTube IFrame API for embedded videos.
-
-function convertToEmbedURL(url) {
-    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
-    const match = url.match(youtubeRegex);
-    return match && match[1] ? `https://www.youtube.com/embed/${match[1]}` : url;
-}
+//
+// Body content schema (each block has `type`):
+//   text  -> { type: text,  value: "..." }
+//   list  -> { type: list,  intro: "...", items: ["...", "..."] }
+//   image -> { type: image, value: "/path/img.png" }
+//   gif   -> { type: gif,   value: "/path/anim.gif" }
+//   video -> { type: video, value: "https://youtu.be/..." }
 
 function extractVideoID(url) {
     const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
@@ -29,7 +30,7 @@ function setupVisibilityObserver(player, videoId) {
 }
 
 function createYouTubePlayer(videoId) {
-    const player = new YT.Player(`youtube-player-${videoId}`, {
+    return new YT.Player(`youtube-player-${videoId}`, {
         videoId: videoId,
         events: {
             'onReady': (event) => {
@@ -46,7 +47,6 @@ function createYouTubePlayer(videoId) {
             autoplay: 0
         }
     });
-    return player;
 }
 
 const youtubeVideoQueue = [];
@@ -69,10 +69,10 @@ function loadYouTubeAPI(callback) {
     };
 }
 
-function displayYouTubeVideo(link, container) {
-    const videoId = extractVideoID(link);
+function renderVideo(item, container) {
+    const videoId = extractVideoID(item.value);
     if (!videoId) {
-        console.error('Invalid YouTube link:', link);
+        console.error('Invalid YouTube link:', item.value);
         return;
     }
     const videoContainer = document.createElement('div');
@@ -82,42 +82,41 @@ function displayYouTubeVideo(link, container) {
     loadYouTubeAPI(() => createYouTubePlayer(videoId));
 }
 
-function displayTextContent(content, container) {
-    const processed = content.replace(/\\n/g, '\n');
-    if (processed.includes('\n-')) {
-        const lines = processed.split('\n');
-        const p = document.createElement('p');
-        p.textContent = lines[0];
-        container.appendChild(p);
-        const ul = document.createElement('ul');
-        lines.slice(1).forEach((line) => {
-            if (line.startsWith('-')) {
-                const li = document.createElement('li');
-                li.textContent = line.substring(2);
-                ul.appendChild(li);
-            }
-        });
-        container.appendChild(ul);
-    } else {
-        const p = document.createElement('p');
-        p.textContent = processed;
-        container.appendChild(p);
-    }
+function renderText(item, container) {
+    const p = document.createElement('p');
+    p.textContent = item.value;
+    container.appendChild(p);
 }
 
-function displayImageContent(src, container) {
+function renderList(item, container) {
+    if (item.intro) {
+        const p = document.createElement('p');
+        p.textContent = item.intro;
+        container.appendChild(p);
+    }
+    const ul = document.createElement('ul');
+    (item.items || []).forEach((line) => {
+        const li = document.createElement('li');
+        li.textContent = line;
+        ul.appendChild(li);
+    });
+    container.appendChild(ul);
+}
+
+function renderImageLike(item, container, className) {
     const img = document.createElement('img');
-    img.src = src;
-    img.className = 'project-content-image';
+    img.src = item.value;
+    img.className = className;
     container.appendChild(img);
 }
 
-function displayGifContent(src, container) {
-    const gif = document.createElement('img');
-    gif.src = src;
-    gif.className = 'project-content-gif';
-    container.appendChild(gif);
-}
+const renderers = {
+    text:  renderText,
+    list:  renderList,
+    image: (item, c) => renderImageLike(item, c, 'project-content-image'),
+    gif:   (item, c) => renderImageLike(item, c, 'project-content-gif'),
+    video: renderVideo,
+};
 
 function renderProject(project) {
     document.getElementById('project-image').src = project.image;
@@ -137,19 +136,13 @@ function renderProject(project) {
 
     const contentContainer = document.createElement('div');
     contentContainer.className = 'project-detailed-content';
-    project.content.forEach((item) => {
-        Object.values(item).forEach((value) => {
-            const [type, content] = value.split(/#(.+)/);
-            if (type === '0') {
-                displayTextContent(content, contentContainer);
-            } else if (type === '1') {
-                displayImageContent(content, contentContainer);
-            } else if (type === '2') {
-                displayGifContent(content, contentContainer);
-            } else if (type === '3') {
-                displayYouTubeVideo(content, contentContainer);
-            }
-        });
+    (project.content || []).forEach((item) => {
+        const render = renderers[item.type];
+        if (render) {
+            render(item, contentContainer);
+        } else {
+            console.warn('Unknown content type:', item.type, item);
+        }
     });
     document.querySelector('.project-title-section').after(contentContainer);
 }

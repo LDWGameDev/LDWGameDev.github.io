@@ -11,7 +11,7 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 - [x] **3. Remove duplicate `<title>` tags** — both [homepage.html:3](../layouts/page/homepage.html#L3) and [project_detail.html:1](../layouts/page/project_detail.html#L1) have a `<title>` outside `<head>` plus another inside. One is hardcoded `"Ldwork Game Dev"`, the other uses `{{ .Title }}`. Keep one, inside `<head>`.
 - [x] **4. Move `<title>` inside `<head>`** — same files: `<title>` appears before `<head>`. Invalid HTML.
 - [x] **5. Add proper HTML skeleton to `project_detail.html`** — no `<!DOCTYPE html>`, `<html>`, or `<body>`. Renders in quirks mode.
-- [ ] **6. Normalize tag casing** — [homepage.html:111-112](../layouts/page/homepage.html#L111-L112) lowercases for matching, but `hugo.toml` has inconsistent casing across projects (`Unreal Engine` vs `UnrealEngine` shows up in `public/tags/`). Pick one canonical form.
+- [x] **6. Normalize tag casing** — All current project tags in `data/projects.yaml` use canonical forms: Unity, Unreal Engine, Personal, Work, Prototype. The old `public/tags/unrealengine/` directory was a stale build artifact from before; the current build only generates the canonical slugs.
 - [x] **7. Validate `?id=N` on detail page** — [project_detail.html:214-215](../layouts/page/project_detail.html#L214-L215): bad/missing `?id=` throws `Cannot read properties of undefined`. Add fallback or redirect to `/`.
 
 ## Wasted/dead files
@@ -33,14 +33,14 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 
 ## Code quality / maintainability
 
-- [ ] **19. Restructure project data** — [hugo.toml](../hugo.toml) has projects as one giant inline array with `"0#..."`/`"1#..."`/`"2#..."`/`"3#..."` magic-number prefixes. Move each project to its own content file or a `data/projects.yaml`, and use a `type:` field.
+- [x] **19. Restructure project data** — Moved to [data/projects.yaml](../data/projects.yaml) with structured schema: each content block has `type:` (text/list/image/gif/video) instead of `"<type>#<value>"` magic prefixes. Removed inline `projects = [...]` from `hugo.toml`. Templates now read from `site.Data.projects`. Marked the xlsx converter script as deprecated.
 - [x] **20. Extract inline `<script>` to static files** — moved to `static/js/homepage.js` and `static/js/project_detail.js`. Project data is embedded as a `<script type="application/json">` block and parsed by the JS file.
 - [x] **21. Extract shared CSS** — `static/css/_common.css` now holds shared rules (Poppins import, body, title row, clickable-title, scroll-to-top). Both layouts link it.
 - [x] **22. Drop unused font imports** — Montserrat removed from both pages.
 - [x] **23. Replace inline `onclick` handlers** — replaced with `data-action` attributes + `addEventListener` in the JS files.
 - [x] **24. Improve `alt` text** — profile pic now `alt="LDW logo"`; decorative scroll-to-top icon now `alt=""` with `aria-label` on the button.
 - [x] **25. Make homepage title click consistent** — `reloadPage()` reloads instead of routing to `/`. Detail page does it correctly.
-- [ ] **26. Harden text-list parser** — [project_detail.html](../layouts/page/project_detail.html) `displayTextContent` uses `\n-` as a list marker. Items without `- ` prefix silently disappear.
+- [x] **26. Harden text-list parser** — No more parsing. Lists are now first-class structured items in the YAML schema (`type: list` with `intro` and `items: [...]`). The fragile `\n-` magic split is gone.
 - [x] **27. Fix misleading IntersectionObserver comment** — [project_detail.html:76](../layouts/page/project_detail.html#L76) says "Pause when 90% out of view" but `threshold: 0.1` means it pauses when more than 90% is out. Behavior likely fine; comment is wrong.
 - [x] **28. Lowercase frontmatter keys** — [content/page/project.md](../content/page/project.md) uses `Title`/`Subtitle`. Non-idiomatic for Hugo.
 

@@ -1,3 +1,9 @@
+# DEPRECATED — project data is now hand-edited in data/projects.yaml
+# (structured schema with `type:` per content block, no more "<type>#<value>"
+# magic prefixes). This script targeted the old hugo.toml inline-TOML format
+# and will not produce data the current templates can read. Kept for
+# reference only; delete once a YAML emitter replacement is written.
+
 import openpyxl
 
 def xlsx_to_text(xlsx_file, output_file):

@@ -46,7 +46,7 @@
 
         <div class="project-grid-container">
             <div class="project-grid">
-                {{ range $index, $project := site.Params.projects }}
+                {{ range $index, $project := site.Data.projects }}
                 <div class="project-card"
                      data-action="navigate-project"
                      data-project-index="{{ $index }}"
