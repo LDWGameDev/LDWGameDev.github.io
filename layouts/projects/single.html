@@ -1,25 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Title }} — {{ site.Title }}</title>
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/project_detail.css">
-    <link rel="icon" href="/images/favicon.png" type="image/png">
-</head>
-<body>
-
 {{- /* Find the matching project entry in data/projects.yaml by slug (= directory name). */ -}}
 {{- $slug := .File.ContentBaseName -}}
 {{- $project := false -}}
 {{- range site.Data.projects -}}
     {{- if eq .slug $slug -}}{{- $project = . -}}{{- end -}}
 {{- end -}}
+{{- $desc := "" -}}
+{{- $ogImg := "" -}}
+{{- if $project -}}
+    {{- $desc = $project.description -}}
+    {{- $ogImg = $project.image -}}
+{{- end -}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ partial "head.html" (dict
+        "pageTitle"    (printf "%s — %s" .Title site.Title)
+        "description"  $desc
+        "ogImage"      $ogImg
+        "ogType"       "article"
+        "canonicalURL" .Permalink
+    ) }}
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_detail.css">
+</head>
+<body>
 
 <div class="title-social-container">
     <div class="title-container">
-        <h1 data-action="home" class="clickable-title">{{ site.Title | upper }}</h1>
+        <h1 data-action="home" class="clickable-title">{{ site.Title }}</h1>
         <p>{{ site.Params.subtitle | default "" }}</p>
     </div>
 </div>

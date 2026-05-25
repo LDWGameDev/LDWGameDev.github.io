@@ -1,5 +1,5 @@
 ---
-title: "LDWORK"
+title: "Ldwork"
 subtitle: "Unreal Engine Gameplay Developer"
 layout: "homepage"
 profile_image: "/images/LDW-logo-blackbg.png"

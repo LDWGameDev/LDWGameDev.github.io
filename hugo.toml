@@ -1,6 +1,7 @@
 baseURL = 'https://LDWGameDev.github.io/'
 languageCode = 'en-us'
 title = 'Ldwork'
+enableRobotsTXT = true
 
 # Project list lives in data/projects.yaml — accessed via site.Data.projects.
 

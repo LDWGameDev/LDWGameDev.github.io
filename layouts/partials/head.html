@@ -1,0 +1,38 @@
+{{- /*
+  Shared <head> contents — meta tags, Open Graph, Twitter card, favicon.
+
+  Parameters (pass via dict from the calling layout):
+    pageTitle    — string shown in <title> and og:title (required)
+    description  — string for meta description, og/twitter description
+    ogImage      — absolute or relative URL of the social card image
+    ogType       — "website" or "article" (default: "website")
+    canonicalURL — canonical absolute URL for og:url and <link rel=canonical>
+*/ -}}
+{{- $title := .pageTitle | default site.Title -}}
+{{- $desc := .description | default "" -}}
+{{- $ogImg := .ogImage -}}
+{{- $ogType := .ogType | default "website" -}}
+{{- $url := .canonicalURL | default site.BaseURL -}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ $title }}</title>
+{{ with $desc }}<meta name="description" content="{{ . }}">{{ end }}
+<link rel="canonical" href="{{ $url }}">
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+{{ with $desc }}<meta property="og:description" content="{{ . }}">{{ end }}
+<meta property="og:type" content="{{ $ogType }}">
+<meta property="og:url" content="{{ $url }}">
+{{ with $ogImg }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="{{ if $ogImg }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:title" content="{{ $title }}">
+{{ with $desc }}<meta name="twitter:description" content="{{ . }}">{{ end }}
+{{ with $ogImg }}<meta name="twitter:image" content="{{ . | absURL }}">{{ end }}
+
+<!-- Favicon (apple-touch-icon falls back to favicon.png if no larger variant) -->
+<link rel="icon" href="/images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/images/favicon.png">

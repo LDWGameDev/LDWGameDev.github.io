@@ -46,8 +46,8 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 
 ## SEO / polish
 
-- [ ] **29. Add meta tags** — `<meta name="description">`, Open Graph tags, favicon size variants. Important for portfolio links shared with recruiters.
-- [ ] **30. Configure sitemap / robots.txt** — verify Hugo's default sitemap covers everything that should be indexed.
+- [x] **29. Add meta tags** — New `layouts/partials/head.html` partial emits per-page meta description, full Open Graph tags (site_name/title/description/type/url/image), Twitter card tags (summary_large_image), canonical link, and apple-touch-icon. Homepage uses `intro_text` and the LDW logo; per-project pages use the project's `description` and hero `image`. *Caveat:* no purpose-built 1200×630 social card yet; we reuse existing project hero images and the logo. Worth designing a dedicated OG card later.
+- [x] **30. Configure sitemap / robots.txt** — Enabled `enableRobotsTXT = true` in `hugo.toml` so Hugo emits a permissive `/robots.txt`. Sitemap already covers all 5 per-project pages (verified in Phase 7); legacy `/project/` is excluded via `sitemap.disable`.
 - [x] **31. Make project pages crawlable** — Each project now has a real Hugo page at `/projects/<slug>/`, rendered server-side from `data/projects.yaml`. Full content is in the HTML (videos render as placeholder divs that the small `project_page.js` upgrades into YouTube IFrame players). Homepage cards are now real `<a href>` links. The old `/project/?id=N` URL now redirects to the canonical slug URL (preserves old inbound links) and is excluded from the sitemap.
 
 ---
