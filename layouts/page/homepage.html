@@ -49,20 +49,6 @@
     
         <!-- Project Grid Container -->
         <div class="project-grid-container">
-            <!-- <div id="no-projects-message">No projects found.</div>
-
-            <div class="project-grid">
-                {{ range .Params.projects }}
-                <div class="project-card" data-tags="{{ delimit .tags ", " }}">
-                    <img src="{{ .image }}" alt="{{ .name }}" class="project-image">
-                    <div class="project-info">
-                        <h3 class="project-name">{{ .name }}</h3>
-                        <p class="project-tags">{{ delimit .tags ", " }}</p>
-                    </div>
-                </div>
-                {{ end }}
-            </div> -->
-
             <div class="project-grid">
                 {{ range $index, $project := site.Params.projects }}
                 <div class="project-card" data-tags="{{ delimit $project.tags ", " }}" onclick="navigateToProject({{ $index }})">

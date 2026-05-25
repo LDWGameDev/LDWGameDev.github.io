@@ -16,12 +16,12 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 
 ## Wasted/dead files
 
-- [ ] **8. Delete empty stub** [layouts/index.html](../layouts/index.html) — never used (homepage uses `layout: "homepage"`).
-- [ ] **9. Audit default layouts** — check whether [layouts/_default/single.html](../layouts/_default/single.html), [layouts/_default/terms.html](../layouts/_default/terms.html), [layouts/taxonomy/list.html](../layouts/taxonomy/list.html) are actually rendered. Prune what's unused.
-- [ ] **10. Delete commented-out dead grid markup** in [homepage.html:53-65](../layouts/page/homepage.html#L53-L65).
-- [ ] **11. Delete commented-out projects data** in [content/_index.md:12-43](../content/_index.md#L12-L43) — superseded by `hugo.toml`.
-- [ ] **12. Replace placeholder text files** — [assets/temp-assets.txt](../assets/temp-assets.txt), [data/temp-data.txt](../data/temp-data.txt), [i18n/temp-i8n.txt](../i18n/temp-i8n.txt) (also typo: "i8n" → "i18n"). Use `.gitkeep`.
-- [ ] **13. Remove `[outputs] section = []`** in [hugo.toml:14-15](../hugo.toml#L14-L15) — likely no-op leftover.
+- [x] **8. Delete empty stub** [layouts/index.html](../layouts/index.html) — never used (homepage uses `layout: "homepage"`).
+- [x] **9. Audit default layouts** — Deleted `_default/single.html` (unused). Kept `_default/terms.html` (renders `/tags/`, `/categories/`) and `taxonomy/list.html` (renders individual term pages like `/tags/unity/`).
+- [x] **10. Delete commented-out dead grid markup** in [homepage.html:53-65](../layouts/page/homepage.html#L53-L65).
+- [x] **11. Delete commented-out projects data** in [content/_index.md:12-43](../content/_index.md#L12-L43) — superseded by `hugo.toml`.
+- [x] **12. Replace placeholder text files** — [assets/temp-assets.txt](../assets/temp-assets.txt), [data/temp-data.txt](../data/temp-data.txt), [i18n/temp-i8n.txt](../i18n/temp-i8n.txt). Replaced with `.gitkeep`.
+- [x] **13. ~~Remove `[outputs] section = []`~~** — Kept. Turns out it's load-bearing: it suppresses the unwanted `content/page/` section list page (which has no template by design). Added a comment in `hugo.toml` explaining why.
 - [x] **14. Gitignore `tools/output.txt`** — one-off generated artifact from the xlsx converter.
 
 ## Deploy / repo hygiene
