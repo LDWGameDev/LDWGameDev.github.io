@@ -1,0 +1,13 @@
+# Hugo build output (deployed by GitHub Actions, not committed)
+public/
+
+# Hugo build artifacts
+.hugo_build.lock
+resources/
+
+# Tooling output
+tools/output.txt
+
+# OS junk
+.DS_Store
+Thumbs.db
