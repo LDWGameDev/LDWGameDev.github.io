@@ -1,9 +1,12 @@
-# Hugo build output (deployed by GitHub Actions, not committed)
-public/
-
 # Hugo build artifacts
 .hugo_build.lock
 resources/
+
+# Deploy worktree (created by tools/deploy.ps1)
+.deploy-worktree/
+
+# Editor / tooling
+.claude/
 
 # Tooling output
 tools/output.txt

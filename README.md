@@ -14,9 +14,17 @@ Then open <http://localhost:1313/>.
 
 ## Deployment
 
-Pushes to `main` trigger [.github/workflows/hugo.yml](.github/workflows/hugo.yml), which builds with Hugo extended `0.143.0` and publishes to GitHub Pages.
+GitHub Pages serves from the `deploy` branch (Settings → Pages → Source = "Deploy from a branch", branch = `deploy`, path = `/`).
 
-**One-time setup** (already done on this repo): in **Settings → Pages → Source**, select **GitHub Actions**.
+To publish changes:
+
+```powershell
+.\tools\deploy.ps1
+```
+
+The script builds the site with Hugo, then pushes the contents of `public/` to the `deploy` branch. Pages picks up the update within ~1 minute.
+
+The `public/` folder is also tracked on `main` for historical reasons; it's regenerated on every deploy so its contents on `main` may lag behind production until you commit a fresh build.
 
 ## Repo layout
 

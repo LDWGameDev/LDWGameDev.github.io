@@ -26,8 +26,8 @@ Track issues found during the codebase audit. Tackle one at a time, check off as
 
 ## Deploy / repo hygiene
 
-- [x] **15. Add GitHub Actions workflow** — no `.github/workflows/` exists. Site is currently deployed by checking in `public/`. Switch to Actions + Pages.
-- [ ] **16. Stop committing `public/`** — bloats repo, creates merge churn. Add to `.gitignore` after the workflow lands. (Phase 3)
+- [x] **15. ~~Add GitHub Actions workflow~~** — Abandoned. Account billing is locked, so Actions can't run. Replaced with `tools/deploy.ps1` that builds locally and pushes to the `deploy` branch (the pre-existing deploy model). Revisit if/when billing is unlocked.
+- [x] **16. ~~Stop committing `public/`~~** — Skipped. Keeping `public/` tracked since we're back on the manual deploy-branch model.
 - [x] **17. Gitignore `.hugo_build.lock`** — Hugo build lockfile shouldn't be tracked.
 - [x] **18. Add `README.md`** — one-liner with the local dev command (`hugo server`).
 
