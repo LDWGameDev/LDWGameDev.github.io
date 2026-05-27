@@ -65,7 +65,99 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function initPrevNextCarousel() {
+    const nav = document.querySelector('.project-prev-next');
+    const dataEl = document.getElementById('all-projects-data');
+    if (!nav || !dataEl) return;
+
+    const all = JSON.parse(dataEl.textContent);
+    const currentSlug = nav.dataset.currentSlug;
+    const others = all.filter((p) => p.slug !== currentSlug);
+    if (others.length < 2) return;
+
+    const currentIndex = all.findIndex((p) => p.slug === currentSlug);
+    const prevOriginal = all[(currentIndex - 1 + all.length) % all.length];
+    let leftIdx = others.findIndex((p) => p.slug === prevOriginal.slug);
+
+    const prevCard = nav.querySelector('.project-card-link.prev');
+    const nextCard = nav.querySelector('.project-card-link.next');
+    const segs = Array.from(document.querySelectorAll('.project-pagination .seg'));
+
+    function updateCard(cardEl, project) {
+        cardEl.href = `/projects/${project.slug}/`;
+        const img = cardEl.querySelector('img');
+        img.src = project.image;
+        img.alt = project.name;
+        cardEl.querySelector('.more-name').textContent = project.name;
+    }
+
+    function updateActiveSegs() {
+        if (!segs.length) return;
+        const activeA = leftIdx;
+        const activeB = (leftIdx + 1) % others.length;
+        segs.forEach((seg, i) => {
+            seg.classList.toggle('active', i === activeA || i === activeB);
+        });
+    }
+
+    const SLIDE_PX = 32;
+    const HALF_MS = 140;
+
+    function setTransition(on) {
+        const v = on ? `transform ${HALF_MS}ms ease, opacity ${HALF_MS}ms ease` : 'none';
+        prevCard.style.transition = v;
+        nextCard.style.transition = v;
+    }
+
+    function render(direction) {
+        const out = direction === 'next' ? -SLIDE_PX : SLIDE_PX;
+        // Slide out in the direction of motion
+        setTransition(true);
+        prevCard.style.transform = `translateX(${out}px)`;
+        nextCard.style.transform = `translateX(${out}px)`;
+        prevCard.style.opacity = '0';
+        nextCard.style.opacity = '0';
+
+        setTimeout(() => {
+            updateCard(prevCard, others[leftIdx]);
+            updateCard(nextCard, others[(leftIdx + 1) % others.length]);
+            updateActiveSegs();
+
+            // Jump to opposite side instantly
+            setTransition(false);
+            prevCard.style.transform = `translateX(${-out}px)`;
+            nextCard.style.transform = `translateX(${-out}px)`;
+            // Force reflow so the next style change animates
+            void prevCard.offsetWidth;
+
+            // Slide back to center
+            setTransition(true);
+            prevCard.style.transform = 'translateX(0)';
+            nextCard.style.transform = 'translateX(0)';
+            prevCard.style.opacity = '1';
+            nextCard.style.opacity = '1';
+        }, HALF_MS);
+    }
+
+    updateActiveSegs();
+
+    nav.querySelectorAll('[data-direction]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dir = btn.dataset.direction;
+            if (dir === 'prev') {
+                leftIdx = (leftIdx - 1 + others.length) % others.length;
+            } else {
+                leftIdx = (leftIdx + 1) % others.length;
+            }
+            render(dir);
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initPrevNextCarousel();
+
     document.querySelectorAll('.project-content-video[data-youtube-url]').forEach((el) => {
         const videoId = extractVideoID(el.dataset.youtubeUrl);
         if (!videoId) {

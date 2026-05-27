@@ -1,9 +1,19 @@
 {{- /* Find the matching project entry in data/projects.yaml by slug (= directory name). */ -}}
 {{- $slug := .File.ContentBaseName -}}
+{{- $projects := site.Data.projects -}}
 {{- $project := false -}}
-{{- range site.Data.projects -}}
-    {{- if eq .slug $slug -}}{{- $project = . -}}{{- end -}}
+{{- $currentIndex := -1 -}}
+{{- range $i, $p := $projects -}}
+    {{- if eq $p.slug $slug -}}{{- $project = $p -}}{{- $currentIndex = $i -}}{{- end -}}
 {{- end -}}
+{{- $prev := false -}}
+{{- $next := false -}}
+{{- $count := len $projects -}}
+{{- if ge $currentIndex 0 -}}
+    {{- $prev = index $projects (mod (add (sub $currentIndex 1) $count) $count) -}}
+    {{- $next = index $projects (mod (add $currentIndex 1) $count) -}}
+{{- end -}}
+{{- $home := site.GetPage "/" -}}
 {{- $desc := "" -}}
 {{- $ogImg := "" -}}
 {{- if $project -}}
@@ -25,32 +35,36 @@
 </head>
 <body>
 
-<div class="title-social-container">
-    <div class="title-container">
-        <h1 data-action="home" class="clickable-title">{{ site.Title }}</h1>
-        <p>{{ site.Params.subtitle | default "" }}</p>
-    </div>
-</div>
+<nav class="project-topnav">
+    <a href="/" class="back-link">← Back to projects</a>
+    <a href="/" class="site-title" data-action="home">{{ site.Title }}</a>
+</nav>
 
 {{ with $project }}
-<div class="project-title-section">
-    <div class="project-image-container">
-        <img src="{{ .image }}" alt="{{ .name }}" class="project-image">
-    </div>
+<header class="project-hero">
+    <img class="project-hero-image" src="{{ .image }}" alt="{{ .name }}">
 
-    <div class="project-info-container">
-        <h2 class="project-name">{{ .name }}</h2>
-        <div class="project-time">{{ .time }}</div>
-        <p class="project-description">{{ .description }}</p>
+    <div class="project-hero-info">
+        <div class="project-hero-text">
+            <h1 class="project-name">{{ .name }}</h1>
+            <div class="project-meta">
+                <span>{{ .time }}</span>
+                {{ range .tags }}<span class="meta-dot">·</span><span>{{ . }}</span>{{ end }}
+            </div>
+            <p class="project-description">{{ .description }}</p>
+        </div>
+
         <div class="project-tags">
             {{ range .tags }}
-            <span class="tag">{{ . }}</span>
+            <a class="tag-pill" href="/?tag={{ . | urlquery }}">{{ . }}</a>
             {{ end }}
         </div>
     </div>
-</div>
+</header>
 
-<div class="project-detailed-content">
+<hr class="hairline">
+
+<article class="project-body">
     {{ range .content }}
         {{ if eq .type "text" }}
             <p>{{ .value }}</p>
@@ -67,16 +81,65 @@
             <div class="project-content-video" data-youtube-url="{{ .value }}"></div>
         {{ end }}
     {{ end }}
+</article>
+
+{{ if and $prev $next }}
+{{- $slim := slice -}}
+{{- range $projects -}}
+    {{- $slim = $slim | append (dict "slug" .slug "name" .name "image" .image) -}}
+{{- end -}}
+<hr class="hairline">
+
+<nav class="project-prev-next" data-current-slug="{{ $slug }}">
+    <button type="button" class="project-nav-arrow" data-direction="prev" aria-label="Show previous projects">‹</button>
+    <a class="project-card-link prev" href="/projects/{{ $prev.slug }}/">
+        <img src="{{ $prev.image }}" alt="">
+        <span class="more-name">{{ $prev.name }}</span>
+    </a>
+    <a class="project-card-link next" href="/projects/{{ $next.slug }}/">
+        <img src="{{ $next.image }}" alt="">
+        <span class="more-name">{{ $next.name }}</span>
+    </a>
+    <button type="button" class="project-nav-arrow" data-direction="next" aria-label="Show next projects">›</button>
+</nav>
+
+<div class="project-pagination" aria-hidden="true">
+    {{ range seq (sub (len $projects) 1) }}
+    <span class="seg"></span>
+    {{ end }}
 </div>
-{{ else }}
-<p>Project not found.</p>
+
+<script type="application/json" id="all-projects-data">{{ $slim | jsonify | safeJS }}</script>
 {{ end }}
 
-<div class="bottom-section">
-    <button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
-        <img src="/images/icons/up-arrow.png" alt="">
-    </button>
-</div>
+{{ else }}
+<p style="text-align:center; padding:40px;">Project not found.</p>
+{{ end }}
+
+<footer class="project-footer">
+    <div class="project-footer-inner">
+        <div class="contact-block">
+            <h3>Get in touch</h3>
+            <p>Email: <a href="mailto:{{ $home.Params.email }}">{{ $home.Params.email }}</a></p>
+            <p>Phone: <a href="tel:{{ $home.Params.phone }}">{{ $home.Params.phone }}</a></p>
+        </div>
+        <div class="social-row">
+            <a href="https://www.linkedin.com/in/do-duy-long/" target="_blank" aria-label="LinkedIn">
+                <img src="/images/social/linkedin.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/LDWGameDev" target="_blank" aria-label="GitHub">
+                <img src="/images/social/github.png" alt="GitHub">
+            </a>
+            <a href="https://x.com/LDWGameDev" target="_blank" aria-label="Twitter / X">
+                <img src="/images/social/twitter.png" alt="Twitter / X">
+            </a>
+        </div>
+    </div>
+</footer>
+
+<button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
+    <img src="/images/icons/up-arrow.png" alt="">
+</button>
 
 <script src="/js/project_page.js"></script>
 
