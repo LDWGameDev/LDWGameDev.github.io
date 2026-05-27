@@ -42,8 +42,20 @@
         <h2 class="highlighted-text">Projects</h2>
 
         <div class="project-tags">
+            {{ $projects := site.Data.projects }}
             {{ range .Params.tags }}
-            <button class="tag-button" data-action="filter" data-tag="{{ . }}">{{ . }}</button>
+                {{ $tag := . }}
+                {{ $count := 0 }}
+                {{ if eq $tag "All" }}
+                    {{ $count = len $projects }}
+                {{ else }}
+                    {{ range $projects }}
+                        {{ if in .tags $tag }}{{ $count = add $count 1 }}{{ end }}
+                    {{ end }}
+                {{ end }}
+                {{ if or (eq $tag "All") (gt $count 0) }}
+            <button class="tag-button" data-action="filter" data-tag="{{ $tag }}">{{ $tag }} ({{ $count }})</button>
+                {{ end }}
             {{ end }}
         </div>
 

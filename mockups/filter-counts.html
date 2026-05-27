@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Filter button — count style mockups</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: white;
+        margin: 40px;
+        color: #111;
+    }
+    h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 32px 0 6px;
+        color: #222;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 14px;
+    }
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 16px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* Base pill — mirrors static/css/homepage.css .tag-button */
+    .tag-button {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f5f5;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: normal;
+        cursor: pointer;
+        min-width: 120px;
+        text-align: center;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .tag-button.active {
+        background-color: black;
+        color: white;
+    }
+
+    /* Option C: badge pill */
+    .badge {
+        background: rgba(0, 0, 0, 0.12);
+        color: #222;
+        border-radius: 999px;
+        padding: 1px 8px;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 12px;
+        line-height: 1.4;
+    }
+    .tag-button.active .badge {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+    }
+
+    /* Option D: stacked label/count */
+    .tag-button.stacked {
+        flex-direction: column;
+        gap: 0;
+        padding: 8px 20px;
+        line-height: 1.15;
+    }
+    .tag-button.stacked .count {
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0.65;
+    }
+
+    /* Option E: dim trailing count */
+    .tag-button .dim {
+        opacity: 0.5;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .tag-button.active .dim {
+        opacity: 0.7;
+    }
+</style>
+</head>
+<body>
+
+<h1 style="font-size:20px; margin-bottom:4px;">Filter button — count style mockups</h1>
+<p class="note">All four options drawn with the real <code>.tag-button</code> pill from the site. Active button = first (All). Counts for the current 5 projects: All&nbsp;5 · Unity&nbsp;1 · Unreal Engine&nbsp;4 · Personal&nbsp;4 · Work&nbsp;1 · Prototype&nbsp;0.</p>
+
+<h2>A — Inline parens</h2>
+<p class="note">Reads naturally, very common.</p>
+<div class="row">
+    <button class="tag-button active">All (5)</button>
+    <button class="tag-button">Unity (1)</button>
+    <button class="tag-button">Unreal Engine (4)</button>
+    <button class="tag-button">Personal (4)</button>
+    <button class="tag-button">Work (1)</button>
+    <button class="tag-button">Prototype (0)</button>
+</div>
+
+<h2>B — Middot separator</h2>
+<p class="note">Cleaner than parens, slightly more modern.</p>
+<div class="row">
+    <button class="tag-button active">All · 5</button>
+    <button class="tag-button">Unity · 1</button>
+    <button class="tag-button">Unreal Engine · 4</button>
+    <button class="tag-button">Personal · 4</button>
+    <button class="tag-button">Work · 1</button>
+    <button class="tag-button">Prototype · 0</button>
+</div>
+
+<h2>C — Badge pill (count chip)</h2>
+<p class="note">Count is a small rounded chip after the label. Clearest visual separation; preserves pill silhouette.</p>
+<div class="row">
+    <button class="tag-button active">All <span class="badge">5</span></button>
+    <button class="tag-button">Unity <span class="badge">1</span></button>
+    <button class="tag-button">Unreal Engine <span class="badge">4</span></button>
+    <button class="tag-button">Personal <span class="badge">4</span></button>
+    <button class="tag-button">Work <span class="badge">1</span></button>
+    <button class="tag-button">Prototype <span class="badge">0</span></button>
+</div>
+
+<h2>D — Stacked (count below)</h2>
+<p class="note">Taller buttons; breaks the current pill silhouette but very clear.</p>
+<div class="row">
+    <button class="tag-button stacked active"><span>All</span><span class="count">5</span></button>
+    <button class="tag-button stacked"><span>Unity</span><span class="count">1</span></button>
+    <button class="tag-button stacked"><span>Unreal Engine</span><span class="count">4</span></button>
+    <button class="tag-button stacked"><span>Personal</span><span class="count">4</span></button>
+    <button class="tag-button stacked"><span>Work</span><span class="count">1</span></button>
+    <button class="tag-button stacked"><span>Prototype</span><span class="count">0</span></button>
+</div>
+
+<h2>E — Dim trailing number (bonus)</h2>
+<p class="note">Number is the same pill, just visually de-emphasized. Lightest touch.</p>
+<div class="row">
+    <button class="tag-button active">All <span class="dim">5</span></button>
+    <button class="tag-button">Unity <span class="dim">1</span></button>
+    <button class="tag-button">Unreal Engine <span class="dim">4</span></button>
+    <button class="tag-button">Personal <span class="dim">4</span></button>
+    <button class="tag-button">Work <span class="dim">1</span></button>
+    <button class="tag-button">Prototype <span class="dim">0</span></button>
+</div>
+
+<h2 style="margin-top:32px">Also decide</h2>
+<p class="note">Should we keep the <strong>Prototype (0)</strong> button when there are no matching projects? Options: keep it greyed-out, hide it entirely, or always show.</p>
+
+</body>
+</html>
