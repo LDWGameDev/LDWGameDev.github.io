@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Career timeline variations</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 120px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 56px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 22px;
+        max-width: 760px;
+        line-height: 1.5;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+    .stage {
+        background: #fafafa;
+        padding: 40px 32px 56px;
+        border-radius: 12px;
+    }
+
+    /* ============================================================
+       Timeline axis — shared by all variants
+       ============================================================ */
+    .tl {
+        position: relative;
+        margin: 0 32px;
+    }
+    .tl-axis {
+        position: relative;
+        height: 1px;
+        background: #d6d6d6;
+        margin-top: 14px;
+    }
+    .tl-tick {
+        position: absolute;
+        top: -5px;
+        width: 1px;
+        height: 11px;
+        background: #c2c2c2;
+    }
+    .tl-tick.is-quarter { height: 6px; opacity: 0.55; }
+    .tl-tick-label {
+        position: absolute;
+        top: 14px;
+        left: 0;
+        transform: translateX(-50%);
+        font-size: 11px;
+        color: #999;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    /* ============================================================
+       Lanes — each lane is a row of bars
+       ============================================================ */
+    .tl-lanes {
+        position: relative;
+        margin-bottom: 18px;
+    }
+    .tl-lane {
+        position: relative;
+        height: 56px;
+        margin-bottom: 4px;
+    }
+    .tl-lane-label {
+        position: absolute;
+        left: -28px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+        transform-origin: left center;
+        font-size: 9px;
+        letter-spacing: 0.15em;
+        color: #b0b0b0;
+        text-transform: uppercase;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* ============================================================
+       Bars — a role with start/end
+       ============================================================ */
+    .bar {
+        position: absolute;
+        top: 8px;
+        height: 40px;
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 6px 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+        border: 1px solid transparent;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+    .bar::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: #0dc469;
+    }
+    .bar.is-contract {
+        background: #2a2a2a;
+        border: 1px dashed #555;
+    }
+    .bar.is-contract::before { background: #c5f5d4; }
+
+    .bar:hover,
+    .bar:focus,
+    .bar.is-active {
+        outline: none;
+        background: #0dc469;
+        color: #0a1f12;
+        z-index: 4;
+        box-shadow: 0 6px 14px rgba(13,196,105,0.35);
+        transform: translateY(-2px);
+    }
+    .bar:hover::before,
+    .bar:focus::before,
+    .bar.is-active::before { background: #0a1f12; }
+
+    .bar-role {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.15;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .bar-co {
+        font-size: 10.5px;
+        line-height: 1.2;
+        color: #b8b8b8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .bar:hover .bar-co,
+    .bar:focus .bar-co,
+    .bar.is-active .bar-co { color: #0a3320; }
+
+    /* ============================================================
+       Detail panel (V1 only)
+       ============================================================ */
+    .v1-panel {
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        padding: 22px 26px;
+        min-height: 170px;
+        margin-top: 56px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .panel-role { font-size: 17px; font-weight: 600; margin: 0; }
+    .panel-co { font-size: 13px; color: #0dc469; margin: 2px 0 0; font-weight: 500; }
+    .panel-meta { font-size: 12px; color: #aaa; margin: 0; }
+    .panel-summary { font-size: 13px; line-height: 1.6; color: #ddd; margin: 8px 0 12px; }
+    .panel-highlights { margin: 0; padding-left: 18px; }
+    .panel-highlights li { font-size: 12px; line-height: 1.55; color: #c5c5c5; margin-bottom: 4px; }
+    .panel-tech { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .panel-tech span {
+        font-size: 11px;
+        background: #2c2c2c;
+        color: #c5f5d4;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    /* ============================================================
+       V2 popover style
+       ============================================================ */
+    .v2-pop {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        width: 280px;
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        text-align: left;
+        z-index: 10;
+    }
+    .v2-pop::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: #1c1c1c;
+    }
+    .bar:hover .v2-pop,
+    .bar:focus .v2-pop,
+    .bar.is-active .v2-pop {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .v2-pop h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; color: #fff; }
+    .v2-pop .v2-pop-co { color: #0dc469; font-size: 12px; margin: 0 0 6px; font-weight: 500; }
+    .v2-pop .v2-pop-meta { color: #888; font-size: 11px; margin: 0 0 8px; }
+    .v2-pop .v2-pop-sum { font-size: 12px; line-height: 1.5; color: #d0d0d0; margin: 0 0 8px; }
+    .v2-pop ul { margin: 0; padding-left: 16px; }
+    .v2-pop ul li { font-size: 11.5px; line-height: 1.5; color: #c5c5c5; margin-bottom: 2px; }
+
+    /* ============================================================
+       V3 — single lane with translucent overlap (comparison)
+       ============================================================ */
+    .v3 .bar { background: rgba(28,28,28,0.85); }
+    .v3 .bar.is-contract {
+        background: rgba(13,196,105,0.6);
+        border: 1px solid #0dc469;
+    }
+    .v3 .bar.is-contract::before { display: none; }
+
+    .legend {
+        max-width: 1100px;
+        margin: 16px auto 0;
+        font-size: 12px;
+        color: #888;
+        text-align: center;
+    }
+    .legend kbd {
+        background: #eee;
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-family: inherit;
+        font-size: 11px;
+    }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Career timeline — bar variations</h1>
+    <p class="note">
+        Each role is now a bar spanning its actual start → end months. Overlapping engagements
+        (e.g. a contract that ran during a full-time role) stack into separate lanes. Role + company
+        are always visible on every bar; hover reveals fuller details (summary, highlights, tech).
+        Same sample data across all variants for direct comparison. Sample includes a deliberate
+        overlap: <em>UE5 RPG Combat Contract</em> (Jun 2024 – May 2025) runs across the tail of
+        <em>Senior Gameplay Engineer</em> and into the start of <em>Indie</em>.
+    </p>
+</div>
+
+<!-- ============================================================
+     V1 — Multi-lane gantt + fixed detail panel below
+     ============================================================ -->
+<div class="frame">
+    <h2>V1 — Multi-lane gantt + detail panel below (recommended)</h2>
+    <p class="note">
+        Two lanes: <strong>Primary</strong> (employment) on top, <strong>Side / Contract</strong>
+        below. The contract bar visibly overlaps the senior role. Hover any bar to swap the panel.
+    </p>
+    <div class="stage">
+        <div class="tl" id="v1-tl">
+            <!-- Lanes -->
+            <div class="tl-lanes">
+                <div class="tl-lane">
+                    <span class="tl-lane-label">Primary</span>
+                    <div class="bar" data-id="r1" style="left:8.33%; width:9.52%;">
+                        <span class="bar-role">Junior Game Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                    </div>
+                    <div class="bar" data-id="r2" style="left:17.86%; width:30.95%;">
+                        <span class="bar-role">Gameplay Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                    </div>
+                    <div class="bar" data-id="r3" style="left:48.81%; width:10.71%;">
+                        <span class="bar-role">Gameplay Engineer</span>
+                        <span class="bar-co">Northwind Games</span>
+                    </div>
+                    <div class="bar is-active" data-id="r4" style="left:59.52%; width:25.00%;">
+                        <span class="bar-role">Senior Gameplay Engineer</span>
+                        <span class="bar-co">Northwind Games</span>
+                    </div>
+                    <div class="bar" data-id="r5" style="left:85.71%; width:13.10%;">
+                        <span class="bar-role">Indie</span>
+                        <span class="bar-co">Self-employed</span>
+                    </div>
+                </div>
+                <div class="tl-lane">
+                    <span class="tl-lane-label">Contract</span>
+                    <div class="bar is-contract" data-id="r6" style="left:77.38%; width:13.10%;">
+                        <span class="bar-role">UE5 RPG Combat Contract</span>
+                        <span class="bar-co">Client (NDA)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Axis with month/year ticks -->
+            <div class="tl-axis" id="v1-axis"></div>
+        </div>
+
+        <!-- Detail panel -->
+        <div class="v1-panel">
+            <div class="panel-head">
+                <div>
+                    <h3 class="panel-role" id="v1-role">Senior Gameplay Engineer</h3>
+                    <p class="panel-co" id="v1-co">Northwind Games</p>
+                </div>
+                <p class="panel-meta" id="v1-meta">Mar 2023 – Dec 2024 · 1 yr 10 mo · Hanoi, Vietnam · Full-time</p>
+            </div>
+            <p class="panel-summary" id="v1-sum">
+                Tech lead for combat systems on an unannounced UE5 action title.
+            </p>
+            <ul class="panel-highlights" id="v1-hl">
+                <li>Owned the ability framework powering 40+ player and enemy abilities.</li>
+                <li>Mentored 3 mid-level engineers; led code review rotation.</li>
+                <li>Cut combat-frame CPU cost by 28% through animation-notify refactor.</li>
+            </ul>
+            <div class="panel-tech" id="v1-tech">
+                <span>Unreal Engine 5</span><span>C++</span><span>Gameplay Ability System</span><span>Niagara</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     V2 — Multi-lane gantt + popover (no fixed panel)
+     ============================================================ -->
+<div class="frame">
+    <h2>V2 — Multi-lane gantt + popover on hover</h2>
+    <p class="note">
+        Same bars and lanes; details appear as a popover above the bar. Saves the vertical space a
+        detail panel would take, but less room for highlights/tech tags.
+    </p>
+    <div class="stage">
+        <div class="tl">
+            <div class="tl-lanes">
+                <div class="tl-lane">
+                    <span class="tl-lane-label">Primary</span>
+                    <div class="bar" style="left:8.33%; width:9.52%;">
+                        <span class="bar-role">Junior Game Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                        <div class="v2-pop">
+                            <h3>Junior Game Programmer</h3>
+                            <p class="v2-pop-co">Pixel Forge Studio</p>
+                            <p class="v2-pop-meta">Aug 2019 – Apr 2020 · 9 mo</p>
+                            <p class="v2-pop-sum">First production role. UI flows and tutorials on a mobile match-3.</p>
+                        </div>
+                    </div>
+                    <div class="bar" style="left:17.86%; width:30.95%;">
+                        <span class="bar-role">Gameplay Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                        <div class="v2-pop">
+                            <h3>Gameplay Programmer</h3>
+                            <p class="v2-pop-co">Pixel Forge Studio</p>
+                            <p class="v2-pop-meta">Apr 2020 – Jun 2022 · 2 yr 3 mo</p>
+                            <p class="v2-pop-sum">Owned combat & AI on action prototype. Two soft-launches.</p>
+                        </div>
+                    </div>
+                    <div class="bar" style="left:48.81%; width:10.71%;">
+                        <span class="bar-role">Gameplay Engineer</span>
+                        <span class="bar-co">Northwind</span>
+                        <div class="v2-pop">
+                            <h3>Gameplay Engineer</h3>
+                            <p class="v2-pop-co">Northwind Games</p>
+                            <p class="v2-pop-meta">Jun 2022 – Mar 2023 · 10 mo</p>
+                            <p class="v2-pop-sum">Joined as the team migrated Unity → UE5.</p>
+                        </div>
+                    </div>
+                    <div class="bar is-active" style="left:59.52%; width:25.00%;">
+                        <span class="bar-role">Senior Gameplay Engineer</span>
+                        <span class="bar-co">Northwind</span>
+                        <div class="v2-pop">
+                            <h3>Senior Gameplay Engineer</h3>
+                            <p class="v2-pop-co">Northwind Games</p>
+                            <p class="v2-pop-meta">Mar 2023 – Dec 2024 · 1 yr 10 mo</p>
+                            <p class="v2-pop-sum">Tech lead for combat on an unannounced UE5 action title.</p>
+                        </div>
+                    </div>
+                    <div class="bar" style="left:85.71%; width:13.10%;">
+                        <span class="bar-role">Indie</span>
+                        <span class="bar-co">Self-employed</span>
+                        <div class="v2-pop">
+                            <h3>Indie</h3>
+                            <p class="v2-pop-co">Self-employed</p>
+                            <p class="v2-pop-meta">Jan 2025 – present · 5 mo</p>
+                            <p class="v2-pop-sum">Action Roguelike + devlog series.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tl-lane">
+                    <span class="tl-lane-label">Contract</span>
+                    <div class="bar is-contract" style="left:77.38%; width:13.10%;">
+                        <span class="bar-role">UE5 RPG Combat Contract</span>
+                        <span class="bar-co">Client (NDA)</span>
+                        <div class="v2-pop">
+                            <h3>UE5 RPG Combat Contract</h3>
+                            <p class="v2-pop-co">Client (NDA)</p>
+                            <p class="v2-pop-meta">Jun 2024 – May 2025 · 1 yr · Remote</p>
+                            <p class="v2-pop-sum">Combat polish + ability tooling, parallel with senior role.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tl-axis" id="v2-axis"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     V3 — Single lane with translucent overlap (no lanes)
+     ============================================================ -->
+<div class="frame">
+    <h2>V3 — Single lane, translucent overlap (for comparison)</h2>
+    <p class="note">
+        All bars on one row. The contract bar is rendered semi-transparent green and sits on top
+        of the senior role to show their overlap. Saves vertical space but the overlap reads as
+        visual noise rather than a clear "side gig" lane. Shown so you can rule it out.
+    </p>
+    <div class="stage v3">
+        <div class="tl">
+            <div class="tl-lanes">
+                <div class="tl-lane">
+                    <div class="bar" style="left:8.33%; width:9.52%;">
+                        <span class="bar-role">Junior Game Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                    </div>
+                    <div class="bar" style="left:17.86%; width:30.95%;">
+                        <span class="bar-role">Gameplay Programmer</span>
+                        <span class="bar-co">Pixel Forge</span>
+                    </div>
+                    <div class="bar" style="left:48.81%; width:10.71%;">
+                        <span class="bar-role">Gameplay Engineer</span>
+                        <span class="bar-co">Northwind</span>
+                    </div>
+                    <div class="bar is-active" style="left:59.52%; width:25.00%;">
+                        <span class="bar-role">Senior Gameplay Engineer</span>
+                        <span class="bar-co">Northwind</span>
+                    </div>
+                    <div class="bar is-contract" style="left:77.38%; width:13.10%; top: 22px; height: 24px;">
+                        <span class="bar-role" style="font-size:11px;">UE5 RPG Contract</span>
+                    </div>
+                    <div class="bar" style="left:85.71%; width:13.10%;">
+                        <span class="bar-role">Indie</span>
+                        <span class="bar-co">Self-employed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tl-axis" id="v3-axis"></div>
+        </div>
+    </div>
+</div>
+
+<p class="legend">
+    Hover or <kbd>Tab</kbd> + <kbd>Enter</kbd> on any bar. Solid green bars = full-time roles; dashed
+    border = side / contract work. Bar width is proportional to the role's actual duration.
+</p>
+
+<script>
+    // ---------- Shared timeline window ----------
+    // 2019-01 → 2025-12  (7 years, 84 months)
+    const START_YEAR = 2019;
+    const END_YEAR = 2026; // exclusive ends
+    const TOTAL_MONTHS = (END_YEAR - START_YEAR) * 12;
+
+    // Build axis ticks: year ticks labeled, quarter ticks unlabeled.
+    function buildAxis(axisEl) {
+        for (let y = START_YEAR; y <= END_YEAR; y++) {
+            const monthIdx = (y - START_YEAR) * 12;
+            const pct = (monthIdx / TOTAL_MONTHS) * 100;
+            if (pct > 100) break;
+            const tick = document.createElement("span");
+            tick.className = "tl-tick";
+            tick.style.left = pct + "%";
+            const lbl = document.createElement("span");
+            lbl.className = "tl-tick-label";
+            lbl.textContent = y;
+            tick.appendChild(lbl);
+            axisEl.appendChild(tick);
+
+            // quarter ticks within this year (skip if at right edge)
+            if (y < END_YEAR) {
+                for (let q = 1; q <= 3; q++) {
+                    const qm = monthIdx + q * 3;
+                    const qpct = (qm / TOTAL_MONTHS) * 100;
+                    if (qpct > 100) break;
+                    const qtick = document.createElement("span");
+                    qtick.className = "tl-tick is-quarter";
+                    qtick.style.left = qpct + "%";
+                    axisEl.appendChild(qtick);
+                }
+            }
+        }
+    }
+    buildAxis(document.getElementById("v1-axis"));
+    buildAxis(document.getElementById("v2-axis"));
+    buildAxis(document.getElementById("v3-axis"));
+
+    // ---------- V1: panel swap ----------
+    const v1data = {
+        r1: {
+            role: "Junior Game Programmer", co: "Pixel Forge Studio",
+            meta: "Aug 2019 – Apr 2020 · 9 mo · Hanoi, Vietnam · Full-time",
+            sum: "First production role. Owned UI flows and tutorial sequences on a mobile match-3.",
+            hl: [
+                "Shipped onboarding redesign that lifted D1 retention by 6%.",
+                "Built reusable popup framework used across 4 titles.",
+            ],
+            tech: ["Unity", "C#", "DOTween"],
+        },
+        r2: {
+            role: "Gameplay Programmer", co: "Pixel Forge Studio",
+            meta: "Apr 2020 – Jun 2022 · 2 yr 3 mo · Hanoi, Vietnam · Full-time",
+            sum: "Owned combat and enemy AI for an action prototype. Two soft-launches.",
+            hl: [
+                "Designed enemy-behavior state machine reused across 3 prototypes.",
+                "Profiled and reduced GC alloc on mobile by 45%.",
+                "Wrote designer-facing combo authoring tool.",
+            ],
+            tech: ["Unity", "C#", "Behavior Designer"],
+        },
+        r3: {
+            role: "Gameplay Engineer", co: "Northwind Games",
+            meta: "Jun 2022 – Mar 2023 · 10 mo · Hanoi, Vietnam · Full-time",
+            sum: "Joined as the team migrated from Unity to Unreal Engine 5.",
+            hl: [
+                "Led ability-system port and traversal/parkour systems.",
+                "Built editor tooling for designer-authored combos.",
+                "Shipped two internal vertical-slice milestones.",
+            ],
+            tech: ["Unreal Engine 5", "C++", "Blueprints", "GAS"],
+        },
+        r4: {
+            role: "Senior Gameplay Engineer", co: "Northwind Games",
+            meta: "Mar 2023 – Dec 2024 · 1 yr 10 mo · Hanoi, Vietnam · Full-time",
+            sum: "Tech lead for combat systems on an unannounced UE5 action title.",
+            hl: [
+                "Owned the ability framework powering 40+ player and enemy abilities.",
+                "Mentored 3 mid-level engineers; led code review rotation.",
+                "Cut combat-frame CPU cost by 28% via animation-notify refactor.",
+            ],
+            tech: ["Unreal Engine 5", "C++", "Gameplay Ability System", "Niagara"],
+        },
+        r5: {
+            role: "Indie", co: "Self-employed",
+            meta: "Jan 2025 – present · Remote",
+            sum: "Solo indie projects (Action Roguelike) and devlog series on roguelike systems.",
+            hl: [
+                "Released devlog series on roguelike systems design.",
+                "Open-sourced ability prototyping plugin.",
+            ],
+            tech: ["Unreal Engine 5", "C++", "GAS"],
+        },
+        r6: {
+            role: "UE5 RPG Combat Contract", co: "Client (NDA)",
+            meta: "Jun 2024 – May 2025 · 1 yr · Remote · Contract",
+            sum: "Parallel contract during senior role + early indie. Combat polish and tooling.",
+            hl: [
+                "Refactored hit-reaction system across 60+ enemies.",
+                "Built ability-authoring editor extensions adopted by 4 designers.",
+            ],
+            tech: ["Unreal Engine 5", "C++", "GAS", "Editor Utility Widgets"],
+        },
+    };
+
+    document.querySelectorAll("#v1-tl .bar").forEach((bar) => {
+        const apply = () => {
+            const d = v1data[bar.dataset.id];
+            if (!d) return;
+            document.getElementById("v1-role").textContent = d.role;
+            document.getElementById("v1-co").textContent = d.co;
+            document.getElementById("v1-meta").textContent = d.meta;
+            document.getElementById("v1-sum").textContent = d.sum;
+            document.getElementById("v1-hl").innerHTML = d.hl.map(h => `<li>${h}</li>`).join("");
+            document.getElementById("v1-tech").innerHTML = d.tech.map(t => `<span>${t}</span>`).join("");
+            document.querySelectorAll("#v1-tl .bar").forEach(x => x.classList.remove("is-active"));
+            bar.classList.add("is-active");
+        };
+        bar.tabIndex = 0;
+        bar.addEventListener("mouseenter", apply);
+        bar.addEventListener("focus", apply);
+    });
+</script>
+
+</body>
+</html>

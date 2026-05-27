@@ -1,0 +1,71 @@
+{{/* Career timeline. Data: data/experience.yaml. Styles: static/css/timeline.css. Script: static/js/timeline.js. */}}
+{{ $entries := sort site.Data.experience "start" "asc" }}
+{{ $hasSide := false }}
+{{ range $entries }}{{ if eq .lane "side" }}{{ $hasSide = true }}{{ end }}{{ end }}
+
+<section class="experience-section">
+    <h2 class="highlighted-text">Experience</h2>
+
+    <div class="tl" id="experience-tl" data-has-side="{{ $hasSide }}">
+        <div class="tl-lanes">
+            <div class="tl-lane" data-lane="primary">
+                <span class="tl-lane-label">Primary</span>
+                {{ range $i, $e := $entries }}
+                    {{ if eq $e.lane "primary" }}
+                    <button class="bar"
+                            type="button"
+                            data-start="{{ $e.start }}"
+                            data-end="{{ $e.end }}"
+                            data-role="{{ $e.role }}"
+                            data-company="{{ $e.company }}"
+                            data-location="{{ $e.location }}"
+                            data-type="{{ $e.type }}"
+                            data-summary="{{ $e.summary }}"
+                            data-highlights="{{ with $e.highlights }}{{ . | jsonify }}{{ else }}[]{{ end }}"
+                            data-tech="{{ with $e.tech }}{{ . | jsonify }}{{ else }}[]{{ end }}">
+                        <span class="bar-role">{{ $e.role }}</span>
+                        <span class="bar-co">{{ $e.company }}</span>
+                    </button>
+                    {{ end }}
+                {{ end }}
+            </div>
+            {{ if $hasSide }}
+            <div class="tl-lane" data-lane="side">
+                <span class="tl-lane-label">Side</span>
+                {{ range $i, $e := $entries }}
+                    {{ if eq $e.lane "side" }}
+                    <button class="bar"
+                            type="button"
+                            data-start="{{ $e.start }}"
+                            data-end="{{ $e.end }}"
+                            data-role="{{ $e.role }}"
+                            data-company="{{ $e.company }}"
+                            data-location="{{ $e.location }}"
+                            data-type="{{ $e.type }}"
+                            data-summary="{{ $e.summary }}"
+                            data-highlights="{{ with $e.highlights }}{{ . | jsonify }}{{ else }}[]{{ end }}"
+                            data-tech="{{ with $e.tech }}{{ . | jsonify }}{{ else }}[]{{ end }}">
+                        <span class="bar-role">{{ $e.role }}</span>
+                        <span class="bar-co">{{ $e.company }}</span>
+                    </button>
+                    {{ end }}
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+        <div class="tl-axis" id="experience-axis"></div>
+    </div>
+
+    <div class="tl-panel" id="experience-panel">
+        <div class="tl-panel-head">
+            <div>
+                <h3 class="tl-panel-role" id="exp-role"></h3>
+                <p class="tl-panel-co" id="exp-co"></p>
+            </div>
+            <p class="tl-panel-meta" id="exp-meta"></p>
+        </div>
+        <p class="tl-panel-summary" id="exp-sum"></p>
+        <ul class="tl-panel-highlights" id="exp-hl"></ul>
+        <div class="tl-panel-tech" id="exp-tech"></div>
+    </div>
+</section>

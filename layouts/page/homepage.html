@@ -10,6 +10,7 @@
     ) }}
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="stylesheet" href="/css/timeline.css">
 </head>
 <body>
     <!-- Title + Social Icons Container -->
@@ -37,6 +38,8 @@
         <h2 class="highlighted-text">{{ .Params.highlighted_text }}</h2>
         <p class="intro-text">{{ .Params.intro_text }}</p>
     </section>
+
+    {{ partial "timeline.html" . }}
 
     <section class="projects-section">
         <h2 class="highlighted-text">Projects</h2>
@@ -91,5 +94,6 @@
     </div>
 
     <script src="/js/homepage.js"></script>
+    <script src="/js/timeline.js"></script>
 </body>
 </html>
