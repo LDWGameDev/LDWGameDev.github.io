@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project timeline — consistent first-of-year side</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 56px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 24px;
+        max-width: 760px;
+        line-height: 1.55;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+
+    /* Stage gets generous side padding so labels at 0% and 100% fit on-screen. */
+    .stage {
+        background: #fafafa;
+        padding: 40px 160px 40px;
+        border-radius: 12px;
+        position: relative;
+        overflow: visible;
+    }
+    .section-title { text-align: center; margin-bottom: 28px; }
+    .section-title h3 {
+        display: inline-block;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        background: #1c1c1c;
+        padding: 6px 18px;
+        border-radius: 6px;
+        margin: 0;
+    }
+
+    /* ---------- Plot area ---------- */
+    .pt-plot {
+        position: relative;
+        height: 200px;
+    }
+    .pt-node {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+    }
+    .pt-dot {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: #0dc469;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #0dc469;
+        cursor: pointer;
+        z-index: 2;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .pt-dot:hover { transform: translate(-50%, -50%) scale(1.15); }
+    .pt-node.is-active .pt-dot {
+        box-shadow: 0 0 0 4px rgba(13,196,105,0.28), 0 0 0 1px #0dc469;
+    }
+
+    .pt-stem {
+        position: absolute;
+        top: 50%;
+        height: 1px;
+        background: #c9c9c9;
+        z-index: 1;
+    }
+    .pt-node.side-right .pt-stem { left: 7px;  width: 18px; }
+    .pt-node.side-left  .pt-stem { right: 7px; width: 18px; }
+
+    .pt-pill {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 999px;
+        padding: 4px 12px 4px 4px;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        white-space: nowrap;
+        transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    }
+    .pt-pill:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.10); }
+    .pt-node.is-active .pt-pill {
+        border-color: #0dc469;
+        box-shadow: 0 0 0 2px rgba(13,196,105,0.18);
+    }
+    .pt-pill img {
+        width: 22px; height: 22px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: #ddd;
+        flex-shrink: 0;
+    }
+    .pt-pill .name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #1c1c1c;
+        line-height: 1.1;
+    }
+    .pt-pill .year {
+        font-size: 10.5px;
+        color: #999;
+        font-weight: 500;
+    }
+    .pt-node.side-right .pt-pill { left: 25px; }
+    .pt-node.side-left  .pt-pill { right: 25px; }
+
+    /* ---------- Year axis ---------- */
+    .pt-axis {
+        position: relative;
+        height: 1px;
+        background: #d6d6d6;
+        margin-bottom: 24px;
+    }
+    .pt-tick {
+        position: absolute;
+        top: -5px;
+        width: 1px;
+        height: 11px;
+        background: #c2c2c2;
+    }
+    .pt-tick-label {
+        position: absolute;
+        top: 14px;
+        left: 0;
+        transform: translateX(-50%);
+        font-size: 11px;
+        color: #999;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    .pt-guide {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent, #ececec 30%, #ececec 70%, transparent);
+        z-index: 0;
+    }
+
+    /* ---------- Anchored card (V3 detail) ---------- */
+    .pt-panel-3-wrap {
+        position: relative;
+        height: 230px;
+        margin-top: 8px;
+    }
+    .pt-panel-3 {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        width: 300px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        text-align: left;
+    }
+    .pt-panel-3::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -7px;
+        transform: translateX(-50%) rotate(45deg);
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-left: 1px solid #e0e0e0;
+        border-top: 1px solid #e0e0e0;
+    }
+    .pt-panel-3 .pt-panel-hero {
+        width: 100%;
+        height: 96px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: #ddd;
+        display: block;
+    }
+    .pt-panel-3 .name-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 4px;
+    }
+    .pt-panel-3 .name-row img {
+        width: 36px; height: 36px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: #ddd;
+        flex-shrink: 0;
+    }
+    .pt-panel-3 .pt-panel-name { font-size: 14px; font-weight: 600; margin: 0; }
+    .pt-panel-3 .pt-panel-meta {
+        font-size: 10px;
+        color: #888;
+        margin: 2px 0 0;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    .pt-panel-3 .pt-panel-desc {
+        font-size: 12px;
+        color: #555;
+        margin: 0 0 10px;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .pt-panel-3 .pt-cta {
+        display: inline-flex;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #0a1f12;
+        background: #0dc469;
+        border-radius: 6px;
+        padding: 6px 12px;
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Rule: first project of each year always on the same side</h1>
+    <p class="note">
+        Fix for the overlap you spotted: every <strong>first project of a year</strong> sticks to the same
+        side (right or left). Only the <strong>second project sharing that year</strong> goes to the opposite
+        side. Adjacent single-project years no longer collide.
+    </p>
+
+    <!-- ============================================================
+         V1 — First-of-year = RIGHT
+         ============================================================ -->
+    <h2>Variation 1 — First-of-year always RIGHT</h2>
+    <p class="note">
+        Fake Knight (right), Wukong (right · 1st of 2021), Casual TDS (LEFT · 2nd of 2021), Action
+        Roguelike (right), Deverse World (right). All pills point forward in time, except the
+        stack-partner Casual TDS.
+    </p>
+    <div class="stage">
+        <div class="section-title"><h3>Projects Timeline</h3></div>
+
+        <div class="pt-plot">
+            <span class="pt-guide" style="left: 20%;"></span>
+
+            <!-- 2020 Fake Knight — 1st of year, RIGHT -->
+            <div class="pt-node side-right" style="left: 0%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/fake-knight/fake-knight.png" alt="">
+                    <span class="name">Fake Knight</span>
+                    <span class="year">2020</span>
+                </span>
+            </div>
+
+            <!-- 2021 Wukong — 1st of year, RIGHT (top of stack) -->
+            <div class="pt-node side-right" style="left: 20%; top: 28%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/wukong/wukong-title-image.png" alt="">
+                    <span class="name">Wukong</span>
+                    <span class="year">2021</span>
+                </span>
+            </div>
+
+            <!-- 2021 Casual TDS — 2nd of year, LEFT (bottom of stack) -->
+            <div class="pt-node side-left" style="left: 20%; top: 72%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/casual-shooter/cts-banner.png" alt="">
+                    <span class="name">Casual TDS</span>
+                    <span class="year">2021</span>
+                </span>
+            </div>
+
+            <!-- 2023 Action Roguelike — 1st of year, RIGHT (active) -->
+            <div class="pt-node side-right is-active" style="left: 60%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                    <span class="name">Action Roguelike</span>
+                    <span class="year">'22 – '23</span>
+                </span>
+            </div>
+
+            <!-- 2025 Deverse World — 1st of year, RIGHT -->
+            <div class="pt-node side-right" style="left: 100%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/deverse-world/dv-banner.png" alt="">
+                    <span class="name">Deverse World</span>
+                    <span class="year">'22 – '25</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="pt-axis">
+            <span class="pt-tick" style="left: 0%;"><span class="pt-tick-label">2020</span></span>
+            <span class="pt-tick" style="left: 20%;"><span class="pt-tick-label">2021</span></span>
+            <span class="pt-tick" style="left: 40%;"><span class="pt-tick-label">2022</span></span>
+            <span class="pt-tick" style="left: 60%;"><span class="pt-tick-label">2023</span></span>
+            <span class="pt-tick" style="left: 80%;"><span class="pt-tick-label">2024</span></span>
+            <span class="pt-tick" style="left: 100%;"><span class="pt-tick-label">2025</span></span>
+        </div>
+
+        <div class="pt-panel-3-wrap">
+            <div class="pt-panel-3" style="left: 60%;">
+                <img class="pt-panel-hero" src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                <div class="name-row">
+                    <img src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                    <div>
+                        <h4 class="pt-panel-name">Action Roguelike</h4>
+                        <p class="pt-panel-meta">2022 – 2023 · Unreal Engine</p>
+                    </div>
+                </div>
+                <p class="pt-panel-desc">Dodge, dash, and slash your way through ever-changing levels, where every decision counts. University graduation project in my final year.</p>
+                <a class="pt-cta" href="#">View project →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         V2 — First-of-year = LEFT
+         ============================================================ -->
+    <h2>Variation 2 — First-of-year always LEFT</h2>
+    <p class="note">
+        Mirror of V1. Pills point backward in time; the dot reads as "this is when it released, here's
+        what came before."
+    </p>
+    <div class="stage">
+        <div class="section-title"><h3>Projects Timeline</h3></div>
+
+        <div class="pt-plot">
+            <span class="pt-guide" style="left: 20%;"></span>
+
+            <!-- 2020 Fake Knight — LEFT -->
+            <div class="pt-node side-left" style="left: 0%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/fake-knight/fake-knight.png" alt="">
+                    <span class="name">Fake Knight</span>
+                    <span class="year">2020</span>
+                </span>
+            </div>
+
+            <!-- 2021 Wukong — LEFT (1st of year, top of stack) -->
+            <div class="pt-node side-left" style="left: 20%; top: 28%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/wukong/wukong-title-image.png" alt="">
+                    <span class="name">Wukong</span>
+                    <span class="year">2021</span>
+                </span>
+            </div>
+
+            <!-- 2021 Casual TDS — RIGHT (2nd of year, bottom of stack) -->
+            <div class="pt-node side-right" style="left: 20%; top: 72%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/casual-shooter/cts-banner.png" alt="">
+                    <span class="name">Casual TDS</span>
+                    <span class="year">2021</span>
+                </span>
+            </div>
+
+            <!-- 2023 Action Roguelike — LEFT (active) -->
+            <div class="pt-node side-left is-active" style="left: 60%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                    <span class="name">Action Roguelike</span>
+                    <span class="year">'22 – '23</span>
+                </span>
+            </div>
+
+            <!-- 2025 Deverse World — LEFT -->
+            <div class="pt-node side-left" style="left: 100%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <span class="pt-pill">
+                    <img src="../static/images/projects/deverse-world/dv-banner.png" alt="">
+                    <span class="name">Deverse World</span>
+                    <span class="year">'22 – '25</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="pt-axis">
+            <span class="pt-tick" style="left: 0%;"><span class="pt-tick-label">2020</span></span>
+            <span class="pt-tick" style="left: 20%;"><span class="pt-tick-label">2021</span></span>
+            <span class="pt-tick" style="left: 40%;"><span class="pt-tick-label">2022</span></span>
+            <span class="pt-tick" style="left: 60%;"><span class="pt-tick-label">2023</span></span>
+            <span class="pt-tick" style="left: 80%;"><span class="pt-tick-label">2024</span></span>
+            <span class="pt-tick" style="left: 100%;"><span class="pt-tick-label">2025</span></span>
+        </div>
+
+        <div class="pt-panel-3-wrap">
+            <div class="pt-panel-3" style="left: 60%;">
+                <img class="pt-panel-hero" src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                <div class="name-row">
+                    <img src="../static/images/projects/action-roguelike/ar-banner.png" alt="">
+                    <div>
+                        <h4 class="pt-panel-name">Action Roguelike</h4>
+                        <p class="pt-panel-meta">2022 – 2023 · Unreal Engine</p>
+                    </div>
+                </div>
+                <p class="pt-panel-desc">Dodge, dash, and slash your way through ever-changing levels, where every decision counts. University graduation project in my final year.</p>
+                <a class="pt-cta" href="#">View project →</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project page — proposed layout</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    :root {
+        --max-width: 1100px;
+        --muted: #6c6c6c;
+        --text: #111;
+        --hairline: #e4e4e4;
+        --pill-bg: #f3f3f3;
+        --pill-bg-hover: #e8e8e8;
+        --green: #0dc469;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--text);
+        margin: 0;
+        background: #fff;
+        line-height: 1.55;
+    }
+    a { color: inherit; }
+
+    /* ======= TOP NAV ======= */
+    .topnav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 24px 32px;
+    }
+    .back-link {
+        font-size: 14px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green); }
+    .topnav .site-title {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    /* ======= HERO ======= */
+    .hero {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+    .hero-image {
+        width: 100%;
+        aspect-ratio: 16/7;
+        object-fit: cover;
+        display: block;
+        border-radius: 12px;
+        background: #222;
+    }
+    .hero-info {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 24px;
+        align-items: start;
+    }
+    .hero-info h1 {
+        font-size: 36px;
+        line-height: 1.15;
+        font-weight: 700;
+        margin: 0 0 6px;
+    }
+    .meta-line {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 14px;
+    }
+    .meta-line .dot { margin: 0 8px; opacity: 0.5; }
+    .description {
+        font-size: 15px;
+        color: #333;
+        max-width: 720px;
+        margin: 0;
+    }
+    .hero-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    .hero-tags a.tag {
+        background: var(--pill-bg);
+        color: var(--text);
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    .hero-tags a.tag:hover { background: var(--pill-bg-hover); }
+
+    .cta-row {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+    }
+    .cta.primary { background: var(--text); color: #fff; }
+    .cta.primary:hover { transform: translateY(-1px); }
+    .cta.secondary { background: var(--pill-bg); color: var(--text); }
+    .cta.secondary:hover { background: var(--pill-bg-hover); }
+
+    .hairline {
+        height: 1px;
+        background: var(--hairline);
+        max-width: var(--max-width);
+        margin: 56px auto;
+    }
+
+    /* ======= BODY ======= */
+    .body {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+    .body p { font-size: 16px; margin: 0 0 18px; color: #1a1a1a; }
+    .body ul { margin: 0 0 24px 0; padding-left: 22px; }
+    .body li { margin-bottom: 6px; font-size: 16px; }
+    .body img.content-img,
+    .body img.content-gif {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 24px 0;
+        border-radius: 4px;
+    }
+    .body .video-placeholder {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: linear-gradient(135deg, #2b2b2b, #111);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 13px;
+        margin: 24px 0;
+    }
+
+    /* ======= MORE PROJECTS ======= */
+    .more-projects {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 32px 56px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    .more-card {
+        display: block;
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        transition: transform 0.2s;
+    }
+    .more-card:hover { transform: translateY(-2px); }
+    .more-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        display: block;
+        opacity: 0.7;
+    }
+    .more-card .arrow {
+        padding: 14px 18px;
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+    .more-card .more-name {
+        padding: 0 18px 18px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .more-card.next .arrow { text-align: right; }
+    .more-card.next .more-name { text-align: right; }
+
+    /* ======= FOOTER ======= */
+    footer.contact {
+        background: #f6f6f6;
+        padding: 36px 32px;
+    }
+    footer.contact .inner {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    footer.contact h3 {
+        margin: 0 0 6px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    footer.contact p {
+        margin: 2px 0;
+        font-size: 14px;
+        color: #444;
+    }
+    footer.contact a {
+        color: var(--green);
+        text-decoration: none;
+    }
+    footer.contact a:hover { text-decoration: underline; }
+    .social-row {
+        display: flex;
+        gap: 12px;
+    }
+    .social-row a {
+        width: 34px;
+        height: 34px;
+        background: #ddd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        text-decoration: none;
+        color: #444;
+        transition: background 0.2s;
+    }
+    .social-row a:hover { background: var(--green); color: #fff; }
+
+    /* ======= ANNOTATIONS (only visible in mockup) ======= */
+    .note {
+        position: relative;
+        outline: 1px dashed rgba(13, 196, 105, 0.45);
+        outline-offset: 4px;
+    }
+    .note::after {
+        content: attr(data-note);
+        position: absolute;
+        top: -22px;
+        left: 0;
+        font-size: 11px;
+        color: var(--green);
+        font-weight: 600;
+        background: #fff;
+        padding: 0 6px;
+        letter-spacing: 0.03em;
+    }
+    .legend {
+        max-width: var(--max-width);
+        margin: 24px auto 0;
+        padding: 16px 32px;
+        font-size: 13px;
+        color: var(--muted);
+        border-top: 1px dashed var(--hairline);
+    }
+    .legend strong { color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav note" data-note="① top nav with back link">
+    <a href="/" class="back-link">← Back to projects</a>
+    <span class="site-title">Ldwork</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <img class="hero-image note" data-note="② full-width hero, natural aspect"
+         src="/images/projects/fake-knight/fake-knight.png"
+         alt="Fake Knight">
+
+    <div class="hero-info">
+        <div>
+            <h1>Fake Knight</h1>
+            <div class="meta-line note" data-note="③ tighter meta line">
+                <span>2020</span>
+                <span class="dot">·</span>
+                <span>Personal project</span>
+                <span class="dot">·</span>
+                <span>Unity</span>
+            </div>
+            <p class="description">
+                Embark on an epic adventure in Fake Knight, an action-packed,
+                combat-driven journey inspired by the beloved Hollow Knight.
+                Do you have the courage and skill to overcome relentless foes
+                and liberate the Underneath from impending doom?
+            </p>
+
+            <div class="cta-row note" data-note="④ optional CTAs (play, source, trailer)">
+                <a class="cta primary" href="#">▶ Watch trailer</a>
+                <a class="cta secondary" href="#">View source</a>
+            </div>
+        </div>
+
+        <div class="hero-tags note" data-note="⑤ tags as filter links">
+            <a class="tag" href="/?tag=Unity">Unity</a>
+            <a class="tag" href="/?tag=Personal">Personal</a>
+        </div>
+    </div>
+</section>
+
+<div class="hairline"></div>
+
+<!-- BODY -->
+<article class="body note" data-note="⑥ wider body (760px), Poppins font">
+    <div class="video-placeholder">[ YouTube embed — gameplay reveal ]</div>
+
+    <p>First project I completed using Unity engine, and possibly the last one
+    as well because I switched to Unreal Engine right after this. This project
+    was made purely for learning purposes and, therefore, contains many
+    copyrighted resources.</p>
+
+    <p>This was my final assignment project for a class in my second year.</p>
+
+    <p>What I worked on:</p>
+    <ul>
+        <li>Inventory and equipment system with set effects.</li>
+        <li>Enemy systems featuring four types of enemies: melee, ranged, flying and boss.</li>
+        <li>Player and AI state machine.</li>
+        <li>Save, load system with 3 save slots for player to choose from.</li>
+        <li>Quest system.</li>
+    </ul>
+
+    <p>Full gameplay.</p>
+    <div class="video-placeholder">[ YouTube embed — full playthrough ]</div>
+
+    <img class="content-gif" src="/images/projects/fake-knight/fake-knight-combat.gif" alt="">
+    <img class="content-gif" src="/images/projects/fake-knight/fake-knight-inventory.gif" alt="">
+</article>
+
+<div class="hairline"></div>
+
+<!-- MORE PROJECTS -->
+<section class="more-projects note" data-note="⑦ prev/next instead of dead-end">
+    <a class="more-card prev" href="#">
+        <div class="arrow">← previous</div>
+        <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+        <div class="more-name">Wukong Early Fan Made</div>
+    </a>
+    <a class="more-card next" href="#">
+        <div class="arrow">next →</div>
+        <img src="/images/projects/casual-shooter/cts-banner.png" alt="">
+        <div class="more-name">Casual Topdown Shooter</div>
+    </a>
+</section>
+
+<!-- CONTACT FOOTER -->
+<footer class="contact note" data-note="⑧ contact footer (same as homepage)">
+    <div class="inner">
+        <div>
+            <h3>Get in touch</h3>
+            <p>Email: <a href="mailto:ldwork.cs@gmail.com">ldwork.cs@gmail.com</a></p>
+            <p>Phone: <a href="tel:+84769661420">+84 769 661 420</a></p>
+        </div>
+        <div class="social-row">
+            <a href="#" title="LinkedIn">in</a>
+            <a href="#" title="GitHub">gh</a>
+            <a href="#" title="Twitter / X">X</a>
+        </div>
+    </div>
+</footer>
+
+<div class="legend">
+    <strong>Dashed boxes</strong> mark proposals vs. current. Numbers correspond to:
+    ① back link · ② full-width hero · ③ meta line · ④ CTAs · ⑤ filter-link tags ·
+    ⑥ wider body, Poppins · ⑦ prev/next nav · ⑧ contact footer.
+    Production version would not show these annotations.
+</div>
+
+</body>
+</html>

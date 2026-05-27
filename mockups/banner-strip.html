@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Banner-strip card variations</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 48px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 20px;
+        max-width: 720px;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+    .stage {
+        background: #fafafa;
+        padding: 28px;
+        border-radius: 12px;
+    }
+    .row {
+        display: grid;
+        grid-template-columns: 64px 1fr 1fr 64px;
+        gap: 18px;
+        align-items: center;
+        justify-items: center;
+    }
+    .arrow {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        color: #444;
+        cursor: pointer;
+    }
+
+    /* Base card style — itch.io banner-strip */
+    .card {
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        text-decoration: none;
+        width: 100%;
+    }
+    .card img {
+        width: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .card .name {
+        font-weight: 600;
+    }
+    .card.next .name { text-align: right; }
+
+    /* Variations */
+    .opt-A .card { max-width: 340px; }
+    .opt-A .card img { aspect-ratio: 16 / 9; }
+    .opt-A .card .name { padding: 10px 14px; font-size: 13px; }
+
+    .opt-B .card { max-width: 400px; }
+    .opt-B .card img { aspect-ratio: 16 / 9; }
+    .opt-B .card .name { padding: 10px 16px; font-size: 14px; }
+
+    .opt-C .card { max-width: 400px; }
+    .opt-C .card img { aspect-ratio: 2 / 1; }
+    .opt-C .card .name { padding: 10px 16px; font-size: 14px; }
+
+    .opt-D .card { max-width: 460px; }
+    .opt-D .card img { aspect-ratio: 16 / 9; }
+    .opt-D .card .name { padding: 12px 18px; font-size: 15px; }
+
+    .opt-E .card { max-width: 380px; }
+    .opt-E .card img { aspect-ratio: 16 / 9; }
+    .opt-E .card .name { padding: 8px 14px; font-size: 12px; letter-spacing: 0.02em; }
+
+    .opt-F .card { max-width: 460px; }
+    .opt-F .card img { aspect-ratio: 5 / 2; }
+    .opt-F .card .name { padding: 10px 16px; font-size: 14px; }
+
+    .opt-G .card { max-width: 420px; }
+    .opt-G .card img { aspect-ratio: 16 / 9; }
+    .opt-G .card .name {
+        padding: 10px 16px;
+        font-size: 14px;
+        background: #0f0f0f;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .opt-H .card { max-width: 420px; border-radius: 12px; }
+    .opt-H .card img { aspect-ratio: 16 / 9; }
+    .opt-H .card .name { padding: 12px 18px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Banner-strip card variations</h1>
+    <p class="note">Mimics the itch.io banner + thin strip style. Same outer carousel layout, varying card max-width, image aspect ratio, and name strip padding/size.</p>
+
+    <h2>A — 340px, 16:9, small text</h2>
+    <div class="stage"><div class="row opt-A">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>B — 400px, 16:9 (currently applied)</h2>
+    <div class="stage"><div class="row opt-B">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>C — 400px, 2:1 (shorter banner)</h2>
+    <div class="stage"><div class="row opt-C">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>D — 460px, 16:9 (bigger)</h2>
+    <div class="stage"><div class="row opt-D">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>E — 380px, 16:9, ultra-thin name strip</h2>
+    <div class="stage"><div class="row opt-E">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>F — 460px, 5:2 (very cinematic)</h2>
+    <div class="stage"><div class="row opt-F">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>G — 420px, 16:9, darker strip (more contrast)</h2>
+    <div class="stage"><div class="row opt-G">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+
+    <h2>H — 420px, 16:9, more rounded corners</h2>
+    <div class="stage"><div class="row opt-H">
+        <span class="arrow">‹</span>
+        <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+        <a class="card next"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+        <span class="arrow">›</span>
+    </div></div>
+</div>
+
+</body>
+</html>

@@ -1,1 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url><loc>https://LDWGameDev.github.io/projects/action-roguelike/</loc></url><url><loc>https://LDWGameDev.github.io/tags/all/</loc></url><url><loc>https://LDWGameDev.github.io/projects/casual-topdown-shooter/</loc></url><url><loc>https://LDWGameDev.github.io/categories/</loc></url><url><loc>https://LDWGameDev.github.io/projects/deverse-world/</loc></url><url><loc>https://LDWGameDev.github.io/projects/fake-knight/</loc></url><url><loc>https://LDWGameDev.github.io/</loc></url><url><loc>https://LDWGameDev.github.io/tags/personal/</loc></url><url><loc>https://LDWGameDev.github.io/tags/prototype/</loc></url><url><loc>https://LDWGameDev.github.io/tags/</loc></url><url><loc>https://LDWGameDev.github.io/tags/unity/</loc></url><url><loc>https://LDWGameDev.github.io/tags/unreal-engine/</loc></url><url><loc>https://LDWGameDev.github.io/tags/work/</loc></url><url><loc>https://LDWGameDev.github.io/projects/wukong-early-fan-made/</loc></url></urlset>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://localhost:1313/projects/action-roguelike/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/all/</loc>
+  </url><url>
+    <loc>http://localhost:1313/projects/casual-topdown-shooter/</loc>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/projects/deverse-world/</loc>
+  </url><url>
+    <loc>http://localhost:1313/projects/fake-knight/</loc>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/personal/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/prototype/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/unity/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/unreal-engine/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/work/</loc>
+  </url><url>
+    <loc>http://localhost:1313/projects/wukong-early-fan-made/</loc>
+  </url>
+</urlset>

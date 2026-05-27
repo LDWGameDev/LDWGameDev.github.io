@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Floating section nav — variations</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 120px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 56px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    p.note {
+        font-size: 13px;
+        color: #555;
+        margin: 0 0 22px;
+        max-width: 760px;
+        line-height: 1.5;
+    }
+    p.note b { color: #111; }
+    .frame { max-width: 1100px; margin: 0 auto; }
+
+    /* Selector toolbar */
+    .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(6px);
+        padding: 14px 0 12px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 8px;
+    }
+    .toolbar .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .toolbar label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-right: 4px;
+    }
+    .toolbar button {
+        font: inherit;
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid #ddd;
+        background: #fff;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    .toolbar button:hover { border-color: #0dc469; color: #0dc469; }
+    .toolbar button.on {
+        background: #0dc469;
+        border-color: #0dc469;
+        color: #fff;
+    }
+
+    /* Mini page preview frame */
+    .stage {
+        position: relative;
+        background: #fafafa;
+        border-radius: 12px;
+        margin: 18px 0 32px;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #eee;
+    }
+    .mini {
+        position: relative;
+        height: 460px;
+        overflow: hidden;
+        background:
+            linear-gradient(180deg, #fff 0%, #fff 100%);
+    }
+    .mini-content {
+        padding: 28px 60px 28px 40px;
+        height: 100%;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+    }
+    .mini-content::-webkit-scrollbar { width: 6px; }
+    .mini-content::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+    .sect {
+        padding: 24px 0;
+        border-bottom: 1px dashed #eee;
+    }
+    .sect:last-child { border-bottom: none; }
+    .sect h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 6px;
+        color: #0dc469;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .sect h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 10px;
+        color: #111;
+    }
+    .sect p {
+        font-size: 12px;
+        color: #777;
+        line-height: 1.6;
+        margin: 0 0 6px;
+    }
+    .filler { height: 40px; }
+    .filler.big { height: 80px; }
+
+    /* Section count badge */
+    .meta {
+        padding: 10px 16px;
+        font-size: 11px;
+        color: #888;
+        background: #fff;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        letter-spacing: 0.03em;
+    }
+    .meta b { color: #0dc469; font-weight: 600; }
+
+    /* ============================================================
+       Variant A — Minimal dots (label on hover)
+       ============================================================ */
+    .navA {
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        z-index: 5;
+    }
+    .navA .item {
+        position: relative;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1.5px solid #bbb;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .navA .item:hover { border-color: #0dc469; transform: scale(1.2); }
+    .navA .item.active {
+        background: #0dc469;
+        border-color: #0dc469;
+        box-shadow: 0 0 0 4px rgba(13, 196, 105, 0.18);
+    }
+    .navA .item .lbl {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        font-weight: 500;
+        color: #333;
+        background: #fff;
+        padding: 4px 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+    }
+    .navA .item:hover .lbl { opacity: 1; }
+
+    /* ============================================================
+       Variant B — Dots + persistent labels
+       ============================================================ */
+    .navB {
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 5;
+    }
+    .navB .item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        color: #999;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        transition: color 0.15s;
+    }
+    .navB .item .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ccc;
+        transition: all 0.2s;
+    }
+    .navB .item .txt { order: -1; }
+    .navB .item:hover { color: #0dc469; }
+    .navB .item.active { color: #0dc469; }
+    .navB .item.active .dot {
+        background: #0dc469;
+        box-shadow: 0 0 0 4px rgba(13, 196, 105, 0.2);
+    }
+
+    /* ============================================================
+       Variant C — Vertical rail with traveling indicator
+       ============================================================ */
+    .navC {
+        position: absolute;
+        top: 50%;
+        right: 22px;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 5;
+    }
+    .navC .labels {
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+        align-items: flex-end;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .navC .labels span {
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.15s;
+    }
+    .navC .labels span:hover { color: #555; }
+    .navC .labels span.active { color: #0dc469; font-weight: 600; }
+    .navC .rail {
+        position: relative;
+        width: 2px;
+        background: #e5e5e5;
+        border-radius: 2px;
+        align-self: stretch;
+    }
+    .navC .rail .fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #0dc469;
+        border-radius: 2px;
+        transition: height 0.35s ease, top 0.35s ease;
+    }
+    .navC .rail .ticks {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .navC .rail .ticks i {
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1.5px solid #ccc;
+        margin-left: -3px;
+    }
+    .navC .rail .ticks i.active {
+        background: #0dc469;
+        border-color: #0dc469;
+    }
+
+    /* ============================================================
+       Variant D — Numbered pills
+       ============================================================ */
+    .navD {
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 5;
+    }
+    .navD .item {
+        position: relative;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1.5px solid #ddd;
+        background: #fff;
+        color: #999;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .navD .item:hover { border-color: #0dc469; color: #0dc469; }
+    .navD .item.active {
+        background: #0dc469;
+        border-color: #0dc469;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(13, 196, 105, 0.3);
+    }
+    .navD .item .lbl {
+        position: absolute;
+        right: 38px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        font-weight: 500;
+        color: #333;
+        background: #fff;
+        padding: 4px 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+    .navD .item:hover .lbl { opacity: 1; }
+
+    /* ============================================================
+       Variant E — Floating pill island ("2/3 · Section ↑↓")
+       ============================================================ */
+    .navE {
+        position: absolute;
+        right: 18px;
+        bottom: 80px;
+        background: #fff;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        padding: 6px 6px 6px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        z-index: 5;
+        border: 1px solid #eee;
+    }
+    .navE .count {
+        color: #888;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+    }
+    .navE .count b { color: #0dc469; font-weight: 600; }
+    .navE .label {
+        color: #111;
+        font-weight: 500;
+        max-width: 130px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .navE .arrow {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: none;
+        background: #f3f3f3;
+        color: #333;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+    }
+    .navE .arrow:hover { background: #0dc469; color: #fff; }
+    .navE .arrow:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+    .navE .arrow:disabled:hover { background: #f3f3f3; color: #333; }
+
+    /* ============================================================
+       Variant F — Progress rail with section ticks (compact)
+       ============================================================ */
+    .navF {
+        position: absolute;
+        top: 50%;
+        right: 24px;
+        transform: translateY(-50%);
+        height: 220px;
+        width: 22px;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .navF .rail {
+        position: relative;
+        width: 3px;
+        height: 100%;
+        background: #ececec;
+        border-radius: 3px;
+    }
+    .navF .rail .fill {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        background: linear-gradient(180deg, #0dc469, #08a35a);
+        border-radius: 3px;
+        transition: height 0.35s ease;
+    }
+    .navF .nodes {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .navF .nodes button {
+        all: unset;
+        position: relative;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1.5px solid #ccc;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .navF .nodes button:hover { border-color: #0dc469; }
+    .navF .nodes button.active {
+        background: #0dc469;
+        border-color: #0dc469;
+        box-shadow: 0 0 0 5px rgba(13,196,105,0.18);
+    }
+    .navF .nodes button .tip {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        font-weight: 500;
+        background: #111;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+    }
+    .navF .nodes button:hover .tip,
+    .navF .nodes button.active .tip { opacity: 1; }
+
+    /* Title row over each stage */
+    .stage-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin: 0 0 6px;
+    }
+    .stage-head h2 { margin: 56px 0 4px; }
+    .tag {
+        font-size: 10px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+    }
+</style>
+</head>
+<body>
+<div class="frame">
+
+    <h1>Floating section nav — variations</h1>
+    <p class="note">
+        Right-edge vertical scrollspy variants for the landing page's three core sections: <b>Experience</b>, <b>Projects Timeline</b>, and <b>Projects</b>. Each preview scrolls independently inside its frame so you can feel how the indicator tracks the active section &mdash; scroll inside any frame, or click an indicator to jump.
+    </p>
+
+    <!-- ===================== VARIANT A ===================== -->
+    <div class="stage-head">
+        <h2>A — Minimal dots, label on hover</h2>
+        <span class="tag">smallest footprint</span>
+    </div>
+    <p class="note">
+        Tiny dots, active fills green with a soft halo. Section names appear only on hover. <b>Pros:</b> calmest visually, blends with minimal design. <b>Cons:</b> users can't tell what each dot represents until they hover — discoverability cost.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="A">
+            <div class="mini-content"></div>
+            <div class="navA"></div>
+        </div>
+        <div class="meta"><span>Right edge · ~10px dots · hover labels</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+    <!-- ===================== VARIANT B ===================== -->
+    <div class="stage-head">
+        <h2>B — Dots + persistent text labels</h2>
+        <span class="tag">most discoverable</span>
+    </div>
+    <p class="note">
+        Section names sit beside dots all the time. <b>Pros:</b> instantly readable, no hover required. <b>Cons:</b> widest variant — eats horizontal space. May feel heavy on a minimal page.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="B">
+            <div class="mini-content"></div>
+            <div class="navB"></div>
+        </div>
+        <div class="meta"><span>Right edge · always-on uppercase labels</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+    <!-- ===================== VARIANT C ===================== -->
+    <div class="stage-head">
+        <h2>C — Vertical rail with traveling fill</h2>
+        <span class="tag">progress + nav combined</span>
+    </div>
+    <p class="note">
+        A thin rail with tick-dots for each section. The green fill grows downward as you scroll, so it doubles as a scroll-progress indicator. Labels sit to the left of the rail. <b>Pros:</b> reads as a true timeline, matches the existing career/project timelines on the page. <b>Cons:</b> slightly more visual weight.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="C">
+            <div class="mini-content"></div>
+            <div class="navC">
+                <div class="labels"></div>
+                <div class="rail">
+                    <div class="fill"></div>
+                    <div class="ticks"></div>
+                </div>
+            </div>
+        </div>
+        <div class="meta"><span>Right edge · rail + traveling fill</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+    <!-- ===================== VARIANT D ===================== -->
+    <div class="stage-head">
+        <h2>D — Numbered pills</h2>
+        <span class="tag">tactile, button-like</span>
+    </div>
+    <p class="note">
+        Each section is a numbered circle. Active pill turns green with a drop shadow. Names appear on hover. <b>Pros:</b> obviously clickable, easy targets. <b>Cons:</b> the numbers don't carry meaning (1, 2, 3 are arbitrary) — might feel like a stepper/wizard, which this isn't.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="D">
+            <div class="mini-content"></div>
+            <div class="navD"></div>
+        </div>
+        <div class="meta"><span>Right edge · 28px numbered pills</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+    <!-- ===================== VARIANT E ===================== -->
+    <div class="stage-head">
+        <h2>E — Floating pill island (bottom-right)</h2>
+        <span class="tag">single chip · novel</span>
+    </div>
+    <p class="note">
+        One small chip in the corner showing <i>"2 / 3 · Projects Timeline"</i> plus up/down chevrons. <b>Pros:</b> very small footprint, doesn't touch the side rail of content, the chevrons make jump-to-next-section deliberate. <b>Cons:</b> harder to glance at the whole structure of the page — you only ever see one section name at a time.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="E">
+            <div class="mini-content"></div>
+            <div class="navE">
+                <span class="count"><b class="cur-n">1</b>/<span class="total">3</span></span>
+                <span class="label">—</span>
+                <button class="arrow up" aria-label="Previous section">↑</button>
+                <button class="arrow down" aria-label="Next section">↓</button>
+            </div>
+        </div>
+        <div class="meta"><span>Bottom-right · pill · prev/next</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+    <!-- ===================== VARIANT F ===================== -->
+    <div class="stage-head">
+        <h2>F — Compact rail with hover tooltips</h2>
+        <span class="tag">middle ground</span>
+    </div>
+    <p class="note">
+        Like C but tighter — the rail is fixed-height (regardless of section count), section nodes sit on it, and labels live in dark tooltips on hover. The active node always shows its tooltip. <b>Pros:</b> stays narrow, scales nicely from 3 → 5 sections without changing footprint. <b>Cons:</b> uses tooltip pattern which is a touch heavier than label-on-hover.
+    </p>
+    <div class="stage">
+        <div class="mini" data-variant="F">
+            <div class="mini-content"></div>
+            <div class="navF">
+                <div class="rail"><div class="fill"></div></div>
+                <div class="nodes"></div>
+            </div>
+        </div>
+        <div class="meta"><span>Right edge · fixed-height rail · tooltips</span><span>active section <b class="cur">—</b></span></div>
+    </div>
+
+</div>
+
+<script>
+/* ---------- shared section data ---------- */
+const SECTIONS = [
+    { key: 'experience', label: 'Experience' },
+    { key: 'ptl',        label: 'Projects Timeline' },
+    { key: 'projects',   label: 'Projects' },
+];
+
+const FAKE_TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at risus tincidunt, fermentum ipsum non, dignissim metus. Mauris non sapien velit. Cras volutpat quam ac risus tincidunt.";
+
+function renderMiniContent(el, sections) {
+    el.innerHTML = sections.map((s, i) => `
+        <section class="sect" id="s-${s.key}-${el.dataset.id}" data-idx="${i}">
+            <h3>${String(i+1).padStart(2,'0')} · ${s.label}</h3>
+            <h4>${s.label} section heading</h4>
+            <p>${FAKE_TEXT}</p>
+            <p>${FAKE_TEXT}</p>
+            <div class="filler ${i % 2 ? 'big' : ''}"></div>
+        </section>
+    `).join('');
+}
+
+/* ---------- per-variant renderers ---------- */
+function renderA(stage, sections) {
+    const nav = stage.querySelector('.navA');
+    nav.innerHTML = sections.map((s, i) => `
+        <div class="item" data-idx="${i}">
+            <span class="lbl">${s.label}</span>
+        </div>
+    `).join('');
+}
+
+function renderB(stage, sections) {
+    const nav = stage.querySelector('.navB');
+    nav.innerHTML = sections.map((s, i) => `
+        <div class="item" data-idx="${i}">
+            <span class="txt">${s.label}</span>
+            <span class="dot"></span>
+        </div>
+    `).join('');
+}
+
+function renderC(stage, sections) {
+    const labels = stage.querySelector('.navC .labels');
+    const ticks = stage.querySelector('.navC .ticks');
+    labels.innerHTML = sections.map((s,i) => `<span data-idx="${i}">${s.label}</span>`).join('');
+    ticks.innerHTML = sections.map((s,i) => `<i data-idx="${i}"></i>`).join('');
+}
+
+function renderD(stage, sections) {
+    const nav = stage.querySelector('.navD');
+    nav.innerHTML = sections.map((s, i) => `
+        <div class="item" data-idx="${i}">${i+1}<span class="lbl">${s.label}</span></div>
+    `).join('');
+}
+
+function renderE(stage, sections) {
+    stage.querySelector('.navE .total').textContent = sections.length;
+}
+
+function renderF(stage, sections) {
+    const nodes = stage.querySelector('.navF .nodes');
+    nodes.innerHTML = sections.map((s,i) => `
+        <button data-idx="${i}"><span class="tip">${s.label}</span></button>
+    `).join('');
+}
+
+const RENDERERS = { A: renderA, B: renderB, C: renderC, D: renderD, E: renderE, F: renderF };
+
+/* ---------- shared active-state sync ---------- */
+function setActive(stage, idx, sections) {
+    const variant = stage.dataset.variant;
+    const meta = stage.parentElement.querySelector('.meta .cur');
+    if (meta) meta.textContent = sections[idx]?.label ?? '—';
+
+    if (variant === 'A') {
+        stage.querySelectorAll('.navA .item').forEach((el, i) => el.classList.toggle('active', i === idx));
+    }
+    if (variant === 'B') {
+        stage.querySelectorAll('.navB .item').forEach((el, i) => el.classList.toggle('active', i === idx));
+    }
+    if (variant === 'C') {
+        stage.querySelectorAll('.navC .labels span').forEach((el, i) => el.classList.toggle('active', i === idx));
+        stage.querySelectorAll('.navC .ticks i').forEach((el, i) => el.classList.toggle('active', i <= idx));
+        const fill = stage.querySelector('.navC .rail .fill');
+        const ticks = stage.querySelectorAll('.navC .ticks i');
+        if (ticks.length > 1) {
+            const total = ticks.length - 1;
+            const pct = idx / total * 100;
+            fill.style.top = '0';
+            fill.style.height = pct + '%';
+        } else {
+            fill.style.height = '100%';
+        }
+    }
+    if (variant === 'D') {
+        stage.querySelectorAll('.navD .item').forEach((el, i) => el.classList.toggle('active', i === idx));
+    }
+    if (variant === 'E') {
+        stage.querySelector('.navE .cur-n').textContent = idx + 1;
+        stage.querySelector('.navE .label').textContent = sections[idx]?.label ?? '—';
+        stage.querySelector('.navE .up').disabled = idx === 0;
+        stage.querySelector('.navE .down').disabled = idx === sections.length - 1;
+    }
+    if (variant === 'F') {
+        stage.querySelectorAll('.navF .nodes button').forEach((el, i) => el.classList.toggle('active', i === idx));
+        const fill = stage.querySelector('.navF .rail .fill');
+        const n = sections.length;
+        const pct = n > 1 ? (idx / (n - 1)) * 100 : 100;
+        fill.style.height = pct + '%';
+    }
+}
+
+/* ---------- wire scroll + clicks ---------- */
+function wireStage(stage, sections) {
+    const scroller = stage.querySelector('.mini-content');
+    const variant = stage.dataset.variant;
+
+    // click-to-scroll
+    const jump = (idx) => {
+        const target = scroller.querySelector(`.sect[data-idx="${idx}"]`);
+        if (target) scroller.scrollTo({ top: target.offsetTop - 8, behavior: 'smooth' });
+    };
+
+    stage.querySelectorAll('[data-idx]').forEach(el => {
+        el.addEventListener('click', () => jump(parseInt(el.dataset.idx)));
+    });
+
+    if (variant === 'E') {
+        const up = stage.querySelector('.navE .up');
+        const down = stage.querySelector('.navE .down');
+        up.addEventListener('click', () => {
+            const cur = stage.dataset.active | 0;
+            if (cur > 0) jump(cur - 1);
+        });
+        down.addEventListener('click', () => {
+            const cur = stage.dataset.active | 0;
+            if (cur < sections.length - 1) jump(cur + 1);
+        });
+    }
+
+    // scrollspy
+    const onScroll = () => {
+        const sects = [...scroller.querySelectorAll('.sect')];
+        let active = 0;
+        const probe = scroller.scrollTop + 80;
+        for (let i = 0; i < sects.length; i++) {
+            if (sects[i].offsetTop <= probe) active = i;
+        }
+        stage.dataset.active = active;
+        setActive(stage, active, sections);
+    };
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    setActive(stage, 0, sections);
+    stage.dataset.active = 0;
+}
+
+/* ---------- render everything ---------- */
+let stageCounter = 0;
+function build() {
+    document.querySelectorAll('.stage .mini').forEach(stage => {
+        if (!stage.dataset.id) stage.dataset.id = (++stageCounter);
+        const variant = stage.dataset.variant;
+        const scroller = stage.querySelector('.mini-content');
+        renderMiniContent(scroller, SECTIONS);
+        RENDERERS[variant](stage, SECTIONS);
+        wireStage(stage, SECTIONS);
+    });
+}
+
+build();
+</script>
+</body>
+</html>

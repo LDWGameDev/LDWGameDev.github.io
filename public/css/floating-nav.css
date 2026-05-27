@@ -1,0 +1,112 @@
+/* Floating section nav. Partial: layouts/partials/floating_nav.html. Script: static/js/floating-nav.js.
+   Right-edge vertical rail with a traveling green fill that tracks scroll progress through
+   #experience, #projects-timeline, and #projects. Hidden on narrow viewports. */
+
+.fnav {
+    position: fixed;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.fnav.is-ready {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.fnav-labels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: flex-end;
+}
+
+.fnav-labels button {
+    all: unset;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: right;
+    transition: color 0.2s ease;
+}
+
+.fnav-labels button:hover,
+.fnav-labels button:focus-visible {
+    color: #555;
+}
+
+.fnav-labels button.is-active {
+    color: #0dc469;
+    font-weight: 600;
+}
+
+.fnav-labels button:focus-visible {
+    outline: 2px solid #0dc469;
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+.fnav-rail {
+    position: relative;
+    width: 2px;
+    background: #e5e5e5;
+    border-radius: 2px;
+    align-self: stretch;
+}
+
+.fnav-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    background: #0dc469;
+    border-radius: 2px;
+    transition: height 0.18s ease-out;
+}
+
+.fnav-ticks {
+    position: absolute;
+    inset: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.fnav-ticks li {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid #ccc;
+    margin-left: -3px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.fnav-ticks li.is-passed {
+    background: #0dc469;
+    border-color: #0dc469;
+}
+
+/* Hide on narrow viewports where the rail would overlap content. */
+@media (max-width: 1100px) {
+    .fnav { display: none; }
+}

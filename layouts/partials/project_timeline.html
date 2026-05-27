@@ -1,0 +1,45 @@
+{{/* Project timeline. Data: data/projects.yaml. Styles: static/css/project-timeline.css. Script: static/js/project-timeline.js.
+     Each node carries the data the JS needs to position dots on a year axis and render the detail card. */}}
+
+<section class="ptl-section" id="projects-timeline">
+    <h2 class="highlighted-text">Projects Timeline</h2>
+
+    <div class="ptl" id="project-tl">
+        <div class="ptl-plot" id="ptl-plot">
+            {{ range site.Data.projects }}
+            <div class="ptl-node"
+                 data-slug="{{ .slug }}"
+                 data-name="{{ .name }}"
+                 data-image="{{ .image }}"
+                 data-time="{{ .time }}"
+                 data-tags="{{ delimit .tags ", " }}"
+                 data-description="{{ .description }}">
+                <span class="ptl-dot"></span>
+                <span class="ptl-stem"></span>
+                <button class="ptl-pill" type="button">
+                    <img src="{{ .image }}" alt="">
+                    <span class="ptl-pill-name">{{ .name }}</span>
+                    <span class="ptl-pill-year"></span>
+                </button>
+            </div>
+            {{ end }}
+        </div>
+
+        <div class="ptl-axis" id="ptl-axis"></div>
+
+        <div class="ptl-panel-wrap" id="ptl-panel-wrap">
+            <div class="ptl-panel" id="ptl-panel" hidden>
+                <img class="ptl-panel-hero" id="ptl-panel-hero" alt="">
+                <div class="ptl-panel-head">
+                    <img class="ptl-panel-icon" id="ptl-panel-icon" alt="">
+                    <div class="ptl-panel-head-text">
+                        <h3 class="ptl-panel-name" id="ptl-panel-name"></h3>
+                        <p class="ptl-panel-meta" id="ptl-panel-meta"></p>
+                    </div>
+                </div>
+                <p class="ptl-panel-desc" id="ptl-panel-desc"></p>
+                <a class="ptl-panel-cta" id="ptl-panel-cta" href="#">View project →</a>
+            </div>
+        </div>
+    </div>
+</section>

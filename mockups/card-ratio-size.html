@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Card ratio × max-size mockups</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 48px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 20px;
+        max-width: 720px;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+    .stage {
+        background: #fafafa;
+        padding: 28px;
+        border-radius: 12px;
+    }
+    .row {
+        display: grid;
+        grid-template-columns: 64px 1fr 1fr 64px;
+        gap: 18px;
+        align-items: center;
+        justify-items: center;
+    }
+    .arrow {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        color: #444;
+        cursor: pointer;
+    }
+    .card {
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        width: 100%;
+    }
+    .card img {
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        opacity: 0.75;
+    }
+    .card .name {
+        padding: 14px 18px 18px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* Per-option overrides */
+    .opt-A .card { max-width: 380px; }
+    .opt-A .card img { aspect-ratio: 3 / 2; }
+
+    .opt-B .card { max-width: 360px; }
+    .opt-B .card img { aspect-ratio: 4 / 3; }
+
+    .opt-C .card { max-width: 320px; }
+    .opt-C .card img { aspect-ratio: 4 / 3; }
+
+    .opt-D .card { max-width: 320px; }
+    .opt-D .card img { aspect-ratio: 5 / 4; }
+
+    .opt-E .card { max-width: 300px; }
+    .opt-E .card img { aspect-ratio: 1 / 1; }
+
+    .opt-F .card { max-width: 280px; }
+    .opt-F .card img { aspect-ratio: 4 / 3; }
+
+    .opt-G .card { max-width: 260px; }
+    .opt-G .card img { aspect-ratio: 1 / 1; }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Card ratio × max-size combos</h1>
+    <p class="note">Same outer carousel layout, varying the image <strong>aspect ratio</strong> and the card <strong>max-width</strong>. Cards center within their column when max-width is smaller than the column.</p>
+
+    <h2>A — 3:2 landscape, max-width 380px (most cinematic)</h2>
+    <div class="stage">
+        <div class="row opt-A">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>B — 4:3 standard, max-width 360px</h2>
+    <div class="stage">
+        <div class="row opt-B">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>C — 4:3, max-width 320px (current ratio, slightly narrower)</h2>
+    <div class="stage">
+        <div class="row opt-C">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>D — 5:4, max-width 320px (more square-ish)</h2>
+    <div class="stage">
+        <div class="row opt-D">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>E — 1:1 square, max-width 300px (matches your screenshot)</h2>
+    <div class="stage">
+        <div class="row opt-E">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>F — 4:3, max-width 280px (compact)</h2>
+    <div class="stage">
+        <div class="row opt-F">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <h2>G — 1:1, max-width 260px (most compact)</h2>
+    <div class="stage">
+        <div class="row opt-G">
+            <span class="arrow">‹</span>
+            <a class="card"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

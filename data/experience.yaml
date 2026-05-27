@@ -20,7 +20,7 @@
   end: present
   location: Ho Chi Minh City, Vietnam · On-site
   type: Full-time
-  summary: Gameplay engineer on an Unreal Engine title at Ather Labs.
+  summary: Gameplay engineer at Ather Labs.
   tech:
     - Unreal Engine
 
@@ -31,7 +31,7 @@
   end: 2025-05
   location: Ho Chi Minh City, Vietnam · On-site
   type: Full-time
-  summary: Probation period before joining Ather Labs full-time as Game Engineer.
+  summary: Gameplay engineer at Ather Labs.
   tech:
     - Unreal Engine
 
@@ -42,12 +42,12 @@
   end: 2025-05
   location: Ho Chi Minh City, Vietnam · On-site
   type: Self-employed
-  summary: Built Tepo MetaHuman — a Maya plugin on top of MetaHuman Calibration that converts custom humanlike meshes into MetaHuman .dna files for use in Unreal Engine.
+  summary: Shipped Tepo MetaHuman end-to-end — a Maya plugin that unlocks custom characters in Unreal's MetaHuman pipeline by generating valid .dna files.
   highlights:
-    - Preprocess custom meshes before transformation.
-    - Convert custom mesh to MetaHuman .dna.
-    - Preview and adjust incorrect facial expressions.
-    - Use the transformed .dna in Unreal Engine like a standard MetaHuman .dna.
+    - Robust preprocessing so artist-authored meshes survive the pipeline.
+    - Produce engine-ready .dna files from arbitrary humanlike meshes.
+    - In-tool expression review and repair so output ships clean.
+    - Output is fully interchangeable with stock MetaHuman assets in Unreal.
   tech:
     - Maya Python
     - MetaHuman
@@ -59,15 +59,15 @@
   end: 2025-01
   location: Ho Chi Minh City, Vietnam · On-site
   type: Full-time
-  summary: Led a small gameplay team on a multiplayer base-building shooter in Unreal Engine.
+  summary: Shipped gameplay for a multiplayer base-building shooter in Unreal Engine.
   highlights:
-    - Developed and led a small gameplay team on a multiplayer base-building shooter.
-    - Debugged, profiled, and optimized CPU/GPU performance using GPU Visualizer and Unreal Insights.
-    - Worked closely with other teams to integrate game logic and content seamlessly.
-    - Reviewed and refined game logic; addressed and resolved technical issues.
-    - Customized and extended third-party systems to align with project requirements.
-    - Researched and tested new Unreal Engine features for potential integration.
-    - Hosted test sessions, gathered team feedback, and prioritized tasks for upcoming sprints.
+    - Built gameplay systems on a small team for a multiplayer base-building shooter.
+    - Drove perf budgets — diagnosed and fixed CPU/GPU bottlenecks with Unreal Insights and GPU Visualizer.
+    - Coordinated cross-team integration so gameplay, content, and tools landed cleanly.
+    - Owned code review and triage for the gameplay layer.
+    - Adapted third-party systems to project requirements rather than fight them.
+    - Scouted new Unreal Engine features and prototyped fit before adoption.
+    - Ran playtests and turned team feedback into prioritized sprint work.
   tech:
     - Unreal Engine
     - C++
@@ -79,11 +79,11 @@
   end: 2023-11
   location: On-site
   type: Full-time
-  summary: Built gameplay templates and an ability system for a sandbox world-builder tool.
+  summary: Delivered gameplay templates and an ability system that powered user-created worlds in a sandbox builder.
   highlights:
-    - Contributed to a world-builder tool — an in-game editor for users to build, publish, and share custom worlds from predefined templates.
-    - Implemented gameplay templates for the world-builder tool.
-    - Built a simple ability system letting characters have class-specific moves.
+    - Helped ship a user-facing world-builder where players authored, published, and shared custom worlds.
+    - Built the gameplay template library users started from.
+    - Built an ability system giving each class a distinct moveset.
   tech:
     - Unreal Engine
     - C++
@@ -95,10 +95,10 @@
   end: 2022-12
   location: Ho Chi Minh City, Vietnam · Hybrid
   type: Internship
-  summary: Internship on a sandbox metaverse game — focused on the in-game builder tool and world-sharing feature.
+  summary: Internship contributing to the in-game builder and world-sharing features of a sandbox metaverse title.
   highlights:
-    - Gained familiarity with project structure and development workflow through training sessions.
-    - Contributed to a sandbox metaverse game, focusing on the in-game builder tool and world-sharing feature.
+    - Onboarded quickly via structured training to contribute on-project.
+    - Shipped contributions to the in-game builder and world-sharing features.
   tech:
     - Unreal Engine
     - C++

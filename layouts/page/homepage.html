@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/homepage.css">
     <link rel="stylesheet" href="/css/timeline.css">
+    <link rel="stylesheet" href="/css/project-timeline.css">
+    <link rel="stylesheet" href="/css/floating-nav.css">
 </head>
 <body>
     <!-- Title + Social Icons Container -->
@@ -39,9 +41,13 @@
         <p class="intro-text">{{ .Params.intro_text }}</p>
     </section>
 
+    {{ partial "floating_nav.html" . }}
+
     {{ partial "timeline.html" . }}
 
-    <section class="projects-section">
+    {{ partial "project_timeline.html" . }}
+
+    <section class="projects-section" id="projects">
         <h2 class="highlighted-text">Projects</h2>
 
         <div class="project-tags">
@@ -95,5 +101,7 @@
 
     <script src="/js/homepage.js"></script>
     <script src="/js/timeline.js"></script>
+    <script src="/js/project-timeline.js"></script>
+    <script src="/js/floating-nav.js"></script>
 </body>
 </html>

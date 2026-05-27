@@ -3,7 +3,11 @@
 # Schema:
 #   slug:        URL-friendly id (reserved for Phase 7 per-project pages)
 #   name:        display name
-#   image:       hero/card image path
+#   image:       hero/card image path (also used as capsule fallback)
+#   capsule:     OPTIONAL Steam-style capsule art for the detail page right column.
+#                Falls back to `image` if omitted.
+#   main:        OPTIONAL hero media for the detail page left panel.
+#                Shape: { type: video|image|gif, value: "..." }. Falls back to `image` if omitted.
 #   tags:        list of tag strings (canonical: Unity, Unreal Engine, Personal, Work, Prototype)
 #   time:        free-text date/range
 #   description: short paragraph shown on the detail card
@@ -17,50 +21,56 @@
 - slug: fake-knight
   name: "Fake Knight"
   image: /images/projects/fake-knight/fake-knight.png
+  main:
+    type: video
+    value: "https://youtu.be/3ZKLAST7Lec"
   tags: [Unity, Personal]
   time: "2020"
-  description: "Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?"
+  description: "Fake Knight is a 2D action-combat adventure set in the Underneath, a forgotten realm fallen to monstrous foes. Explore winding tunnels, gear up with weapon and armor sets, take on quests from the survivors, and fight through melee, ranged, flying, and boss enemies to reclaim what was lost."
   content:
-    - type: video
-      value: "https://youtu.be/3ZKLAST7Lec"
     - type: text
-      value: "First project I completed using Unity engine, and possibly the last one as well because I switched to Unreal Engine right after this. This project was made purely for learning purposes and, therefore, contains many copyrighted resources."
-    - type: text
-      value: "This was my final assignment project for a class in my second year."
+      value: "My first — and, as it turned out, only — Unity project, built as the final assignment for a second-year university course. I moved to Unreal Engine right after finishing it. Made purely for learning, so it contains some copyrighted art and audio and isn't intended for release."
+    - type: gif
+      value: /images/projects/fake-knight/fake-knight-combat.gif
     - type: list
       intro: "What I worked on:"
       items:
-        - "Inventory and equipment system with set effects."
-        - "Enemy systems featuring four types of enemies: melee, ranged, flying and boss."
-        - "Player and AI state machine."
-        - "Save, load system with 3 save slots for player to choose from."
-        - "Quest system."
+        - "Inventory and equipment with set bonuses."
+        - "Four enemy archetypes — melee, ranged, flying, and boss — built on a shared state machine that also drives the player."
+        - "Save/load with three save slots."
+        - "Quest system as proof of concept — all quests granted at start, completable in any order. Didn't have time to expand into a full questline."
     - type: text
-      value: "Full gameplay."
+      value: "Full playthrough."
     - type: video
       value: "https://youtu.be/mY6sDiFHwwo"
     - type: gif
-      value: /images/projects/fake-knight/fake-knight-combat.gif
-    - type: gif
       value: /images/projects/fake-knight/fake-knight-inventory.gif
+    - type: text
+      value: "Honestly, the systems were over-scoped for a coursework deadline — the state machine alone ended up the heaviest piece of engineering. I came out of it having learned more about cutting scope than about combat feel."
 
 - slug: wukong-early-fan-made
   name: "Wukong Early Fan Made"
   image: /images/projects/wukong/wukong-title-image.png
+  main:
+    type: video
+    value: "https://youtu.be/ntYqUWGNy1c"
   tags: [Unreal Engine, Personal]
   time: "2021"
-  description: "Dive headfirst into intense, action-packed battles in Myth of the Jade Monkey, an RPG inspired by the high-energy combat of Black Myth: Wukong's first trailer. Play as a fierce warrior armed with elemental powers, mastering fast, fluid combat techniques to conquer formidable, mythic foes."
+  description: "A fast-paced action RPG inspired by the first trailer of Black Myth: Wukong, set in a mythic realm of warring spirits and elemental power. Wield elemental abilities, chain fluid melee combos, dodge through danger, and clash with mythic bosses."
   content:
-    - type: video
-      value: "https://youtu.be/ntYqUWGNy1c"
     - type: text
-      value: "First project after switching to Unreal Engine. I tried to mess around with the framework and see how everything works together. To be honest, I was impressed but also overwhelmed at first by all the tools and features in front of me."
+      value: "First project after switching to Unreal Engine — mostly an exploration of how the engine fits together. I was impressed but overwhelmed at first by the sheer surface area of tools and features."
     - type: list
       intro: "What I worked on:"
       items:
-        - "Combat system."
-        - "Environment creation tools."
-        - "Enemy AI."
+        - "Basic action combat — nothing fancy, but it works end to end."
+        - "The full pipeline, all the way through to a packaged, playable demo."
+    - type: list
+      intro: "What I learnt:"
+      items:
+        - "Unreal's gameplay framework, project workflow, and editor UI/UX."
+    - type: text
+      value: "That last one is genuinely the hardest part of picking up Unreal — there's so much in front of you on day one (frameworks, editors, build pipelines, Blueprint vs C++) that I spent the first few weeks just figuring out where everything lived."
     - type: gif
       value: /images/projects/wukong/wukong-enemies-combat.gif
     - type: gif
@@ -69,26 +79,33 @@
 - slug: casual-topdown-shooter
   name: "Casual Topdown Shooter"
   image: /images/projects/casual-shooter/cts-banner.png
+  main:
+    type: video
+    value: "https://youtu.be/P0DJOXgHhxs"
   tags: [Unreal Engine, Personal]
   time: "2021"
-  description: "Sharpen your reflexes in this fast-paced, top-down shooter for PC and mobile! Outsmart waves of enemies, navigate dynamic battlegrounds, and unleash tactical firepower as you blast through each level."
+  description: "A fast-paced arcade top-down shooter for PC and mobile, set across dynamic battlegrounds built for quick sessions. Outsmart enemy waves, dodge incoming fire, unleash tactical firepower, and tackle three different game modes."
   content:
-    - type: video
-      value: "https://youtu.be/P0DJOXgHhxs"
     - type: text
-      value: "This was my final assignment project for a class in my third year."
+      value: "Third-year university coursework, designed for both PC and mobile. I kept the scope deliberately small after Fake Knight — single-genre, finite content, finishable in a semester."
     - type: list
       intro: "What I worked on:"
       items:
-        - "Levels and character management system."
-        - "Shooting combat."
-        - "Enemy AI."
-        - "Save load system."
-        - "Multiple game modes with different gameplay styles to choose from."
+        - "Top-down shooting combat."
+        - "Level flow and character management."
+        - "Enemy AI across a few different archetypes."
+        - "Save/load between sessions."
+        - "Three game modes — defeat all enemies, reach a target location, or survive over a set duration."
+    - type: list
+      intro: "What I learnt:"
+      items:
+        - "Mobile is its own kind of complexity — input, performance, screen sizes, packaging."
+    - type: text
+      value: "A lot of those constraints only show up once you're testing on-device or building the final package. If you haven't accounted for them from day one, you end up redoing whole systems."
     - type: gif
       value: /images/projects/casual-shooter/cts-combat.gif
     - type: text
-      value: "Characters, weapons and enemies."
+      value: "Design of all characters, weapons, and enemies in the game."
     - type: image
       value: /images/projects/casual-shooter/cts-characters.png
     - type: image
@@ -99,22 +116,23 @@
 - slug: action-roguelike
   name: "Action Roguelike"
   image: /images/projects/action-roguelike/ar-banner.png
+  main:
+    type: video
+    value: "https://youtu.be/mfHQZCE7S80"
   tags: [Unreal Engine, Personal]
   time: "2022-2023"
-  description: "Dodge, dash, and slash your way through ever-changing levels, where every decision counts. Defeat everything in your path and master the chaos, but stay sharp ---- one wrong move and it’s game over. Can you survive the madness and push further than ever before?"
+  description: "A fast, run-based action game set across ever-shifting procedural rooms where one misstep ends the run. Dodge, dash, slash through enemy waves, grab upgrades between rooms, and push deeper with each attempt."
   content:
-    - type: video
-      value: "https://youtu.be/mfHQZCE7S80"
     - type: text
-      value: "This was my university graduation project in my final year."
+      value: "Final-year university graduation project. By this point I'd switched to Unreal and finished a couple of smaller projects, so I wanted to try something with more replay value — hence the roguelike loop."
     - type: list
       intro: "What I worked on:"
       items:
-        - "Roguelike combat."
-        - "Random rooms and upgrades system."
-        - "Enemy AI, trap system."
-        - "Save load system."
-        - "Event trigger, simple shop."
+        - "Roguelike combat — dodge, dash, melee, and abilities."
+        - "Procedural rooms and an upgrade system."
+        - "Enemy AI and environmental traps."
+        - "Save/load."
+        - "Event triggers and a simple in-run shop."
     - type: text
       value: "Full gameplay."
     - type: video
@@ -127,12 +145,13 @@
 - slug: deverse-world
   name: "Deverse World"
   image: /images/projects/deverse-world/dv-banner.png
+  main:
+    type: video
+    value: "https://www.youtube.com/watch?v=5_RaYynq8PY"
   tags: [Unreal Engine, Work]
   time: "2022 - 2025"
-  description: "Deverse World is role-playing game with fusion of RTS, shooter and sandbox adventure revolving around base building versus base raiding across infinite procedural floating isles."
+  description: "Deverse World is a sandbox RPG fusing RTS, shooter, and base-building, set across infinite floating isles shaped by procedural generation. Gather resources, build strongholds, raid rival bases, and explore the skies with friends."
   content:
-    - type: video
-      value: "https://www.youtube.com/watch?v=5_RaYynq8PY"
     - type: list
       intro: "What I worked on:"
       items:

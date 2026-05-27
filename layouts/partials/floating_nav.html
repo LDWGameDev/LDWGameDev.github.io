@@ -1,0 +1,18 @@
+{{/* Floating section nav for the homepage. Styles: static/css/floating-nav.css. Script: static/js/floating-nav.js.
+     Vertical rail on the right with a traveling green fill that tracks scroll progress through the three core sections.
+     Section IDs are wired in: timeline.html (#experience), project_timeline.html (#projects-timeline), homepage.html (#projects). */}}
+<aside class="fnav" aria-label="Section navigation">
+    <ul class="fnav-labels">
+        <li><button type="button" data-target="experience">Experience</button></li>
+        <li><button type="button" data-target="projects-timeline">Projects Timeline</button></li>
+        <li><button type="button" data-target="projects">Projects</button></li>
+    </ul>
+    <div class="fnav-rail">
+        <div class="fnav-fill"></div>
+        <ul class="fnav-ticks">
+            <li data-target="experience"></li>
+            <li data-target="projects-timeline"></li>
+            <li data-target="projects"></li>
+        </ul>
+    </div>
+</aside>

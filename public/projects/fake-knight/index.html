@@ -1,19 +1,169 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Fake Knight — Ldwork</title>
-<meta name=description content="Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?"><link rel=canonical href=https://LDWGameDev.github.io/projects/fake-knight/><meta property="og:site_name" content="Ldwork"><meta property="og:title" content="Fake Knight — Ldwork"><meta property="og:description" content="Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?"><meta property="og:type" content="article"><meta property="og:url" content="https://LDWGameDev.github.io/projects/fake-knight/"><meta property="og:image" content="https://LDWGameDev.github.io/images/projects/fake-knight/fake-knight.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="Fake Knight — Ldwork"><meta name=twitter:description content="Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?"><meta name=twitter:image content="https://LDWGameDev.github.io/images/projects/fake-knight/fake-knight.png"><link rel=icon href=/images/favicon.png type=image/png><link rel=apple-touch-icon href=/images/favicon.png><link rel=stylesheet href=/css/common.css><link rel=stylesheet href=/css/project_detail.css></head><body><nav class=project-topnav><a href=/ class=back-link>← Back to projects</a>
-<a href=/ class=site-title data-action=home>Ldwork</a></nav><header class=project-hero><img class=project-hero-image src=/images/projects/fake-knight/fake-knight.png alt="Fake Knight"><div class=project-hero-info><div class=project-hero-text><h1 class=project-name>Fake Knight</h1><div class=project-meta><span>2020</span>
-<span class=meta-dot>·</span><span>Unity</span><span class=meta-dot>·</span><span>Personal</span></div><p class=project-description>Embark on an epic adventure in Fake Knight, an action-packed, combat-driven journey inspired by the beloved Hollow Knight. Do you have the courage and skill to overcome relentless foes and liberate the Underneath from impending doom?</p></div><div class=project-tags><a class=tag-pill href="/?tag=Unity">Unity</a>
-<a class=tag-pill href="/?tag=Personal">Personal</a></div></div></header><hr class=hairline><article class=project-body><div class=project-content-video data-youtube-url=https://youtu.be/3ZKLAST7Lec></div><p>First project I completed using Unity engine, and possibly the last one as well because I switched to Unreal Engine right after this. This project was made purely for learning purposes and, therefore, contains many copyrighted resources.</p><p>This was my final assignment project for a class in my second year.</p><p>What I worked on:</p><ul><li>Inventory and equipment system with set effects.</li><li>Enemy systems featuring four types of enemies: melee, ranged, flying and boss.</li><li>Player and AI state machine.</li><li>Save, load system with 3 save slots for player to choose from.</li><li>Quest system.</li></ul><p>Full gameplay.</p><div class=project-content-video data-youtube-url=https://youtu.be/mY6sDiFHwwo></div><img src=/images/projects/fake-knight/fake-knight-combat.gif alt class=project-content-gif>
-<img src=/images/projects/fake-knight/fake-knight-inventory.gif alt class=project-content-gif></article><hr class=hairline><nav class=project-prev-next data-current-slug=fake-knight><button type=button class=project-nav-arrow data-direction=prev aria-label="Show previous projects">‹</button>
-<a class="project-card-link prev" href=/projects/deverse-world/><img src=/images/projects/deverse-world/dv-banner.png alt>
-<span class=more-name>Deverse World</span>
-</a><a class="project-card-link next" href=/projects/wukong-early-fan-made/><img src=/images/projects/wukong/wukong-title-image.png alt>
-<span class=more-name>Wukong Early Fan Made</span>
-</a><button type=button class=project-nav-arrow data-direction=next aria-label="Show next projects">›</button></nav><div class=project-pagination aria-hidden=true><span class=seg></span>
-<span class=seg></span>
-<span class=seg></span>
-<span class=seg></span></div><script type=application/json id=all-projects-data>[{"image":"/images/projects/fake-knight/fake-knight.png","name":"Fake Knight","slug":"fake-knight"},{"image":"/images/projects/wukong/wukong-title-image.png","name":"Wukong Early Fan Made","slug":"wukong-early-fan-made"},{"image":"/images/projects/casual-shooter/cts-banner.png","name":"Casual Topdown Shooter","slug":"casual-topdown-shooter"},{"image":"/images/projects/action-roguelike/ar-banner.png","name":"Action Roguelike","slug":"action-roguelike"},{"image":"/images/projects/deverse-world/dv-banner.png","name":"Deverse World","slug":"deverse-world"}]</script><footer class=project-footer><div class=project-footer-inner><div class=contact-block><h3>Get in touch</h3><p>Email: <a href=mailto:ldwork.cs@gmail.com>ldwork.cs@gmail.com</a></p><p>Phone: <a href=tel:+84%20769%20661%20420>+84 769 661 420</a></p></div><div class=social-row><a href=https://www.linkedin.com/in/do-duy-long/ target=_blank aria-label=LinkedIn><img src=/images/social/linkedin.png alt=LinkedIn>
-</a><a href=https://github.com/LDWGameDev target=_blank aria-label=GitHub><img src=/images/social/github.png alt=GitHub>
-</a><a href=https://x.com/LDWGameDev target=_blank aria-label="Twitter / X"><img src=/images/social/twitter.png alt="Twitter / X"></a></div></div></footer><button id=scroll-to-top data-action=scroll-top aria-label="Scroll to top">
-<img src=/images/icons/up-arrow.png alt>
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Knight — Ldwork</title>
+<meta name="description" content="Fake Knight is a 2D action-combat adventure set in the Underneath, a forgotten realm fallen to monstrous foes. Explore winding tunnels, gear up with weapon and armor sets, take on quests from the survivors, and fight through melee, ranged, flying, and boss enemies to reclaim what was lost.">
+<link rel="canonical" href="http://localhost:1314/projects/fake-knight/">
+
+
+<meta property="og:site_name" content="Ldwork">
+<meta property="og:title" content="Fake Knight — Ldwork">
+<meta property="og:description" content="Fake Knight is a 2D action-combat adventure set in the Underneath, a forgotten realm fallen to monstrous foes. Explore winding tunnels, gear up with weapon and armor sets, take on quests from the survivors, and fight through melee, ranged, flying, and boss enemies to reclaim what was lost.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1314/projects/fake-knight/">
+<meta property="og:image" content="http://localhost:1314/images/projects/fake-knight/fake-knight.png">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fake Knight — Ldwork">
+<meta name="twitter:description" content="Fake Knight is a 2D action-combat adventure set in the Underneath, a forgotten realm fallen to monstrous foes. Explore winding tunnels, gear up with weapon and armor sets, take on quests from the survivors, and fight through melee, ranged, flying, and boss enemies to reclaim what was lost.">
+<meta name="twitter:image" content="http://localhost:1314/images/projects/fake-knight/fake-knight.png">
+
+
+<link rel="icon" href="/images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/images/favicon.png">
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_detail.css">
+</head>
+<body>
+
+<nav class="project-topnav">
+    <a href="/" class="back-link">← Back to projects</a>
+    <a href="/" class="site-title" data-action="home">Ldwork</a>
+</nav>
+
+<header class="project-hero">
+    <h1 class="project-name">Fake Knight</h1>
+
+    <div class="project-hero-grid">
+        <div class="project-hero-main">
+            
+                
+                    <div class="project-hero-media project-content-video" data-youtube-url="https://youtu.be/3ZKLAST7Lec"></div>
+                
+            
+        </div>
+
+        <aside class="project-hero-aside">
+            <img class="project-hero-capsule" src="/images/projects/fake-knight/fake-knight.png" alt="Fake Knight">
+
+            <p class="project-description">Fake Knight is a 2D action-combat adventure set in the Underneath, a forgotten realm fallen to monstrous foes. Explore winding tunnels, gear up with weapon and armor sets, take on quests from the survivors, and fight through melee, ranged, flying, and boss enemies to reclaim what was lost.</p>
+
+            <dl class="project-hero-meta">
+                <dt>Year</dt>   <dd>2020</dd>
+                <dt>Engine</dt> <dd>Unity</dd>
+                <dt>Type</dt>   <dd>Personal</dd>
+            </dl>
+
+            <div class="project-tags">
+                
+                <a class="tag-pill" href="/?tag=Unity">Unity</a>
+                
+                <a class="tag-pill" href="/?tag=Personal">Personal</a>
+                
+            </div>
+        </aside>
+    </div>
+</header>
+
+<hr class="hairline">
+
+<article class="project-body">
+    
+        
+            <p>My first — and, as it turned out, only — Unity project, built as the final assignment for a second-year university course. I moved to Unreal Engine right after finishing it. Made purely for learning, so it contains some copyrighted art and audio and isn&#39;t intended for release.</p>
+        
+    
+        
+            <img src="/images/projects/fake-knight/fake-knight-combat.gif" alt="" class="project-content-gif">
+        
+    
+        
+            <p>What I worked on:</p>
+            <ul>
+                <li>Inventory and equipment with set bonuses.</li><li>Four enemy archetypes — melee, ranged, flying, and boss — built on a shared state machine that also drives the player.</li><li>Save/load with three save slots.</li><li>Quest system as proof of concept — all quests granted at start, completable in any order. Didn&#39;t have time to expand into a full questline.</li>
+            </ul>
+        
+    
+        
+            <p>Full playthrough.</p>
+        
+    
+        
+            <div class="project-content-video" data-youtube-url="https://youtu.be/mY6sDiFHwwo"></div>
+        
+    
+        
+            <img src="/images/projects/fake-knight/fake-knight-inventory.gif" alt="" class="project-content-gif">
+        
+    
+        
+            <p>Honestly, the systems were over-scoped for a coursework deadline — the state machine alone ended up the heaviest piece of engineering. I came out of it having learned more about cutting scope than about combat feel.</p>
+        
+    
+</article>
+
+<hr class="hairline">
+
+<nav class="project-prev-next" data-current-slug="fake-knight">
+    <button type="button" class="project-nav-arrow" data-direction="prev" aria-label="Show previous projects">‹</button>
+    <a class="project-card-link prev" href="/projects/deverse-world/">
+        <img src="/images/projects/deverse-world/dv-banner.png" alt="">
+        <span class="more-name">Deverse World</span>
+    </a>
+    <a class="project-card-link next" href="/projects/wukong-early-fan-made/">
+        <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+        <span class="more-name">Wukong Early Fan Made</span>
+    </a>
+    <button type="button" class="project-nav-arrow" data-direction="next" aria-label="Show next projects">›</button>
+</nav>
+
+<div class="project-pagination" aria-hidden="true">
+    
+    <span class="seg"></span>
+    
+    <span class="seg"></span>
+    
+    <span class="seg"></span>
+    
+    <span class="seg"></span>
+    
+</div>
+
+<script type="application/json" id="all-projects-data">[{"image":"/images/projects/fake-knight/fake-knight.png","name":"Fake Knight","slug":"fake-knight"},{"image":"/images/projects/wukong/wukong-title-image.png","name":"Wukong Early Fan Made","slug":"wukong-early-fan-made"},{"image":"/images/projects/casual-shooter/cts-banner.png","name":"Casual Topdown Shooter","slug":"casual-topdown-shooter"},{"image":"/images/projects/action-roguelike/ar-banner.png","name":"Action Roguelike","slug":"action-roguelike"},{"image":"/images/projects/deverse-world/dv-banner.png","name":"Deverse World","slug":"deverse-world"}]</script>
+
+
+
+
+<footer class="project-footer">
+    <div class="project-footer-inner">
+        <div class="contact-block">
+            <h3>Get in touch</h3>
+            <p>Email: <a href="mailto:ldwork.cs@gmail.com">ldwork.cs@gmail.com</a></p>
+            <p>Phone: <a href="tel:&#43;84%20769%20661%20420">&#43;84 769 661 420</a></p>
+        </div>
+        <div class="social-row">
+            <a href="https://www.linkedin.com/in/do-duy-long/" target="_blank" aria-label="LinkedIn">
+                <img src="/images/social/linkedin.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/LDWGameDev" target="_blank" aria-label="GitHub">
+                <img src="/images/social/github.png" alt="GitHub">
+            </a>
+            <a href="https://x.com/LDWGameDev" target="_blank" aria-label="Twitter / X">
+                <img src="/images/social/twitter.png" alt="Twitter / X">
+            </a>
+        </div>
+    </div>
+</footer>
+
+<button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
+    <img src="/images/icons/up-arrow.png" alt="">
 </button>
-<script src=/js/project_page.js></script></body></html>
+
+<script src="/js/project_page.js"></script>
+
+</body>
+</html>

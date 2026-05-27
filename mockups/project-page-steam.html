@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project page — Steam-style hero mockup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    :root {
+        --max-width: 1100px;
+        --muted: #6c6c6c;
+        --muted-2: #8a8a8a;
+        --text: #111;
+        --hairline: #e4e4e4;
+        --pill-bg: #f3f3f3;
+        --pill-bg-hover: #e8e8e8;
+        --green: #0dc469;
+        --row-divider: #ececec;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--text);
+        margin: 0;
+        background: #fff;
+        line-height: 1.55;
+    }
+    a { color: inherit; }
+
+    /* ======= TOP NAV ======= */
+    .topnav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 24px 32px;
+    }
+    .back-link {
+        font-size: 14px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green); }
+    .topnav .site-title {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    /* ======= VARIANT BANNER ======= */
+    .variant-banner {
+        max-width: var(--max-width);
+        margin: 32px auto 12px;
+        padding: 0 32px;
+    }
+    .variant-banner h2 {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--green);
+        margin: 0 0 4px;
+        font-weight: 600;
+    }
+    .variant-banner p {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    /* ======= STEAM-STYLE HERO ======= */
+    .project-hero {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+    .hero-title-top {
+        font-size: 36px;
+        line-height: 1.15;
+        font-weight: 700;
+        margin: 0 0 18px;
+    }
+    .hero-title-bottom {
+        font-size: 36px;
+        line-height: 1.15;
+        font-weight: 700;
+        margin: 28px 0 0;
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* LEFT — main media */
+    .hero-main {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #111;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .hero-main img,
+    .hero-main iframe {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border: 0;
+    }
+    /* fake video placeholder for the mockup */
+    .hero-main.fake-video::after {
+        content: "▶";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+    }
+    .hero-main.fake-video::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.25));
+        pointer-events: none;
+    }
+
+    /* RIGHT — info column */
+    .hero-info {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+    }
+    .hero-capsule {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        display: block;
+        border-radius: 6px;
+        background: #222;
+    }
+    .hero-description {
+        font-size: 13.5px;
+        color: #333;
+        margin: 0;
+        line-height: 1.55;
+    }
+    .hero-meta {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        row-gap: 8px;
+        column-gap: 12px;
+        padding: 10px 0 0;
+        border-top: 1px solid var(--row-divider);
+        margin-top: 4px;
+    }
+    .hero-meta dt {
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-2);
+        font-weight: 600;
+    }
+    .hero-meta dd {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+    }
+    .hero-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+    }
+    .hero-tags a.tag {
+        background: var(--pill-bg);
+        color: var(--text);
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 11.5px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    .hero-tags a.tag:hover { background: var(--pill-bg-hover); }
+
+    /* divider between mockup variants */
+    .variant-divider {
+        max-width: var(--max-width);
+        margin: 64px auto;
+        border: 0;
+        border-top: 2px dashed #e0e0e0;
+    }
+
+    /* annotation overlay (mockup-only) */
+    .note {
+        position: relative;
+        outline: 1px dashed rgba(13, 196, 105, 0.45);
+        outline-offset: 4px;
+    }
+    .note::after {
+        content: attr(data-note);
+        position: absolute;
+        top: -22px;
+        left: 0;
+        font-size: 11px;
+        color: var(--green);
+        font-weight: 600;
+        background: #fff;
+        padding: 0 6px;
+        letter-spacing: 0.03em;
+        z-index: 2;
+    }
+    .legend {
+        max-width: var(--max-width);
+        margin: 48px auto 64px;
+        padding: 16px 32px;
+        font-size: 13px;
+        color: var(--muted);
+        border-top: 1px dashed var(--hairline);
+    }
+    .legend strong { color: var(--green); }
+    .legend ul { padding-left: 18px; margin: 8px 0 0; }
+    .legend li { margin-bottom: 4px; }
+
+    /* responsive */
+    @media (max-width: 760px) {
+        .hero-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .hero-meta { grid-template-columns: 90px 1fr; }
+        .hero-title-top, .hero-title-bottom { font-size: 28px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+    <a href="/" class="back-link">← Back to projects</a>
+    <span class="site-title">Ldwork</span>
+</nav>
+
+<!-- ============================================ -->
+<!-- VARIANT A — title ABOVE the two-column block -->
+<!-- ============================================ -->
+<div class="variant-banner">
+    <h2>Variant A · title above</h2>
+    <p>H1 sits as a header bar above the Steam two-col block — clear page hierarchy, title is the first thing you read.</p>
+</div>
+
+<section class="project-hero">
+    <h1 class="hero-title-top">Fake Knight</h1>
+
+    <div class="hero-grid">
+        <!-- LEFT: main media (video in this example) -->
+        <div class="hero-main fake-video note" data-note="① main media (video or image)">
+            <img src="/images/projects/fake-knight/fake-knight.png" alt="Fake Knight gameplay">
+        </div>
+
+        <!-- RIGHT: capsule + description + metadata + tags -->
+        <aside class="hero-info">
+            <img class="hero-capsule note" data-note="② capsule (falls back to image)"
+                 src="/images/projects/fake-knight/fake-knight.png"
+                 alt="Fake Knight capsule">
+
+            <p class="hero-description note" data-note="③ description">
+                Fake Knight is a 2D action-combat adventure set in the Underneath,
+                a forgotten realm fallen to monstrous foes. Explore winding tunnels,
+                gear up with weapon and armor sets, take on quests from the survivors,
+                and fight through melee, ranged, flying, and boss enemies to reclaim
+                what was lost.
+            </p>
+
+            <dl class="hero-meta note" data-note="④ metadata rows (year / engine / type)">
+                <dt>Year</dt>      <dd>2020</dd>
+                <dt>Engine</dt>    <dd>Unity</dd>
+                <dt>Type</dt>      <dd>Personal project</dd>
+            </dl>
+
+            <div class="hero-tags note" data-note="⑤ tags as filter links">
+                <a class="tag" href="/?tag=Unity">Unity</a>
+                <a class="tag" href="/?tag=Personal">Personal</a>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<hr class="variant-divider">
+
+<!-- ============================================ -->
+<!-- VARIANT B — title BELOW the two-column block -->
+<!-- ============================================ -->
+<div class="variant-banner">
+    <h2>Variant B · title below</h2>
+    <p>Two-col block leads, title sits underneath like a caption. Lets the media land first — closer to Steam's actual flow where the capsule art carries the brand.</p>
+</div>
+
+<section class="project-hero">
+    <div class="hero-grid">
+        <div class="hero-main fake-video">
+            <img src="/images/projects/wukong/wukong-title-image.png" alt="Wukong gameplay">
+        </div>
+
+        <aside class="hero-info">
+            <img class="hero-capsule"
+                 src="/images/projects/wukong/wukong-title-image.png"
+                 alt="Wukong capsule">
+
+            <p class="hero-description">
+                Dive headfirst into intense, action-packed battles in Myth of the
+                Jade Monkey, an RPG inspired by the high-energy combat of Black
+                Myth: Wukong's first trailer. Play as a fierce warrior armed with
+                elemental powers, mastering fast, fluid combat techniques to
+                conquer formidable, mythic foes.
+            </p>
+
+            <dl class="hero-meta">
+                <dt>Year</dt>      <dd>2021</dd>
+                <dt>Engine</dt>    <dd>Unreal Engine</dd>
+                <dt>Type</dt>      <dd>Personal project</dd>
+            </dl>
+
+            <div class="hero-tags">
+                <a class="tag" href="/?tag=Unreal%20Engine">Unreal Engine</a>
+                <a class="tag" href="/?tag=Personal">Personal</a>
+            </div>
+        </aside>
+    </div>
+
+    <h1 class="hero-title-bottom">Wukong Early Fan Made</h1>
+</section>
+
+<hr class="variant-divider">
+
+<!-- ============================================ -->
+<!-- VARIANT C — main media is a static image     -->
+<!-- ============================================ -->
+<div class="variant-banner">
+    <h2>Variant C · main is an image (no video)</h2>
+    <p>Same layout, but the project's `main` is a still image instead of a video. Confirms the slot handles both gracefully.</p>
+</div>
+
+<section class="project-hero">
+    <h1 class="hero-title-top">Deverse World</h1>
+
+    <div class="hero-grid">
+        <div class="hero-main">
+            <img src="/images/projects/deverse-world/dv-banner.png" alt="Deverse World key art">
+        </div>
+
+        <aside class="hero-info">
+            <img class="hero-capsule"
+                 src="/images/projects/deverse-world/dv-banner.png"
+                 alt="Deverse World capsule">
+
+            <p class="hero-description">
+                Deverse World is role-playing game with fusion of RTS, shooter
+                and sandbox adventure revolving around base building versus base
+                raiding across infinite procedural floating isles.
+            </p>
+
+            <dl class="hero-meta">
+                <dt>Year</dt>      <dd>2022 – 2025</dd>
+                <dt>Engine</dt>    <dd>Unreal Engine</dd>
+                <dt>Type</dt>      <dd>Work</dd>
+            </dl>
+
+            <div class="hero-tags">
+                <a class="tag" href="/?tag=Unreal%20Engine">Unreal Engine</a>
+                <a class="tag" href="/?tag=Work">Work</a>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<div class="legend">
+    <strong>Mockup notes</strong> — three variants on one page so you can compare.
+    <ul>
+        <li><strong>A</strong>: title above the grid (recommended for portfolio — clearest hierarchy).</li>
+        <li><strong>B</strong>: title below the grid (closer to Steam's visual flow but pushes the h1 down).</li>
+        <li><strong>C</strong>: shows the layout when `main` is a still image instead of a video.</li>
+        <li>① Left slot accepts video (YouTube iframe) OR image — schema field <code>main: { type, value }</code>.</li>
+        <li>② Right capsule uses optional <code>capsule:</code> field, falls back to existing <code>image:</code>.</li>
+        <li>④ Metadata rows derive year from <code>time</code>; engine/type derive from <code>tags</code> (Unity/Unreal Engine vs Personal/Work/Prototype).</li>
+        <li>Dashed annotations only appear in this mockup.</li>
+    </ul>
+</div>
+
+</body>
+</html>

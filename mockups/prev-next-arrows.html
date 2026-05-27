@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prev/Next arrow style mockups</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 48px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 20px;
+        max-width: 720px;
+    }
+    .frame {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .stage {
+        background: #fafafa;
+        padding: 28px;
+        border-radius: 12px;
+    }
+
+    /* shared card */
+    .card {
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        display: block;
+        transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        display: block;
+        opacity: 0.75;
+    }
+    .card .name {
+        padding: 14px 18px 18px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* ============================================== */
+    /* A — Outer floating arrows */
+    /* ============================================== */
+    .opt-a {
+        display: grid;
+        grid-template-columns: 56px 1fr 1fr 56px;
+        gap: 18px;
+        align-items: center;
+    }
+    .opt-a .arrow-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        background: #1c1c1c;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .opt-a .arrow-btn:hover {
+        background: #0dc469;
+        transform: scale(1.05);
+    }
+
+    /* ============================================== */
+    /* B — Arrow overlay on each card */
+    /* ============================================== */
+    .opt-b {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    .opt-b .card { position: relative; }
+    .opt-b .overlay-arrow {
+        position: absolute;
+        top: 14px;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #111;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        z-index: 2;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .opt-b .card.prev .overlay-arrow { left: 14px; }
+    .opt-b .card.next .overlay-arrow { right: 14px; }
+
+    /* ============================================== */
+    /* C — Between-card chevron arrows */
+    /* ============================================== */
+    .opt-c {
+        display: grid;
+        grid-template-columns: 1fr 60px 1fr;
+        gap: 12px;
+        align-items: center;
+    }
+    .opt-c .chevron {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #999;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .opt-c .chevron:hover { color: #0dc469; }
+    .opt-c .chevron-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+    }
+
+    /* ============================================== */
+    /* D — Cards row + arrow controls below */
+    /* ============================================== */
+    .opt-d .cards-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 18px;
+    }
+    .opt-d .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+    }
+    .opt-d .nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1.5px solid #ddd;
+        background: #fff;
+        color: #333;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .opt-d .nav-btn:hover {
+        background: #1c1c1c;
+        color: #fff;
+        border-color: #1c1c1c;
+    }
+    .opt-d .position {
+        font-size: 14px;
+        color: #666;
+        min-width: 60px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Prev / Next arrow placements</h1>
+    <p class="note">Same prev/next data (Wukong, Action Roguelike) drawn with four different arrow approaches. No "← previous" / "next →" text labels anywhere.</p>
+
+    <!-- ============================================== -->
+    <h2>A — Outer floating arrows (carousel-style)</h2>
+    <p class="note">Large circular arrow buttons sit on the far left/right edges of the row. Most discoverable; signals "scroll horizontally". Cards stay clean.</p>
+    <div class="stage">
+        <div class="opt-a">
+            <button class="arrow-btn" aria-label="Previous">◀</button>
+            <a class="card" href="#">
+                <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+                <div class="name">Wukong Early Fan Made</div>
+            </a>
+            <a class="card" href="#">
+                <img src="/images/projects/action-roguelike/ar-banner.png" alt="">
+                <div class="name">Action Roguelike</div>
+            </a>
+            <button class="arrow-btn" aria-label="Next">▶</button>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>B — Arrow icon overlaid on each card</h2>
+    <p class="note">Replaces the "PREVIOUS"/"NEXT" text labels with a small circular arrow icon in the corner of each card. Minimal visual change from current.</p>
+    <div class="stage">
+        <div class="opt-b">
+            <a class="card prev" href="#">
+                <span class="overlay-arrow">←</span>
+                <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+                <div class="name">Wukong Early Fan Made</div>
+            </a>
+            <a class="card next" href="#">
+                <span class="overlay-arrow">→</span>
+                <img src="/images/projects/action-roguelike/ar-banner.png" alt="">
+                <div class="name">Action Roguelike</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>C — Between-card chevrons (most subtle)</h2>
+    <p class="note">Tiny double-chevron arrows in the gap between the two cards. Doesn't compete visually with the cards themselves. Quieter.</p>
+    <div class="stage">
+        <div class="opt-c">
+            <a class="card" href="#">
+                <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+                <div class="name">Wukong Early Fan Made</div>
+            </a>
+            <div class="chevron-stack">
+                <span class="chevron" aria-label="Previous">‹</span>
+                <span class="chevron" aria-label="Next">›</span>
+            </div>
+            <a class="card" href="#">
+                <img src="/images/projects/action-roguelike/ar-banner.png" alt="">
+                <div class="name">Action Roguelike</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>D — Arrow controls below the cards (with position)</h2>
+    <p class="note">Cards on top, separate compact control row below with arrows and a position indicator ("3 / 5"). Adds wayfinding — visitors see how many projects total.</p>
+    <div class="stage">
+        <div class="opt-d">
+            <div class="cards-row">
+                <a class="card" href="#">
+                    <img src="/images/projects/wukong/wukong-title-image.png" alt="">
+                    <div class="name">Wukong Early Fan Made</div>
+                </a>
+                <a class="card" href="#">
+                    <img src="/images/projects/action-roguelike/ar-banner.png" alt="">
+                    <div class="name">Action Roguelike</div>
+                </a>
+            </div>
+            <div class="controls">
+                <button class="nav-btn" aria-label="Previous">‹</button>
+                <span class="position">3 / 5</span>
+                <button class="nav-btn" aria-label="Next">›</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

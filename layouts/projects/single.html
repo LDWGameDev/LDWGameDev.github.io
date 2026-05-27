@@ -41,24 +41,53 @@
 </nav>
 
 {{ with $project }}
+{{- /* Split tags into engine (Unity / Unreal Engine) vs type (Personal / Work / Prototype). */ -}}
+{{- $engines := slice "Unity" "Unreal Engine" -}}
+{{- $engineTags := slice -}}
+{{- $typeTags := slice -}}
+{{- range .tags -}}
+    {{- if in $engines . -}}
+        {{- $engineTags = $engineTags | append . -}}
+    {{- else -}}
+        {{- $typeTags = $typeTags | append . -}}
+    {{- end -}}
+{{- end -}}
+{{- $capsule := .image -}}
+{{- with .capsule }}{{ $capsule = . }}{{ end -}}
+
 <header class="project-hero">
-    <img class="project-hero-image" src="{{ .image }}" alt="{{ .name }}">
+    <h1 class="project-name">{{ .name }}</h1>
 
-    <div class="project-hero-info">
-        <div class="project-hero-text">
-            <h1 class="project-name">{{ .name }}</h1>
-            <div class="project-meta">
-                <span>{{ .time }}</span>
-                {{ range .tags }}<span class="meta-dot">·</span><span>{{ . }}</span>{{ end }}
-            </div>
-            <p class="project-description">{{ .description }}</p>
-        </div>
-
-        <div class="project-tags">
-            {{ range .tags }}
-            <a class="tag-pill" href="/?tag={{ . | urlquery }}">{{ . }}</a>
+    <div class="project-hero-grid">
+        <div class="project-hero-main">
+            {{ with .main }}
+                {{ if eq .type "video" }}
+                    <div class="project-hero-media project-content-video" data-youtube-url="{{ .value }}"></div>
+                {{ else }}
+                    <img class="project-hero-media" src="{{ .value }}" alt="">
+                {{ end }}
+            {{ else }}
+                <img class="project-hero-media" src="{{ .image }}" alt="">
             {{ end }}
         </div>
+
+        <aside class="project-hero-aside">
+            <img class="project-hero-capsule" src="{{ $capsule }}" alt="{{ .name }}">
+
+            <p class="project-description">{{ .description }}</p>
+
+            <dl class="project-hero-meta">
+                <dt>Year</dt>   <dd>{{ .time }}</dd>
+                {{ with $engineTags }}<dt>Engine</dt> <dd>{{ delimit . ", " }}</dd>{{ end }}
+                {{ with $typeTags }}<dt>Type</dt>   <dd>{{ delimit . ", " }}</dd>{{ end }}
+            </dl>
+
+            <div class="project-tags">
+                {{ range .tags }}
+                <a class="tag-pill" href="/?tag={{ . | urlquery }}">{{ . }}</a>
+                {{ end }}
+            </div>
+        </aside>
     </div>
 </header>
 

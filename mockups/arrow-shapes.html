@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Outer-arrow style mockups</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 48px 0 4px;
+        color: #0dc469;
+        letter-spacing: 0.04em;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 20px;
+        max-width: 720px;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+    .stage {
+        background: #fafafa;
+        padding: 28px;
+        border-radius: 12px;
+    }
+
+    /* shared card */
+    .card {
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        display: block;
+        transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        display: block;
+        opacity: 0.75;
+    }
+    .card .name {
+        padding: 14px 18px 18px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* shared row grid (outer arrows + two cards) */
+    .row {
+        display: grid;
+        grid-template-columns: 64px 1fr 1fr 64px;
+        gap: 18px;
+        align-items: center;
+    }
+
+    /* ============================================== */
+    /* 1 — Solid dark circle, line arrow */
+    /* ============================================== */
+    .btn-1 {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: none;
+        background: #1c1c1c;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .btn-1:hover { background: #0dc469; transform: scale(1.05); }
+
+    /* ============================================== */
+    /* 2 — Outline / ghost circle */
+    /* ============================================== */
+    .btn-2 {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: 1.5px solid #222;
+        background: transparent;
+        color: #222;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-2:hover { background: #222; color: #fff; }
+
+    /* ============================================== */
+    /* 3 — Rounded square button */
+    /* ============================================== */
+    .btn-3 {
+        width: 56px; height: 56px;
+        border-radius: 12px;
+        border: none;
+        background: #1c1c1c;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s, background 0.2s;
+    }
+    .btn-3:hover { background: #0dc469; transform: translateY(-2px); }
+
+    /* ============================================== */
+    /* 4 — Soft light pill */
+    /* ============================================== */
+    .btn-4 {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: none;
+        background: #f3f3f3;
+        color: #222;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .btn-4:hover { background: #1c1c1c; color: #fff; }
+
+    /* ============================================== */
+    /* 5 — Minimal: just the arrow, no container */
+    /* ============================================== */
+    .btn-5 {
+        width: 56px; height: 56px;
+        border: none;
+        background: transparent;
+        color: #444;
+        font-size: 34px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: color 0.2s, transform 0.2s;
+    }
+    .btn-5:hover { color: #0dc469; transform: scale(1.15); }
+
+    /* ============================================== */
+    /* 6 — Branded green circle (filled) */
+    /* ============================================== */
+    .btn-6 {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: none;
+        background: #0dc469;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s, transform 0.2s;
+        box-shadow: 0 4px 12px rgba(13, 196, 105, 0.35);
+    }
+    .btn-6:hover { background: #0aa75b; transform: scale(1.05); }
+
+    /* ============================================== */
+    /* 7 — SVG line arrow inside circle */
+    /* ============================================== */
+    .btn-7 {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: 1.5px solid #ddd;
+        background: #fff;
+        color: #222;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s;
+    }
+    .btn-7:hover { background: #1c1c1c; color: #fff; border-color: #1c1c1c; }
+    .btn-7 svg { width: 22px; height: 22px; }
+
+    /* ============================================== */
+    /* 8 — Tall narrow pill */
+    /* ============================================== */
+    .btn-8 {
+        width: 40px; height: 80px;
+        border-radius: 999px;
+        border: none;
+        background: #1c1c1c;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s, width 0.2s;
+    }
+    .btn-8:hover { background: #0dc469; width: 48px; }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>Outer-floating arrow — shape & style options</h1>
+    <p class="note">All eight variants use the same outer-arrow layout (arrow · prev card · next card · arrow). Pick the button style — hover over any to see the interaction.</p>
+
+    <!-- 1 -->
+    <h2>1 — Solid dark circle (filled triangle)</h2>
+    <p class="note">Bold, high contrast. Hovers to brand green.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-1" aria-label="Previous">◀</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-1" aria-label="Next">▶</button>
+        </div>
+    </div>
+
+    <!-- 2 -->
+    <h2>2 — Outline / ghost circle (line arrow)</h2>
+    <p class="note">Quieter, less visual weight than solid. Fills in on hover.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-2" aria-label="Previous">←</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-2" aria-label="Next">→</button>
+        </div>
+    </div>
+
+    <!-- 3 -->
+    <h2>3 — Rounded square (chunky)</h2>
+    <p class="note">Matches the card corner-radius vibe. More "button-like" than the circles.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-3" aria-label="Previous">‹</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-3" aria-label="Next">›</button>
+        </div>
+    </div>
+
+    <!-- 4 -->
+    <h2>4 — Soft light pill (gray bg, dark arrow)</h2>
+    <p class="note">Friendly, low-key, blends with light page bg until hovered.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-4" aria-label="Previous">‹</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-4" aria-label="Next">›</button>
+        </div>
+    </div>
+
+    <!-- 5 -->
+    <h2>5 — Minimal: just the arrow (no container)</h2>
+    <p class="note">No button, no border. Pure arrow character. Cleanest, but less obviously clickable.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-5" aria-label="Previous">‹</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-5" aria-label="Next">›</button>
+        </div>
+    </div>
+
+    <!-- 6 -->
+    <h2>6 — Branded green circle</h2>
+    <p class="note">Uses the site's accent green as the button. Eye-catching but might overpower the cards.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-6" aria-label="Previous">◀</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-6" aria-label="Next">▶</button>
+        </div>
+    </div>
+
+    <!-- 7 -->
+    <h2>7 — White circle, SVG arrow, thin border</h2>
+    <p class="note">Clean and modern. Crisp SVG instead of unicode glyphs (looks the same on every browser).</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-7" aria-label="Previous">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-7" aria-label="Next">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 8 -->
+    <h2>8 — Tall narrow pill (matches card height)</h2>
+    <p class="note">Vertically tall buttons that visually echo the height of the cards. Hover widens slightly.</p>
+    <div class="stage">
+        <div class="row">
+            <button class="btn-8" aria-label="Previous">‹</button>
+            <a class="card" href="#"><img src="/images/projects/wukong/wukong-title-image.png" alt=""><div class="name">Wukong Early Fan Made</div></a>
+            <a class="card" href="#"><img src="/images/projects/action-roguelike/ar-banner.png" alt=""><div class="name">Action Roguelike</div></a>
+            <button class="btn-8" aria-label="Next">›</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
