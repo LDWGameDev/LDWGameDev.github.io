@@ -74,6 +74,24 @@
     z-index: 1;
 }
 
+/* Vertical dashed line from the dot down to the axis, color-matched to the dot.
+   Height is set in JS based on the dot's vertical position within the 200px plot. */
+.ptl-projection {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    border-left: 2px dashed #0dc469;
+    transform: translateX(-50%);
+    opacity: 0.85;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.ptl-node.is-wip .ptl-projection {
+    border-left-color: #ff7a18;
+}
+
 .ptl-node.side-left .ptl-stem {
     right: 7px;
     width: 18px;
@@ -133,18 +151,71 @@
     line-height: 1.1;
 }
 
-.ptl-pill-year {
-    font-size: 10.5px;
-    color: #999;
-    font-weight: 500;
-}
-
 .ptl-node.side-left .ptl-pill {
     right: 25px;
 }
 
 .ptl-node.side-right .ptl-pill {
     left: 25px;
+}
+
+/* ---------- WIP (in-development) variant — orange theme ---------- */
+.ptl-node.is-wip .ptl-dot {
+    background: #ff7a18;
+    box-shadow: 0 0 0 1px #ff7a18;
+}
+
+.ptl-node.is-wip.is-active .ptl-dot {
+    box-shadow: 0 0 0 4px rgba(255, 122, 24, 0.28), 0 0 0 1px #ff7a18;
+}
+
+.ptl-pill-wip {
+    background: #fff7ef;
+    border-color: #ffd2a8;
+}
+
+.ptl-pill-wip:hover {
+    box-shadow: 0 4px 10px rgba(255, 122, 24, 0.16);
+}
+
+.ptl-pill-wip:focus-visible {
+    outline: none;
+    border-color: #ff7a18;
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.25);
+}
+
+.ptl-node.is-wip.is-active .ptl-pill-wip {
+    border-color: #ff7a18;
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.18);
+}
+
+.ptl-pill-wip .ptl-pill-name {
+    color: #7a3b00;
+}
+
+.ptl-pill-lock {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffb066, #ff7a18);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ptl-pill-tag {
+    margin-left: 2px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #ff7a18;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    line-height: 1;
 }
 
 /* ---------- Axis ---------- */
@@ -211,13 +282,41 @@
     border-top: 1px solid #e0e0e0;
 }
 
-.ptl-panel-hero {
+.ptl-panel-hero-wrap {
+    position: relative;
     width: 100%;
     height: 110px;
-    object-fit: cover;
     border-radius: 6px;
+    overflow: hidden;
     background: #ddd;
+}
+
+.ptl-panel-hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
+}
+
+.ptl-panel-hero-gate {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg,
+        #ffd2a8 0 14px,
+        #ffe6cf 14px 28px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ptl-panel-hero-gate svg {
+    width: 28px;
+    height: 28px;
+    color: #ff7a18;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 8px;
+    box-sizing: content-box;
 }
 
 .ptl-panel-head {
@@ -234,6 +333,23 @@
     border-radius: 6px;
     background: #ddd;
     flex-shrink: 0;
+}
+
+.ptl-panel-icon-gate {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #ffb066, #ff7a18);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ptl-panel.is-wip-panel .ptl-panel-meta {
+    color: #ff7a18;
+    font-weight: 600;
 }
 
 .ptl-panel-head-text {
@@ -284,6 +400,28 @@
     background: #11d775;
 }
 
+.ptl-panel-cta-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #7a3b00;
+    background: #ffe6cf;
+    border: 1px solid #ffd2a8;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: not-allowed;
+}
+
+/* The detail panel toggles children via the `hidden` attribute (hero vs hero-gate,
+   icon vs icon-gate, cta vs cta-locked). Several of those children declare
+   `display: flex|inline-flex`, which would otherwise override the UA default
+   `[hidden] { display: none }`. Make `hidden` authoritative across the panel. */
+.ptl-panel [hidden] {
+    display: none !important;
+}
+
 /* ---------- Mobile fallback: collapse to a vertical card list ---------- */
 @media (max-width: 700px) {
     .ptl-section {
@@ -325,6 +463,36 @@
     .ptl-mobile-item:hover {
         background: #ececec;
         border-left-color: #0dc469;
+    }
+
+    .ptl-mobile-item.is-wip {
+        background: #fff7ef;
+        border-left-color: #ff7a18;
+        cursor: default;
+    }
+
+    .ptl-mobile-item.is-wip:hover {
+        background: #fff7ef;
+    }
+
+    .ptl-mobile-item.is-wip .ptl-mobile-lock {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ffb066, #ff7a18);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .ptl-mobile-item.is-wip .ptl-mobile-meta {
+        color: #ff7a18;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 10px;
     }
 
     .ptl-mobile-item img {

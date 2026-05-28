@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Experience detail card — ongoing job treatments</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 48px 0 6px;
+        color: #ff7a18;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    p.note {
+        font-size: 13px;
+        color: #555;
+        margin: 0 0 18px;
+        max-width: 760px;
+        line-height: 1.55;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    /* ------------------------------------------------------------------
+       Base card — mirrors production .tl-panel.
+       Each variant adds / overrides specific rules.
+    ------------------------------------------------------------------ */
+    .card {
+        position: relative;
+        background: #1c1c1c;
+        color: #fff;
+        border-radius: 12px;
+        padding: 22px 26px;
+        min-height: 200px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .card-role {
+        font-size: 17px;
+        font-weight: 600;
+        margin: 0;
+    }
+    .card-co {
+        font-size: 13px;
+        color: #ff7a18;
+        margin: 2px 0 0;
+        font-weight: 500;
+    }
+    .card-meta {
+        font-size: 12px;
+        color: #aaa;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .card-summary {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #ddd;
+        margin: 8px 0 12px;
+    }
+    .card-hl { margin: 0; padding-left: 18px; }
+    .card-hl li {
+        font-size: 12px;
+        line-height: 1.55;
+        color: #c5c5c5;
+        margin-bottom: 4px;
+    }
+    .card-tech {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .card-tech span {
+        font-size: 11px;
+        background: #2c2c2c;
+        color: #ffd2a8;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    /* ------------------------------------------------------------------
+       SHARED: ongoing-indicator pieces (each variant uses a subset)
+    ------------------------------------------------------------------ */
+    .dot-live {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ff7a18;
+        box-shadow: 0 0 0 0 rgba(255, 122, 24, 0.6);
+        animation: livepulse 1.8s ease-out infinite;
+    }
+    @keyframes livepulse {
+        0%   { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0.6); }
+        70%  { box-shadow: 0 0 0 8px rgba(255, 122, 24, 0);   }
+        100% { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0);   }
+    }
+
+    .pill-ongoing {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255, 122, 24, 0.16);
+        color: #ffb066;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        border: 1px solid rgba(255, 122, 24, 0.35);
+    }
+
+    /* ==================================================================
+       VARIANT A — "Inline Ongoing pill"
+       Replaces the end date with an orange "● Ongoing" pill inline in the
+       meta line. Card otherwise identical to existing dark-panel design.
+    ================================================================== */
+    .v-a .card-meta .end-slot {
+        /* nothing extra; pill handles it */
+    }
+
+    /* ==================================================================
+       VARIANT B — "Live status header"
+       Adds a thin orange status bar above the role, with a pulsing dot
+       and "Currently building" label. Date line becomes "Started Jun 2026".
+    ================================================================== */
+    .v-b .status-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #ff9d4d;
+        margin-bottom: 12px;
+    }
+    .v-b .status-bar::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, rgba(255, 122, 24, 0.45), transparent);
+    }
+
+    /* ==================================================================
+       VARIANT C — "Orange left rail"
+       Card grows a 4px orange rail down the left edge. Date line uses a
+       small pulsing dot + "Ongoing" inline. Strong "active record" feel.
+    ================================================================== */
+    .v-c {
+        border-left: 4px solid #ff7a18;
+        padding-left: 24px;
+    }
+    .v-c::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(255, 122, 24, 0.08), transparent 40%);
+        pointer-events: none;
+    }
+    .v-c > * { position: relative; }
+
+    /* ==================================================================
+       VARIANT D — "Corner badge"
+       Floating "ONGOING" badge in the top-right corner of the card, with
+       pulsing dot. Date line shows only the start ("Since Jun 2026").
+       Keeps the card body uncluttered.
+    ================================================================== */
+    .v-d .corner-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #ffb066, #ff7a18);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 999px;
+        box-shadow: 0 2px 6px rgba(255, 122, 24, 0.35);
+    }
+    .v-d .corner-badge .dot-live {
+        background: #fff;
+        width: 6px;
+        height: 6px;
+    }
+    @keyframes whitepulse {
+        0%   { box-shadow: 0 0 0 0   rgba(255, 255, 255, 0.7); }
+        70%  { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);   }
+        100% { box-shadow: 0 0 0 0   rgba(255, 255, 255, 0);   }
+    }
+    .v-d .corner-badge .dot-live { animation: whitepulse 1.8s ease-out infinite; }
+    .v-d .card-head { padding-right: 110px; }
+
+    /* ==================================================================
+       VARIANT E — "Light orange card" (matches WIP pill look)
+       Inverts the panel from dark to a light cream-orange surface, mirroring
+       the WIP / Untitled-Project pill on the projects timeline. Strong tie
+       to the rest of the page's "in development" language.
+    ================================================================== */
+    .v-e {
+        background: #fff7ef;
+        color: #3a1f00;
+        border: 1px solid #ffd2a8;
+    }
+    .v-e .card-role { color: #3a1f00; }
+    .v-e .card-co { color: #ff7a18; }
+    .v-e .card-meta { color: #8a5a2b; }
+    .v-e .card-summary { color: #4a2e10; }
+    .v-e .card-hl li { color: #5a3a15; }
+    .v-e .card-tech span {
+        background: #ffe6cf;
+        color: #7a3b00;
+    }
+    .v-e .pill-ongoing {
+        background: #ff7a18;
+        color: #fff;
+        border-color: transparent;
+    }
+
+    /* ==================================================================
+       VARIANT F — "Gradient header strip + footer"
+       Adds an orange gradient strip across the top and an "Active since
+       Jun 2026" footer. Header & footer use orange; body stays dark/neutral.
+    ================================================================== */
+    .v-f {
+        padding-top: 36px;
+    }
+    .v-f .top-strip {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #ffb066, #ff7a18, #ffb066);
+    }
+    .v-f .foot {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(255, 122, 24, 0.3);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ff9d4d;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<h1>Experience detail card — ongoing job treatments</h1>
+<p class="note">
+    Six mockups for the "currently active" state of the detail panel, using the
+    <strong>Indie Game Developer</strong> entry as the example. All variants
+    swap the green company text + green tech chips for the orange palette
+    (<code>#ff7a18</code>) used by the WIP pills on the projects timeline.
+    The goal is to communicate <em>ongoing</em> instead of showing a hard end date.
+</p>
+
+<!-- ============================== ROW 1 ============================== -->
+<h2>Variant A — Inline “Ongoing” pill</h2>
+<p class="note">Smallest delta from today. Replaces the end date in the meta line with an orange pill containing a pulsing dot + “Ongoing”. Card chrome unchanged.</p>
+<div class="row">
+    <div class="card v-a">
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">
+                Jun 2026 –
+                <span class="pill-ongoing"><span class="dot-live"></span>Ongoing</span>
+                · Ho Chi Minh City, Vietnam · Remote · Self-employed
+            </p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<!-- ============================== ROW 2 ============================== -->
+<h2>Variant B — Live status header</h2>
+<p class="note">Thin orange status row above the role: a pulsing dot, “Currently building” label, and a fading rule. Date line collapses to “Started Jun 2026”. Treats ongoing as a state of the record, not an end-date variant.</p>
+<div class="row">
+    <div class="card v-b">
+        <div class="status-bar">
+            <span class="dot-live"></span>
+            Currently building
+        </div>
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">Started Jun 2026 · Ho Chi Minh City, Vietnam · Remote · Self-employed</p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<!-- ============================== ROW 3 ============================== -->
+<h2>Variant C — Orange left rail</h2>
+<p class="note">Card grows a 4px orange rail along the left edge plus a subtle orange wash. Meta line keeps the same shape as other entries but ends in a small dot + “Ongoing”. Quietest of the “card-level” treatments.</p>
+<div class="row">
+    <div class="card v-c">
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">
+                Jun 2026 – <span class="dot-live" style="margin-left:2px"></span> Ongoing
+                · Ho Chi Minh City, Vietnam · Remote · Self-employed
+            </p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<!-- ============================== ROW 4 ============================== -->
+<h2>Variant D — Corner badge</h2>
+<p class="note">Floating gradient “● ONGOING” badge in the top-right corner. Date line collapses to “Since Jun 2026”. Most assertive treatment — the badge always reads first.</p>
+<div class="row">
+    <div class="card v-d">
+        <span class="corner-badge"><span class="dot-live"></span>Ongoing</span>
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">Since Jun 2026 · Ho Chi Minh City, Vietnam · Remote · Self-employed</p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<!-- ============================== ROW 5 ============================== -->
+<h2>Variant E — Light orange card (matches WIP pill on projects timeline)</h2>
+<p class="note">Flips the panel from dark to a light cream-orange surface, the same look as the “Untitled Project” WIP pills above. Strongest visual link to the rest of the page's in-development language; biggest departure from the existing dark detail-panel pattern.</p>
+<div class="row">
+    <div class="card v-e">
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">
+                Jun 2026 –
+                <span class="pill-ongoing"><span class="dot-live" style="background:#fff"></span>Ongoing</span>
+                · Ho Chi Minh City, Vietnam · Remote · Self-employed
+            </p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<!-- ============================== ROW 6 ============================== -->
+<h2>Variant F — Gradient strip + active-since footer</h2>
+<p class="note">Orange gradient bar across the very top of the card and a small dashed-rule footer reading “Active since Jun 2026”. Bookends the card without crowding the body.</p>
+<div class="row">
+    <div class="card v-f">
+        <span class="top-strip"></span>
+        <div class="card-head">
+            <div>
+                <h3 class="card-role">Indie Game Developer</h3>
+                <p class="card-co">Self-employed</p>
+            </div>
+            <p class="card-meta">Jun 2026 – Present · Ho Chi Minh City, Vietnam · Remote · Self-employed</p>
+        </div>
+        <p class="card-summary">Building indie game projects on the side — see the projects timeline above for what's currently cooking.</p>
+        <ul class="card-hl">
+            <li>Owning the full stack from prototype to publishing on a self-set cadence.</li>
+            <li>Continuing the Tepo MetaHuman line and exploring new gameplay directions.</li>
+        </ul>
+        <div class="card-tech">
+            <span>Unreal Engine</span><span>C++</span><span>MetaHuman</span>
+        </div>
+        <div class="foot"><span class="dot-live"></span>Active since Jun 2026</div>
+    </div>
+    <div></div>
+</div>
+
+</div>
+</body>
+</html>

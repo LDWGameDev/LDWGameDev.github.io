@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project timeline — 2026 in-progress treatments</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 56px 0 4px;
+        color: #ff7a18;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    p.note {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 24px;
+        max-width: 760px;
+        line-height: 1.55;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+
+    .stage {
+        background: #fafafa;
+        padding: 40px 160px 40px;
+        border-radius: 12px;
+        position: relative;
+        overflow: visible;
+    }
+
+    /* ---------- Plot area (same skeleton as production) ---------- */
+    .pt-plot { position: relative; height: 200px; }
+    .pt-node {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        width: 0; height: 0;
+    }
+
+    /* Green (shipped) dot — same as production */
+    .pt-dot {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: #0dc469;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #0dc469;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    /* Orange (in-progress) dot — shared by all variants */
+    .pt-dot.wip {
+        background: #ff7a18;
+        box-shadow: 0 0 0 1px #ff7a18;
+    }
+    .pt-dot.wip.pulse {
+        animation: pulse 2.2s ease-out infinite;
+    }
+    @keyframes pulse {
+        0%   { box-shadow: 0 0 0 1px #ff7a18, 0 0 0 0   rgba(255,122,24,0.55); }
+        70%  { box-shadow: 0 0 0 1px #ff7a18, 0 0 0 14px rgba(255,122,24,0);   }
+        100% { box-shadow: 0 0 0 1px #ff7a18, 0 0 0 0   rgba(255,122,24,0);   }
+    }
+
+    .pt-stem {
+        position: absolute;
+        top: 50%;
+        height: 1px;
+        background: #c9c9c9;
+        z-index: 1;
+    }
+    .pt-node.side-right .pt-stem { left: 7px;  width: 18px; }
+    .pt-node.side-left  .pt-stem { right: 7px; width: 18px; }
+
+    /* Generic pill — same as production for shipped projects */
+    .pt-pill {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 999px;
+        padding: 4px 12px 4px 4px;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        white-space: nowrap;
+    }
+    .pt-pill img {
+        width: 22px; height: 22px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: #ddd;
+        flex-shrink: 0;
+    }
+    .pt-pill .name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #1c1c1c;
+        line-height: 1.1;
+    }
+    .pt-pill .year {
+        font-size: 10.5px;
+        color: #999;
+        font-weight: 500;
+    }
+    .pt-node.side-right .pt-pill { left: 25px; }
+    .pt-node.side-left  .pt-pill { right: 25px; }
+
+    /* ============================================================
+       Variant A — Mystery pill + lock icon
+    ============================================================ */
+    .pt-pill.wip-a {
+        background: #fff7ef;
+        border-color: #ffd2a8;
+    }
+    .pt-pill.wip-a .lock-avatar {
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffb066, #ff7a18);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 11px;
+    }
+    .pt-pill.wip-a .name { color: #7a3b00; }
+    .pt-pill.wip-a .wip-tag {
+        margin-left: 4px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        background: #ff7a18;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 999px;
+        text-transform: uppercase;
+    }
+
+    /* ============================================================
+       Variant B — Pulsing dot only (no pill at all)
+    ============================================================ */
+    .pt-node.b-tooltip-host { position: absolute; }
+    .pt-tooltip {
+        position: absolute;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1c1c1c;
+        color: #fff;
+        font-size: 10.5px;
+        padding: 5px 9px;
+        border-radius: 5px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+    }
+    .pt-tooltip::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -4px;
+        transform: translateX(-50%) rotate(45deg);
+        width: 7px; height: 7px;
+        background: #1c1c1c;
+    }
+    .pt-node.b-tooltip-host:hover .pt-tooltip,
+    .pt-node.b-tooltip-host.is-active .pt-tooltip {
+        opacity: 1;
+    }
+
+    /* ============================================================
+       Variant C — Silhouette / code-name pill (dashed border)
+    ============================================================ */
+    .pt-pill.wip-c {
+        background: #fff;
+        border: 1px dashed #ff7a18;
+        box-shadow: 0 1px 3px rgba(255,122,24,0.08);
+    }
+    .pt-pill.wip-c .silhouette {
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid #ff7a18;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #ff7a18;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .pt-pill.wip-c .name { color: #1c1c1c; }
+    .pt-pill.wip-c .year {
+        color: #ff7a18;
+        font-weight: 600;
+    }
+
+    /* ---------- Year axis ---------- */
+    .pt-axis {
+        position: relative;
+        height: 1px;
+        background: #d6d6d6;
+        margin-bottom: 24px;
+    }
+    .pt-tick {
+        position: absolute;
+        top: -5px;
+        width: 1px;
+        height: 11px;
+        background: #c2c2c2;
+    }
+    .pt-tick-label {
+        position: absolute;
+        top: 14px;
+        left: 0;
+        transform: translateX(-50%);
+        font-size: 11px;
+        color: #999;
+        font-weight: 500;
+    }
+
+    /* ---------- Gated panel (shared across all variants) ---------- */
+    .panel-row {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        margin: 36px 0 8px;
+    }
+    .panel-row-label {
+        flex: 0 0 220px;
+        font-size: 12px;
+        color: #666;
+        line-height: 1.5;
+        padding-top: 8px;
+    }
+    .panel-row-label strong {
+        color: #ff7a18;
+        display: block;
+        font-size: 13px;
+        margin-bottom: 4px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .pt-panel {
+        position: relative;
+        width: 300px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        text-align: left;
+    }
+    .pt-panel .hero {
+        width: 100%;
+        height: 110px;
+        border-radius: 6px;
+        background: repeating-linear-gradient(135deg,
+            #ffd2a8 0 14px,
+            #ffe6cf 14px 28px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        filter: blur(0.5px);
+    }
+    .pt-panel .hero .lock-big {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ff7a18;
+        font-size: 18px;
+        backdrop-filter: blur(4px);
+    }
+    .pt-panel .head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 6px;
+    }
+    .pt-panel .head .icon {
+        width: 36px; height: 36px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ffb066, #ff7a18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+    }
+    .pt-panel .head h3 {
+        font-size: 14px;
+        margin: 0;
+        font-weight: 600;
+        color: #1c1c1c;
+    }
+    .pt-panel .head .meta {
+        font-size: 10px;
+        margin: 2px 0 0;
+        color: #ff7a18;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .pt-panel .desc {
+        font-size: 12px;
+        color: #555;
+        line-height: 1.55;
+        margin: 0 0 12px;
+    }
+    .pt-panel .cta-locked {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #7a3b00;
+        background: #ffe6cf;
+        border: 1px solid #ffd2a8;
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: not-allowed;
+    }
+
+    /* Section separator */
+    .section-divider {
+        margin: 64px 0 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    }
+
+    .legend {
+        display: inline-flex;
+        gap: 18px;
+        font-size: 11px;
+        color: #777;
+        margin: 12px 0 0;
+        padding: 8px 14px;
+        background: #fff;
+        border-radius: 999px;
+        border: 1px solid #eee;
+    }
+    .legend .swatch {
+        display: inline-block;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+    .legend .swatch.green  { background: #0dc469; }
+    .legend .swatch.orange { background: #ff7a18; }
+
+    .pick-line {
+        text-align: center;
+        font-size: 13px;
+        color: #444;
+        margin-top: 24px;
+        padding: 14px 20px;
+        background: #fffaf3;
+        border: 1px dashed #ffd2a8;
+        border-radius: 8px;
+    }
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <h1>2026 in-progress treatments — pick one</h1>
+    <p class="note">
+        Three options for the two unannounced 2026 projects. All share the same orange theme to read as
+        “in development, details under embargo,” but differ in how loud the pill on the timeline is. The
+        right column shows the gated detail panel that appears on click — same panel design for all three
+        variants, so the choice is purely about the timeline pill itself.
+    </p>
+    <div class="legend">
+        <span><span class="swatch green"></span>Shipped</span>
+        <span><span class="swatch orange"></span>In development</span>
+    </div>
+
+    <!-- ================================================================
+         VARIANT A — Mystery pill + lock icon
+    ================================================================ -->
+    <h2>Variant A — Mystery pill + lock icon</h2>
+    <p class="note">
+        Same pill shape as shipped projects, but warm orange wash, a lock-avatar instead of the game icon,
+        and a small <strong>WIP</strong> tag. Reads as “in the same family as the others, but locked.”
+        Most visible / commits to having something cooking.
+    </p>
+    <div class="stage">
+        <div class="pt-plot">
+            <!-- Shipped reference: Deverse World 2022-2025 at far-left side -->
+            <div class="pt-node side-right" style="left: 0%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill" type="button">
+                    <img src="https://placehold.co/40x40/3b82f6/fff?text=DW" alt="">
+                    <span class="name">Deverse World</span>
+                    <span class="year">'22 – '25</span>
+                </button>
+            </div>
+
+            <!-- 2026 — Project A — LEFT side (first of year) -->
+            <div class="pt-node side-left" style="left: 100%; top: 28%;">
+                <span class="pt-dot wip"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill wip-a" type="button">
+                    <span class="lock-avatar">🔒</span>
+                    <span class="name">Untitled Project A</span>
+                    <span class="wip-tag">WIP</span>
+                </button>
+            </div>
+
+            <!-- 2026 — Project B — RIGHT side (second of year) -->
+            <div class="pt-node side-right" style="left: 100%; top: 72%;">
+                <span class="pt-dot wip"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill wip-a" type="button">
+                    <span class="lock-avatar">🔒</span>
+                    <span class="name">Untitled Project B</span>
+                    <span class="wip-tag">WIP</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="pt-axis">
+            <span class="pt-tick" style="left: 0%;"><span class="pt-tick-label">2025</span></span>
+            <span class="pt-tick" style="left: 100%;"><span class="pt-tick-label">2026</span></span>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         VARIANT B — Pulsing dot only (no pill)
+    ================================================================ -->
+    <h2>Variant B — Pulsing dot only</h2>
+    <p class="note">
+        No pill at all — just two pulsing orange dots on 2026. Hover/click shows a small tooltip. Quietest
+        treatment: the 2026 column is clearly “something’s coming” without committing to a name or
+        screenshot. Risk: easy to miss on first scan.
+    </p>
+    <div class="stage">
+        <div class="pt-plot">
+            <div class="pt-node side-right" style="left: 0%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill" type="button">
+                    <img src="https://placehold.co/40x40/3b82f6/fff?text=DW" alt="">
+                    <span class="name">Deverse World</span>
+                    <span class="year">'22 – '25</span>
+                </button>
+            </div>
+
+            <!-- 2026 — two pulsing dots, no pill -->
+            <div class="pt-node b-tooltip-host" style="left: 100%; top: 35%;">
+                <span class="pt-dot wip pulse"></span>
+                <span class="pt-tooltip">In development — details under embargo</span>
+            </div>
+            <div class="pt-node b-tooltip-host" style="left: 100%; top: 65%;">
+                <span class="pt-dot wip pulse"></span>
+                <span class="pt-tooltip">In development — details under embargo</span>
+            </div>
+        </div>
+
+        <div class="pt-axis">
+            <span class="pt-tick" style="left: 0%;"><span class="pt-tick-label">2025</span></span>
+            <span class="pt-tick" style="left: 100%;"><span class="pt-tick-label">2026</span></span>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         VARIANT C — Silhouette pill (code names, dashed border)
+    ================================================================ -->
+    <h2>Variant C — Silhouette / code-name pill</h2>
+    <p class="note">
+        White pill with a dashed orange border and an initial-only avatar circle. Uses code names
+        (“Project Echo,” “Project Nova”) so the timeline still has something to read, while the dashed
+        outline signals “not finalized.” Middle ground between A and B — visible without shouting.
+    </p>
+    <div class="stage">
+        <div class="pt-plot">
+            <div class="pt-node side-right" style="left: 0%; top: 50%;">
+                <span class="pt-dot"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill" type="button">
+                    <img src="https://placehold.co/40x40/3b82f6/fff?text=DW" alt="">
+                    <span class="name">Deverse World</span>
+                    <span class="year">'22 – '25</span>
+                </button>
+            </div>
+
+            <div class="pt-node side-left" style="left: 100%; top: 28%;">
+                <span class="pt-dot wip"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill wip-c" type="button">
+                    <span class="silhouette">E</span>
+                    <span class="name">Project Echo</span>
+                    <span class="year">2026</span>
+                </button>
+            </div>
+
+            <div class="pt-node side-right" style="left: 100%; top: 72%;">
+                <span class="pt-dot wip"></span>
+                <span class="pt-stem"></span>
+                <button class="pt-pill wip-c" type="button">
+                    <span class="silhouette">N</span>
+                    <span class="name">Project Nova</span>
+                    <span class="year">2026</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="pt-axis">
+            <span class="pt-tick" style="left: 0%;"><span class="pt-tick-label">2025</span></span>
+            <span class="pt-tick" style="left: 100%;"><span class="pt-tick-label">2026</span></span>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ================================================================
+         SHARED — Gated detail panel
+    ================================================================ -->
+    <h2>Gated detail panel (shared, opens on click)</h2>
+    <p class="note">
+        Same panel design no matter which variant above we pick. Hatched/blurred hero, lock badge, orange
+        meta line, locked CTA. This is the click-target payoff for all three options.
+    </p>
+    <div class="panel-row">
+        <div class="panel-row-label">
+            <strong>Gated panel</strong>
+            Replaces the green “View project →” CTA with a disabled chip. Hero is a striped placeholder so
+            no real art is implied. Copy stays vague but human.
+        </div>
+        <div class="pt-panel">
+            <div class="hero">
+                <div class="lock-big">🔒</div>
+            </div>
+            <div class="head">
+                <div class="icon">🔒</div>
+                <div>
+                    <h3>Untitled Project · 2026</h3>
+                    <p class="meta">In development</p>
+                </div>
+            </div>
+            <p class="desc">
+                Something new is cooking. Details are under wraps for now — check back later in the year.
+            </p>
+            <span class="cta-locked">🔒 Locked — coming soon</span>
+        </div>
+    </div>
+
+    <div class="pick-line">
+        Pick a variant (A · B · C) and I’ll wire it into <code>data/projects.yaml</code>,
+        <code>layouts/partials/project_timeline.html</code>, and the CSS/JS.
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
-{{- /* Find the matching project entry in data/projects.yaml by slug (= directory name). */ -}}
+{{- /* Find the matching project entry in data/projects.yaml by slug (= directory name).
+       WIP entries are excluded so prev/next cycles through shipped projects only. */ -}}
 {{- $slug := .File.ContentBaseName -}}
-{{- $projects := site.Data.projects -}}
+{{- $projects := where site.Data.projects "wip" "ne" true -}}
 {{- $project := false -}}
 {{- $currentIndex := -1 -}}
 {{- range $i, $p := $projects -}}

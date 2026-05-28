@@ -12,12 +12,26 @@
 #   summary     One-line headline for the detail panel.
 #   highlights  (optional) Bullets in the detail panel.
 #   tech        (optional) Tech tag chips.
+#   ongoing     (optional) true = open-ended role. Bar fades to transparent on
+#               the right; panel uses the orange left-rail "ongoing" treatment;
+#               the date range renders "Jun 2026 – ● Ongoing" instead of an end
+#               date. The yaml `end:` is still used to scale the timeline axis.
+
+- role: Indie Game Developer
+  company: Self-employed
+  lane: primary
+  start: 2026-06
+  end: 2027-12
+  location: Ho Chi Minh City, Vietnam · Remote
+  type: Self-employed
+  ongoing: true
+  summary: Building indie game projects on the side — see the projects timeline above for what's currently cooking.
 
 - role: Game Engineer
   company: Ather Labs
   lane: primary
   start: 2025-06
-  end: present
+  end: 2026-05
   location: Ho Chi Minh City, Vietnam · On-site
   type: Full-time
   summary: Gameplay engineer at Ather Labs.

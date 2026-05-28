@@ -55,6 +55,8 @@
     const STACK_TOP = "28%";
     const STACK_BOTTOM = "72%";
 
+    const plotHeight = plot.clientHeight;
+
     byYear.forEach((group) => {
         group.forEach((e, i) => {
             const x = xPct(e.year);
@@ -64,28 +66,22 @@
             e.node.classList.add(i === 0 ? "side-left" : "side-right");
 
             // Vertical position: single = center, stacked = split.
+            let topPct;
             if (group.length === 1) {
-                e.node.style.top = "50%";
+                topPct = 50;
             } else {
-                e.node.style.top = i === 0 ? STACK_TOP : STACK_BOTTOM;
+                topPct = i === 0 ? 28 : 72;
             }
+            e.node.style.top = topPct + "%";
 
-            // Fill in the pill's year text (kept out of the template so the rule for
-            // multi-year strings stays here).
-            const yearLabel = e.node.querySelector(".ptl-pill-year");
-            if (yearLabel) yearLabel.textContent = formatYearLabel(e.node.dataset.time);
+            // Projection line: from dot center down to the axis at the plot's bottom.
+            const proj = e.node.querySelector(".ptl-projection");
+            if (proj) {
+                const dotY = (topPct / 100) * plotHeight;
+                proj.style.height = (plotHeight - dotY) + "px";
+            }
         });
     });
-
-    function formatYearLabel(time) {
-        // Compact form: "2022 - 2025" -> "'22 – '25"; "2020" -> "2020"; "2022-2023" -> "'22 – '23".
-        if (!time) return "";
-        const m = String(time).match(/(\d{4})\s*[-–]\s*(\d{4})/);
-        if (m) {
-            return "'" + m[1].slice(2) + " – '" + m[2].slice(2);
-        }
-        return String(time).trim();
-    }
 
     root.classList.add("is-positioned");
 
@@ -103,11 +99,14 @@
 
     // ---------- Detail card ----------
     const heroEl = document.getElementById("ptl-panel-hero");
+    const heroGateEl = document.getElementById("ptl-panel-hero-gate");
     const iconEl = document.getElementById("ptl-panel-icon");
+    const iconGateEl = document.getElementById("ptl-panel-icon-gate");
     const nameEl = document.getElementById("ptl-panel-name");
     const metaEl = document.getElementById("ptl-panel-meta");
     const descEl = document.getElementById("ptl-panel-desc");
     const ctaEl = document.getElementById("ptl-panel-cta");
+    const ctaLockedEl = document.getElementById("ptl-panel-cta-locked");
 
     let activeNode = null;
 
@@ -116,18 +115,38 @@
         activeNode = node;
         node.classList.add("is-active");
 
+        const isWip = node.dataset.wip === "true";
         const img = node.dataset.image || "";
-        heroEl.src = img;
-        iconEl.src = img;
+
+        // Hero: real image for shipped projects, hatched lock panel for WIP.
+        heroEl.hidden = isWip;
+        heroGateEl.hidden = !isWip;
+        if (!isWip) heroEl.src = img;
+
+        // Inline icon: real image for shipped, lock badge for WIP.
+        iconEl.hidden = isWip;
+        iconGateEl.hidden = !isWip;
+        if (!isWip) iconEl.src = img;
+
         nameEl.textContent = node.dataset.name || "";
 
-        const metaParts = [];
-        if (node.dataset.time) metaParts.push(node.dataset.time);
-        if (node.dataset.tags) metaParts.push(node.dataset.tags);
-        metaEl.textContent = metaParts.join(" · ");
+        if (isWip) {
+            metaEl.textContent = "In development";
+        } else {
+            const metaParts = [];
+            if (node.dataset.time) metaParts.push(node.dataset.time);
+            if (node.dataset.tags) metaParts.push(node.dataset.tags);
+            metaEl.textContent = metaParts.join(" · ");
+        }
 
         descEl.textContent = node.dataset.description || "";
-        ctaEl.href = "/projects/" + (node.dataset.slug || "") + "/";
+
+        // CTA: link for shipped, locked chip for WIP.
+        ctaEl.hidden = isWip;
+        ctaLockedEl.hidden = !isWip;
+        if (!isWip) ctaEl.href = "/projects/" + (node.dataset.slug || "") + "/";
+
+        panel.classList.toggle("is-wip-panel", isWip);
 
         // Anchor card under the node's x-percent.
         panel.style.left = node.style.left;
@@ -166,30 +185,46 @@
     });
 
     // ---------- Mobile fallback: build a vertical list from the same data ----------
+    const LOCK_SVG = '<svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M4 7V5a4 4 0 1 1 8 0v2h.5A1.5 1.5 0 0 1 14 8.5v5A1.5 1.5 0 0 1 12.5 15h-9A1.5 1.5 0 0 1 2 13.5v-5A1.5 1.5 0 0 1 3.5 7H4zm1.5 0h5V5a2.5 2.5 0 1 0-5 0v2z"/></svg>';
     const mobileList = document.createElement("div");
     mobileList.className = "ptl-mobile";
     entries.forEach((e) => {
-        const a = document.createElement("a");
-        a.className = "ptl-mobile-item";
-        a.href = "/projects/" + (e.node.dataset.slug || "") + "/";
-        const img = document.createElement("img");
-        img.src = e.node.dataset.image || "";
-        img.alt = "";
+        const isWip = e.node.dataset.wip === "true";
+        // WIP items aren't links (no detail page exists); shipped ones are.
+        const item = document.createElement(isWip ? "div" : "a");
+        item.className = "ptl-mobile-item" + (isWip ? " is-wip" : "");
+        if (!isWip) item.href = "/projects/" + (e.node.dataset.slug || "") + "/";
+
+        if (isWip) {
+            const lock = document.createElement("div");
+            lock.className = "ptl-mobile-lock";
+            lock.innerHTML = LOCK_SVG;
+            item.appendChild(lock);
+        } else {
+            const img = document.createElement("img");
+            img.src = e.node.dataset.image || "";
+            img.alt = "";
+            item.appendChild(img);
+        }
+
         const meta = document.createElement("div");
         const name = document.createElement("div");
         name.className = "ptl-mobile-name";
         name.textContent = e.node.dataset.name || "";
         const sub = document.createElement("div");
         sub.className = "ptl-mobile-meta";
-        const subParts = [];
-        if (e.node.dataset.time) subParts.push(e.node.dataset.time);
-        if (e.node.dataset.tags) subParts.push(e.node.dataset.tags);
-        sub.textContent = subParts.join(" · ");
+        if (isWip) {
+            sub.textContent = "In development · " + (e.node.dataset.time || "");
+        } else {
+            const subParts = [];
+            if (e.node.dataset.time) subParts.push(e.node.dataset.time);
+            if (e.node.dataset.tags) subParts.push(e.node.dataset.tags);
+            sub.textContent = subParts.join(" · ");
+        }
         meta.appendChild(name);
         meta.appendChild(sub);
-        a.appendChild(img);
-        a.appendChild(meta);
-        mobileList.appendChild(a);
+        item.appendChild(meta);
+        mobileList.appendChild(item);
     });
     root.appendChild(mobileList);
 })();

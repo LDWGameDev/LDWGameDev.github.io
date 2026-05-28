@@ -51,7 +51,7 @@
         <h2 class="highlighted-text">Projects</h2>
 
         <div class="project-tags">
-            {{ $projects := site.Data.projects }}
+            {{ $projects := where site.Data.projects "wip" "ne" true }}
             {{ range .Params.tags }}
                 {{ $tag := . }}
                 {{ $count := 0 }}
@@ -70,7 +70,7 @@
 
         <div class="project-grid-container">
             <div class="project-grid">
-                {{ range site.Data.projects }}
+                {{ range $projects }}
                 <a class="project-card"
                    href="/projects/{{ .slug }}/"
                    data-tags="{{ delimit .tags ", " }}">
@@ -86,18 +86,30 @@
         </div>
     </section>
 
-    <!-- Gray Blank Section -->
-    <div class="bottom-section">
-        <div class="contact-section">
-            <h3>Contact Information</h3>
-            <p>Email: <a href="mailto:{{ .Params.email }}">{{ .Params.email }}</a></p>
-            <p>Phone: <a href="tel:{{ .Params.phone }}">{{ .Params.phone }}</a></p>
+    <footer class="project-footer">
+        <div class="project-footer-inner">
+            <div class="contact-block">
+                <h3>Get in touch</h3>
+                <p>Email: <a href="mailto:{{ .Params.email }}">{{ .Params.email }}</a></p>
+                <p>Phone: <a href="tel:{{ .Params.phone }}">{{ .Params.phone }}</a></p>
+            </div>
+            <div class="social-row">
+                <a href="https://www.linkedin.com/in/do-duy-long/" target="_blank" aria-label="LinkedIn">
+                    <img src="/images/social/linkedin.png" alt="LinkedIn">
+                </a>
+                <a href="https://github.com/LDWGameDev" target="_blank" aria-label="GitHub">
+                    <img src="/images/social/github.png" alt="GitHub">
+                </a>
+                <a href="https://x.com/LDWGameDev" target="_blank" aria-label="Twitter / X">
+                    <img src="/images/social/twitter.png" alt="Twitter / X">
+                </a>
+            </div>
         </div>
+    </footer>
 
-        <button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
-            <img src="/images/icons/up-arrow.png" alt="">
-        </button>
-    </div>
+    <button id="scroll-to-top" data-action="scroll-top" aria-label="Scroll to top">
+        <img src="/images/icons/up-arrow.png" alt="">
+    </button>
 
     <script src="/js/homepage.js"></script>
     <script src="/js/timeline.js"></script>

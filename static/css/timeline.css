@@ -164,8 +164,105 @@
     color: #0a3320;
 }
 
+/* ---------- "Ongoing" role — orange overrides + fade ----------
+   Past roles keep the default green palette. Only [data-ongoing="true"]
+   entries swap to orange, fade their right edge to transparent, and
+   trigger the panel's orange left-rail treatment. */
+.tl .bar[data-ongoing="true"] {
+    -webkit-mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 55%,
+        transparent 100%);
+    mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 55%,
+        transparent 100%);
+}
+
+.tl .bar[data-ongoing="true"]::before {
+    background: #ff7a18;
+}
+
+.tl .bar[data-ongoing="true"]:focus-visible {
+    box-shadow: 0 0 0 2px #ff7a18, 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.tl .bar[data-ongoing="true"].is-active {
+    background: #ff7a18;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(255, 122, 24, 0.4);
+}
+
+.tl .bar[data-ongoing="true"].is-active::before {
+    background: #2a1404;
+}
+
+.tl .bar[data-ongoing="true"].is-active .bar-co {
+    color: #fff2e3;
+}
+
+/* Panel "ongoing" treatment (Variant C — "Orange left rail"):
+   4px orange rail down the left edge plus a soft orange wash. The meta
+   line's end-date slot is replaced with an inline pulsing-dot "Ongoing"
+   pill by timeline.js. Company headline + tech chips also swap to orange
+   so the panel matches the bar. */
+.tl-panel[data-ongoing="true"] {
+    border-left: 4px solid #ff7a18;
+    padding-left: 22px;
+}
+
+.tl-panel[data-ongoing="true"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(255, 122, 24, 0.08), transparent 40%);
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.tl-panel[data-ongoing="true"] > * {
+    position: relative;
+}
+
+.tl-panel[data-ongoing="true"] .tl-panel-co {
+    color: #ff7a18;
+}
+
+.tl-panel[data-ongoing="true"] .tl-panel-tech span {
+    color: #ffd2a8;
+}
+
+/* Inline "ongoing" indicator used inside the meta line. */
+.tl-ongoing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff9d4d;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.tl-live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff7a18;
+    box-shadow: 0 0 0 0 rgba(255, 122, 24, 0.6);
+    animation: tl-livepulse 1.8s ease-out infinite;
+}
+
+@keyframes tl-livepulse {
+    0%   { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(255, 122, 24, 0);   }
+    100% { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0);   }
+}
+
 /* ---------- Detail panel ---------- */
 .tl-panel {
+    position: relative;
     background: #1c1c1c;
     color: #fff;
     border-radius: 12px;
@@ -174,6 +271,7 @@
     margin-top: 56px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     text-align: left;
+    overflow: hidden;
 }
 
 .tl-panel-head {

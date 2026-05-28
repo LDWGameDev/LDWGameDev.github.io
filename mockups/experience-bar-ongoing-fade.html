@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Experience bar — ongoing fade-out treatments</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #fff;
+        color: #111;
+        margin: 0;
+        padding: 0 32px 80px;
+    }
+    h1 { font-size: 22px; margin: 40px 0 4px; }
+    h2 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 48px 0 6px;
+        color: #ff7a18;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    p.note {
+        font-size: 13px;
+        color: #555;
+        margin: 0 0 18px;
+        max-width: 760px;
+        line-height: 1.55;
+    }
+    .frame { max-width: 1100px; margin: 0 auto; }
+
+    /* Stage approximates the real timeline lane: light gray background
+       so the "fade to transparent" actually reads. */
+    .stage {
+        --stage-bg: #fafafa;
+        background: var(--stage-bg);
+        border-radius: 12px;
+        padding: 30px 40px 50px;
+        position: relative;
+        margin-bottom: 8px;
+    }
+    .lane { position: relative; height: 56px; margin-bottom: 6px; }
+    .axis { position: relative; height: 1px; background: #d6d6d6; margin-top: 8px; }
+    .axis span {
+        position: absolute; top: -5px;
+        width: 1px; height: 11px;
+        background: #c2c2c2;
+    }
+    .axis em {
+        position: absolute; top: 14px;
+        font-style: normal; font-size: 11px; color: #999;
+        transform: translateX(-50%);
+    }
+
+    /* ------------ Base bar (production-like) ------------ */
+    .bar {
+        position: absolute;
+        top: 8px; height: 40px;
+        border-radius: 6px;
+        padding: 6px 10px 6px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        overflow: visible;
+        background: #2a2a2a;
+        color: #fff;
+        border: 1px dashed #555;
+    }
+    .bar-role { font-size: 12px; font-weight: 600; line-height: 1.15; white-space: nowrap; }
+    .bar-co   { font-size: 10.5px; line-height: 1.2; color: #b8b8b8; white-space: nowrap; }
+    .bar::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: #c5f5d4;
+        z-index: 1;
+    }
+
+    /* Reference: an ended/neutral bar on the left of each stage. */
+    .ref-ended {
+        left: 8%; width: 22%;
+    }
+
+    /* ------------ V4-base WIP bar (dark + orange chip + orange strip) ------------ */
+    .bar.wip {
+        left: 35%; width: 60%;
+        padding-right: 56px;  /* room for chip */
+    }
+    .bar.wip::before { background: #ff7a18; width: 4px; }
+    .bar.wip .live-chip {
+        position: absolute;
+        right: 8px; top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #ff7a18;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 2px 7px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        line-height: 1;
+        z-index: 3;
+    }
+    .bar.wip .live-chip .dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: #fff;
+        animation: pulse-white 1.8s ease-out infinite;
+    }
+    @keyframes pulse-white {
+        0%   { box-shadow: 0 0 0 0   rgba(255,255,255,0.8); }
+        70%  { box-shadow: 0 0 0 6px rgba(255,255,255,0);   }
+        100% { box-shadow: 0 0 0 0   rgba(255,255,255,0);   }
+    }
+
+    /* ==================================================================
+       FADE A — "Gradient fade" (chip pinned outside fade zone via inset)
+       Bar bg fades from solid #2a2a2a to transparent over the last 35%.
+       Chip sits on a small solid plate so it survives the fade.
+    ================================================================== */
+    .fa .bar.wip {
+        background: linear-gradient(
+            to right,
+            #2a2a2a 0%,
+            #2a2a2a 55%,
+            rgba(42, 42, 42, 0) 100%
+        );
+        border: 1px dashed transparent;
+        border-left: none;
+    }
+    .fa .bar.wip::after {
+        /* Re-draw the dashed border only where the bar is still opaque. */
+        content: "";
+        position: absolute;
+        inset: -1px 35% -1px 0;
+        border: 1px dashed #555;
+        border-radius: 6px 0 0 6px;
+        border-right: none;
+        pointer-events: none;
+    }
+
+    /* ==================================================================
+       FADE B — "Mask soft taper"
+       Uses CSS mask-image on the whole bar so EVERYTHING (bg + border +
+       text) fades. Chip is moved to the LEFT side so it stays solid.
+       Cleanest visual but reorders content.
+    ================================================================== */
+    .fb .bar.wip {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            #000 0%, #000 55%, transparent 100%);
+        mask-image: linear-gradient(
+            to right,
+            #000 0%, #000 55%, transparent 100%);
+        padding-left: 58px;
+        padding-right: 10px;
+    }
+    .fb .bar.wip .live-chip {
+        right: auto; left: 8px;
+    }
+
+    /* ==================================================================
+       FADE C — "Dotted trail"
+       Bar ends with a hard edge at ~70% width, then a row of small orange
+       dots trails off to the right, fading in opacity. Chip stays at right
+       INSIDE the solid bar portion.
+    ================================================================== */
+    .fc .bar.wip {
+        width: 38%;  /* solid bar shorter */
+    }
+    .fc .trail {
+        position: absolute;
+        left: calc(35% + 38%);
+        top: calc(8px + 20px);
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        pointer-events: none;
+    }
+    .fc .trail i {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #ff7a18;
+        display: block;
+    }
+    .fc .trail i:nth-child(1) { opacity: 0.85; }
+    .fc .trail i:nth-child(2) { opacity: 0.6;  }
+    .fc .trail i:nth-child(3) { opacity: 0.4;  width: 7px; height: 7px; }
+    .fc .trail i:nth-child(4) { opacity: 0.25; width: 6px; height: 6px; }
+    .fc .trail i:nth-child(5) { opacity: 0.12; width: 5px; height: 5px; }
+
+    /* ==================================================================
+       FADE D — "Frayed edge / dashed trail"
+       The bar's right border becomes a long open-ended dashed line that
+       fades, suggesting "no end yet". Body of the bar stays fully solid.
+    ================================================================== */
+    .fd .bar.wip {
+        width: 38%;
+        border-radius: 6px 0 0 6px;
+        border-right: none;
+    }
+    .fd .frays {
+        position: absolute;
+        left: calc(35% + 38%);
+        top: 8px;
+        height: 40px;
+        width: 22%;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        padding-left: 4px;
+    }
+    .fd .frays::before {
+        content: "";
+        flex: 1;
+        height: 0;
+        border-top: 2px dashed #ff7a18;
+        opacity: 0.55;
+        /* Fade the dashed line itself. */
+        -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 95%);
+        mask-image: linear-gradient(to right, #000 0%, transparent 95%);
+    }
+
+    /* ==================================================================
+       FADE E — "Arrow / chevron cut"
+       The right edge of the bar isn't flat — it tapers into a soft chevron
+       pointing right, with a gradient fade overlay. Reads as "moving
+       forward, no end-cap".
+    ================================================================== */
+    .fe .bar.wip {
+        clip-path: polygon(
+            0 0,
+            calc(100% - 22px) 0,
+            100% 50%,
+            calc(100% - 22px) 100%,
+            0 100%
+        );
+        background: linear-gradient(
+            to right,
+            #2a2a2a 0%,
+            #2a2a2a 55%,
+            rgba(42, 42, 42, 0.3) 95%,
+            rgba(42, 42, 42, 0.1) 100%
+        );
+        border: none;
+        padding-right: 70px;
+    }
+    .fe .bar.wip::before {
+        background: #ff7a18; width: 4px;
+    }
+
+    /* ==================================================================
+       FADE F — "Glow extension"
+       Solid bar ends at a clean edge; an orange diffuse glow extends past
+       the right edge, suggesting energy/motion continuing forward.
+    ================================================================== */
+    .ff .bar.wip {
+        width: 38%;
+        box-shadow:
+            12px 0 18px -6px rgba(255, 122, 24, 0.35),
+            22px 0 30px -10px rgba(255, 122, 24, 0.2);
+    }
+    .ff .glow {
+        position: absolute;
+        left: calc(35% + 38%);
+        top: 8px;
+        height: 40px;
+        width: 18%;
+        pointer-events: none;
+        background: linear-gradient(
+            to right,
+            rgba(255, 122, 24, 0.35) 0%,
+            rgba(255, 122, 24, 0) 90%
+        );
+        border-radius: 0 6px 6px 0;
+    }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<h1>Experience bar — ongoing fade-out treatments</h1>
+<p class="note">
+    Six options for tapering the right edge of an ongoing-job bar so the bar
+    visibly does not have an end-cap. All variants use the Variant 4 base
+    (dark bar + orange left strip + orange “● LIVE” chip) and replace any
+    green accents with orange. The neutral bar on the left of each stage is
+    a reference “ended” role.
+</p>
+
+<!-- A -->
+<h2>Fade A — Gradient fade (background only)</h2>
+<p class="note">Bar background gradients from solid to fully transparent over the last 45%. Border is redrawn only across the opaque region. Chip stays at the right, just outside the fade zone. Closest to “bar literally dissolves into nothing”.</p>
+<div class="stage fa">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+        </div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+<!-- B -->
+<h2>Fade B — Mask soft taper (whole bar)</h2>
+<p class="note">CSS <code>mask-image</code> fades the entire bar — background, border, AND text — over the last 45%. Cleanest visually but the chip has to move to the left of the role text so it doesn’t fade out too.</p>
+<div class="stage fb">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="live-chip"><span class="dot"></span>Live</span>
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+        </div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+<!-- C -->
+<h2>Fade C — Dotted trail</h2>
+<p class="note">Bar ends with a hard edge at ~70% width; five orange dots in decreasing size + opacity trail off into the future. Reads playful and explicit — “it keeps going”.</p>
+<div class="stage fc">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+        </div>
+        <div class="trail"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+<!-- D -->
+<h2>Fade D — Frayed dashed line</h2>
+<p class="note">The bar’s right edge ends cleanly, then a long fading dashed orange line extends right. Like a planning line — no commitment to an end date.</p>
+<div class="stage fd">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+        </div>
+        <div class="frays"></div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+<!-- E -->
+<h2>Fade E — Chevron cut</h2>
+<p class="note">Right edge is a soft chevron pointing forward, plus a gradient fade through the tip. Reads as motion / arrow. Most stylized; bar shape is the message.</p>
+<div class="stage fe">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+        </div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+<!-- F -->
+<h2>Fade F — Glow extension</h2>
+<p class="note">Bar ends with a clean edge but emits an orange diffuse glow that extends well past the right edge. Energy continues. Subtle, atmospheric.</p>
+<div class="stage ff">
+    <div class="lane">
+        <div class="bar ref-ended"><span class="bar-role">Game Developer</span><span class="bar-co">Cosugames</span></div>
+        <div class="bar wip">
+            <span class="bar-role">Indie Game Developer</span>
+            <span class="bar-co">Self-employed</span>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+        </div>
+        <div class="glow"></div>
+    </div>
+    <div class="axis"><em style="left:12%">2024</em><em style="left:55%">2026</em><span style="left:88%"></span><em style="left:88%">2028</em></div>
+</div>
+
+</div>
+</body>
+</html>

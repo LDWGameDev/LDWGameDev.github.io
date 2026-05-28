@@ -14,6 +14,7 @@
                     {{ if eq $e.lane "primary" }}
                     <button class="bar"
                             type="button"
+                            {{ if $e.ongoing }}data-ongoing="true"{{ end }}
                             data-start="{{ $e.start }}"
                             data-end="{{ $e.end }}"
                             data-role="{{ $e.role }}"
@@ -36,6 +37,7 @@
                     {{ if eq $e.lane "side" }}
                     <button class="bar"
                             type="button"
+                            {{ if $e.ongoing }}data-ongoing="true"{{ end }}
                             data-start="{{ $e.start }}"
                             data-end="{{ $e.end }}"
                             data-role="{{ $e.role }}"
