@@ -37,8 +37,10 @@
 
     <section class="intro">
         <img src="{{ .Params.profile_image }}" alt="LDW logo" class="profile-pic">
-        <h2 class="highlighted-text">{{ .Params.highlighted_text }}</h2>
-        <p class="intro-text">{{ .Params.intro_text }}</p>
+        <div class="intro-text-block">
+            <h2 class="highlighted-text">{{ .Params.highlighted_text }}</h2>
+            <p class="intro-text">{{ .Params.intro_text }}</p>
+        </div>
     </section>
 
     {{ partial "floating_nav.html" . }}
