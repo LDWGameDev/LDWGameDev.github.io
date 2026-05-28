@@ -186,24 +186,37 @@
         bar.addEventListener("click", () => applyBar(bar));
     });
 
-    // Default: pick the role active today. An ongoing role is always considered
-    // current (its yaml `end` is just an axis hint). Among non-ongoing roles,
-    // "active" means today falls within [start, end]. If multiple match, prefer
-    // the one with the latest start. Fall back to the latest-ending bar.
+    // Default precedence: ongoing role first (yaml-flagged `ongoing: true`,
+    // even if its start is in the future), then the role active today
+    // (today within [start, end]), then the latest-ending bar. When multiple
+    // candidates tie at a step, prefer the latest start.
     let defaultBar = bars[0];
     let bestStart = -Infinity;
     let found = false;
+
     bars.forEach((bar) => {
+        if (bar.dataset.ongoing !== "true") return;
         const s = startIdx(bar.dataset.start);
-        const e = endIdx(bar.dataset.end);
-        const isOngoing = bar.dataset.ongoing === "true";
-        const isActive = isOngoing ? s <= presentIdx : s <= presentIdx && presentIdx < e;
-        if (isActive && s > bestStart) {
+        if (s > bestStart) {
             bestStart = s;
             defaultBar = bar;
             found = true;
         }
     });
+
+    if (!found) {
+        bars.forEach((bar) => {
+            const s = startIdx(bar.dataset.start);
+            const e = endIdx(bar.dataset.end);
+            const isActive = s <= presentIdx && presentIdx < e;
+            if (isActive && s > bestStart) {
+                bestStart = s;
+                defaultBar = bar;
+                found = true;
+            }
+        });
+    }
+
     if (!found) {
         let bestEnd = -Infinity;
         bestStart = -Infinity;
@@ -217,5 +230,6 @@
             }
         });
     }
+
     applyBar(defaultBar);
 })();

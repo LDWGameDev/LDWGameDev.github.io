@@ -33,19 +33,25 @@
 
 /* Intro section */
 .intro {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
     margin-top: 50px;
 }
 
 .profile-pic {
-    width: 100%;
-    max-width: 120px;
-    height: auto;
+    width: 120px;
+    height: 120px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     object-fit: cover;
     display: block;
-    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.intro-text-block {
+    text-align: left;
 }
 
 .highlighted-text {
@@ -55,6 +61,7 @@
     position: relative;
     display: inline-block;
     padding: 5px 10px;
+    margin: 0 0 6px;
 }
 
 .highlighted-text::before {
@@ -73,10 +80,19 @@
     font-family: sans-serif, sans-serif;
     font-size: 16px;
     color: #111111;
-    width: 80%;
-    max-width: 600px;
-    margin: 0px auto;
+    max-width: 520px;
+    margin: 0;
     line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+    .intro {
+        flex-direction: column;
+        text-align: center;
+    }
+    .intro-text-block {
+        text-align: center;
+    }
 }
 
 /* Tag filter row above the project grid */
