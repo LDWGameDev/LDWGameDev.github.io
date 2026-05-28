@@ -1,0 +1,404 @@
+/* Career timeline (homepage). Data lives in data/experience.yaml, partial in
+   layouts/partials/timeline.html, JS in static/js/timeline.js. */
+
+.experience-section {
+    text-align: center;
+    margin-top: 50px;
+    padding: 0 32px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.experience-section .highlighted-text {
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+/* ---------- Timeline frame ---------- */
+.tl {
+    position: relative;
+    margin: 0 32px;
+    text-align: left;
+}
+
+.tl-axis {
+    position: relative;
+    height: 1px;
+    background: #d6d6d6;
+    margin-top: 14px;
+}
+
+.tl-tick {
+    position: absolute;
+    top: -5px;
+    width: 1px;
+    height: 11px;
+    background: #c2c2c2;
+}
+
+.tl-tick.is-quarter {
+    height: 6px;
+    opacity: 0.55;
+}
+
+.tl-tick-label {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #999;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ---------- Lanes ---------- */
+.tl-lanes {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.tl-lane {
+    position: relative;
+    height: 56px;
+    margin-bottom: 4px;
+}
+
+.tl-lane-label {
+    position: absolute;
+    left: -28px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: #b0b0b0;
+    text-transform: uppercase;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---------- Bars ---------- */
+.tl .bar {
+    position: absolute;
+    top: 8px;
+    height: 40px;
+    background: #2a2a2a;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 6px 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    border: 1px dashed #555;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    /* hidden until JS computes positions */
+    visibility: hidden;
+}
+
+.tl.is-positioned .bar {
+    visibility: visible;
+}
+
+.tl .bar::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #c5f5d4;
+}
+
+/* Hover / focus = clickable affordance only (subtle lift). Selection is by click. */
+.tl .bar:hover,
+.tl .bar:focus-visible {
+    outline: none;
+    background: #2a2a2a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+    z-index: 3;
+}
+
+.tl .bar:focus-visible {
+    box-shadow: 0 0 0 2px #0dc469, 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+/* Active (clicked) = selected style. */
+.tl .bar.is-active {
+    background: #0dc469;
+    color: #0a1f12;
+    z-index: 4;
+    box-shadow: 0 6px 14px rgba(13, 196, 105, 0.35);
+    transform: translateY(-2px);
+}
+
+.tl .bar.is-active::before {
+    background: #0a1f12;
+}
+
+.bar-role {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bar-co {
+    font-size: 10.5px;
+    line-height: 1.2;
+    color: #b8b8b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tl .bar.is-active .bar-co {
+    color: #0a3320;
+}
+
+/* ---------- "Ongoing" role — orange overrides + fade ----------
+   Past roles keep the default green palette. Only [data-ongoing="true"]
+   entries swap to orange, fade their right edge to transparent, and
+   trigger the panel's orange left-rail treatment. */
+.tl .bar[data-ongoing="true"] {
+    -webkit-mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 55%,
+        transparent 100%);
+    mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 55%,
+        transparent 100%);
+}
+
+.tl .bar[data-ongoing="true"]::before {
+    background: #ff7a18;
+}
+
+.tl .bar[data-ongoing="true"]:focus-visible {
+    box-shadow: 0 0 0 2px #ff7a18, 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.tl .bar[data-ongoing="true"].is-active {
+    background: #ff7a18;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(255, 122, 24, 0.4);
+}
+
+.tl .bar[data-ongoing="true"].is-active::before {
+    background: #2a1404;
+}
+
+.tl .bar[data-ongoing="true"].is-active .bar-co {
+    color: #fff2e3;
+}
+
+/* Panel "ongoing" treatment (Variant C — "Orange left rail"):
+   4px orange rail down the left edge plus a soft orange wash. The meta
+   line's end-date slot is replaced with an inline pulsing-dot "Ongoing"
+   pill by timeline.js. Company headline + tech chips also swap to orange
+   so the panel matches the bar. */
+.tl-panel[data-ongoing="true"] {
+    border-left: 4px solid #ff7a18;
+    padding-left: 22px;
+}
+
+.tl-panel[data-ongoing="true"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(255, 122, 24, 0.08), transparent 40%);
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.tl-panel[data-ongoing="true"] > * {
+    position: relative;
+}
+
+.tl-panel[data-ongoing="true"] .tl-panel-co {
+    color: #ff7a18;
+}
+
+.tl-panel[data-ongoing="true"] .tl-panel-tech span {
+    color: #ffd2a8;
+}
+
+/* Inline "ongoing" indicator used inside the meta line. */
+.tl-ongoing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #ff9d4d;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.tl-live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff7a18;
+    box-shadow: 0 0 0 0 rgba(255, 122, 24, 0.6);
+    animation: tl-livepulse 1.8s ease-out infinite;
+}
+
+@keyframes tl-livepulse {
+    0%   { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(255, 122, 24, 0);   }
+    100% { box-shadow: 0 0 0 0   rgba(255, 122, 24, 0);   }
+}
+
+/* ---------- Detail panel ---------- */
+.tl-panel {
+    position: relative;
+    background: #1c1c1c;
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px 26px;
+    min-height: 170px;
+    margin-top: 56px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    overflow: hidden;
+}
+
+.tl-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.tl-panel-role {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.tl-panel-co {
+    font-size: 13px;
+    color: #0dc469;
+    margin: 2px 0 0;
+    font-weight: 500;
+}
+
+.tl-panel-meta {
+    font-size: 12px;
+    color: #aaa;
+    margin: 0;
+}
+
+.tl-panel-summary {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #ddd;
+    margin: 8px 0 12px;
+}
+
+.tl-panel-highlights {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.tl-panel-highlights:empty {
+    display: none;
+}
+
+.tl-panel-highlights li {
+    font-size: 12px;
+    line-height: 1.55;
+    color: #c5c5c5;
+    margin-bottom: 4px;
+}
+
+.tl-panel-tech {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tl-panel-tech:empty {
+    display: none;
+}
+
+.tl-panel-tech span {
+    font-size: 11px;
+    background: #2c2c2c;
+    color: #c5f5d4;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+/* ---------- Mobile fallback: vertical card stack ---------- */
+@media (max-width: 700px) {
+    .experience-section {
+        padding: 0 16px;
+    }
+
+    .tl {
+        margin: 0;
+    }
+
+    .tl-axis,
+    .tl-lane-label {
+        display: none;
+    }
+
+    .tl-lanes {
+        margin-bottom: 0;
+    }
+
+    .tl-lane {
+        height: auto;
+        margin-bottom: 0;
+    }
+
+    .tl .bar {
+        position: relative;
+        left: auto !important;
+        width: 100% !important;
+        top: auto;
+        height: auto;
+        min-height: 56px;
+        margin-bottom: 8px;
+        padding: 10px 14px;
+        visibility: visible;
+    }
+
+    .tl .bar:hover,
+    .tl .bar:focus-visible,
+    .tl .bar.is-active {
+        transform: none;
+    }
+
+    .bar-role {
+        font-size: 13px;
+        white-space: normal;
+    }
+
+    .bar-co {
+        font-size: 11.5px;
+        white-space: normal;
+    }
+
+    .tl-panel {
+        margin-top: 24px;
+        padding: 18px 20px;
+    }
+}

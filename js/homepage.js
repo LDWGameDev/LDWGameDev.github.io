@@ -32,8 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', scrollToTop);
     });
 
-    const defaultButton = document.querySelector('.tag-button');
-    if (defaultButton) {
-        filterProjects('All', defaultButton);
+    const urlTag = new URLSearchParams(window.location.search).get('tag');
+    let initialButton = null;
+    if (urlTag) {
+        initialButton = document.querySelector(`.tag-button[data-tag="${CSS.escape(urlTag)}"]`);
+    }
+    if (!initialButton) {
+        initialButton = document.querySelector('.tag-button');
+    }
+    if (initialButton) {
+        filterProjects(initialButton.dataset.tag, initialButton);
     }
 });

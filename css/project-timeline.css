@@ -1,0 +1,525 @@
+/* Project timeline (homepage). Data: data/projects.yaml. Partial: layouts/partials/project_timeline.html.
+   Script: static/js/project-timeline.js. Rule: first project of each year sits on the LEFT; a second
+   project sharing the same year goes RIGHT. */
+
+.ptl-section {
+    text-align: center;
+    margin-top: 50px;
+    padding: 0 32px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ptl-section .highlighted-text {
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+/* Inner side padding so pills at the 0% / 100% ends don't clip. */
+.ptl {
+    position: relative;
+    padding: 0 160px;
+    text-align: left;
+}
+
+/* ---------- Plot ---------- */
+.ptl-plot {
+    position: relative;
+    height: 200px;
+}
+
+.ptl-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    /* JS sets left/top; hide until positioned to avoid flash. */
+    visibility: hidden;
+}
+
+.ptl.is-positioned .ptl-node {
+    visibility: visible;
+}
+
+.ptl-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #0dc469;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #0dc469;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ptl-node:hover .ptl-dot {
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.ptl-node.is-active .ptl-dot {
+    box-shadow: 0 0 0 4px rgba(13, 196, 105, 0.28), 0 0 0 1px #0dc469;
+}
+
+.ptl-stem {
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    background: #c9c9c9;
+    z-index: 1;
+}
+
+/* Vertical dashed line from the dot down to the axis, color-matched to the dot.
+   Height is set in JS based on the dot's vertical position within the 200px plot. */
+.ptl-projection {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    border-left: 2px dashed #0dc469;
+    transform: translateX(-50%);
+    opacity: 0.85;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.ptl-node.is-wip .ptl-projection {
+    border-left-color: #ff7a18;
+}
+
+.ptl-node.side-left .ptl-stem {
+    right: 7px;
+    width: 18px;
+}
+
+.ptl-node.side-right .ptl-stem {
+    left: 7px;
+    width: 18px;
+}
+
+.ptl-pill {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 999px;
+    padding: 4px 12px 4px 4px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    font-family: 'Poppins', sans-serif;
+    transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.ptl-pill:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+}
+
+.ptl-pill:focus-visible {
+    outline: none;
+    border-color: #0dc469;
+    box-shadow: 0 0 0 2px rgba(13, 196, 105, 0.25);
+}
+
+.ptl-node.is-active .ptl-pill {
+    border-color: #0dc469;
+    box-shadow: 0 0 0 2px rgba(13, 196, 105, 0.18);
+}
+
+.ptl-pill img {
+    width: 22px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #ddd;
+    flex-shrink: 0;
+}
+
+.ptl-pill-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1c1c1c;
+    line-height: 1.1;
+}
+
+.ptl-node.side-left .ptl-pill {
+    right: 25px;
+}
+
+.ptl-node.side-right .ptl-pill {
+    left: 25px;
+}
+
+/* ---------- WIP (in-development) variant — orange theme ---------- */
+.ptl-node.is-wip .ptl-dot {
+    background: #ff7a18;
+    box-shadow: 0 0 0 1px #ff7a18;
+}
+
+.ptl-node.is-wip.is-active .ptl-dot {
+    box-shadow: 0 0 0 4px rgba(255, 122, 24, 0.28), 0 0 0 1px #ff7a18;
+}
+
+.ptl-pill-wip {
+    background: #fff7ef;
+    border-color: #ffd2a8;
+}
+
+.ptl-pill-wip:hover {
+    box-shadow: 0 4px 10px rgba(255, 122, 24, 0.16);
+}
+
+.ptl-pill-wip:focus-visible {
+    outline: none;
+    border-color: #ff7a18;
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.25);
+}
+
+.ptl-node.is-wip.is-active .ptl-pill-wip {
+    border-color: #ff7a18;
+    box-shadow: 0 0 0 2px rgba(255, 122, 24, 0.18);
+}
+
+.ptl-pill-wip .ptl-pill-name {
+    color: #7a3b00;
+}
+
+.ptl-pill-lock {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffb066, #ff7a18);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ptl-pill-tag {
+    margin-left: 2px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #ff7a18;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* ---------- Axis ---------- */
+.ptl-axis {
+    position: relative;
+    height: 1px;
+    background: #d6d6d6;
+    margin-bottom: 24px;
+}
+
+.ptl-tick {
+    position: absolute;
+    top: -5px;
+    width: 1px;
+    height: 11px;
+    background: #c2c2c2;
+}
+
+.ptl-tick-label {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #999;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ---------- Anchored detail card ---------- */
+.ptl-panel-wrap {
+    position: relative;
+    min-height: 12px;
+}
+
+.ptl-panel {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    width: 300px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    z-index: 5;
+}
+
+.ptl-panel[hidden] {
+    display: none;
+}
+
+.ptl-panel::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -7px;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-left: 1px solid #e0e0e0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.ptl-panel-hero-wrap {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #ddd;
+}
+
+.ptl-panel-hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ptl-panel-hero-gate {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg,
+        #ffd2a8 0 14px,
+        #ffe6cf 14px 28px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ptl-panel-hero-gate svg {
+    width: 28px;
+    height: 28px;
+    color: #ff7a18;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 8px;
+    box-sizing: content-box;
+}
+
+.ptl-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 6px;
+}
+
+.ptl-panel-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #ddd;
+    flex-shrink: 0;
+}
+
+.ptl-panel-icon-gate {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #ffb066, #ff7a18);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ptl-panel.is-wip-panel .ptl-panel-meta {
+    color: #ff7a18;
+    font-weight: 600;
+}
+
+.ptl-panel-head-text {
+    min-width: 0;
+}
+
+.ptl-panel-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #1c1c1c;
+}
+
+.ptl-panel-meta {
+    font-size: 10px;
+    color: #888;
+    margin: 2px 0 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ptl-panel-desc {
+    font-size: 12px;
+    color: #555;
+    margin: 0 0 12px;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ptl-panel-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #0a1f12;
+    background: #0dc469;
+    border-radius: 6px;
+    padding: 6px 12px;
+    text-decoration: none;
+}
+
+.ptl-panel-cta:hover {
+    background: #11d775;
+}
+
+.ptl-panel-cta-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #7a3b00;
+    background: #ffe6cf;
+    border: 1px solid #ffd2a8;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: not-allowed;
+}
+
+/* The detail panel toggles children via the `hidden` attribute (hero vs hero-gate,
+   icon vs icon-gate, cta vs cta-locked). Several of those children declare
+   `display: flex|inline-flex`, which would otherwise override the UA default
+   `[hidden] { display: none }`. Make `hidden` authoritative across the panel. */
+.ptl-panel [hidden] {
+    display: none !important;
+}
+
+/* ---------- Mobile fallback: collapse to a vertical card list ---------- */
+@media (max-width: 700px) {
+    .ptl-section {
+        padding: 0 16px;
+    }
+
+    .ptl {
+        padding: 0;
+    }
+
+    .ptl-plot,
+    .ptl-axis {
+        display: none;
+    }
+
+    .ptl-panel-wrap {
+        position: static;
+        min-height: 0;
+    }
+
+    .ptl-mobile {
+        display: grid;
+        gap: 10px;
+    }
+
+    .ptl-mobile-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        background: #f3f3f3;
+        border-radius: 10px;
+        border-left: 3px solid transparent;
+        text-decoration: none;
+        color: inherit;
+        transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .ptl-mobile-item:hover {
+        background: #ececec;
+        border-left-color: #0dc469;
+    }
+
+    .ptl-mobile-item.is-wip {
+        background: #fff7ef;
+        border-left-color: #ff7a18;
+        cursor: default;
+    }
+
+    .ptl-mobile-item.is-wip:hover {
+        background: #fff7ef;
+    }
+
+    .ptl-mobile-item.is-wip .ptl-mobile-lock {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ffb066, #ff7a18);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .ptl-mobile-item.is-wip .ptl-mobile-meta {
+        color: #ff7a18;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 10px;
+    }
+
+    .ptl-mobile-item img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: #ddd;
+        flex-shrink: 0;
+    }
+
+    .ptl-mobile-item .ptl-mobile-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1c1c1c;
+    }
+
+    .ptl-mobile-item .ptl-mobile-meta {
+        font-size: 11px;
+        color: #777;
+        margin-top: 2px;
+    }
+}
+
+/* Hide the mobile list above the breakpoint */
+@media (min-width: 701px) {
+    .ptl-mobile {
+        display: none;
+    }
+}
